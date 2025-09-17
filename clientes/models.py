@@ -59,3 +59,8 @@ class ClientePJ(PessoaJuridica):
 
     def __str__(self):
         return super().nome
+
+"""class Cliente(ClientePJ or ClientePF):
+
+tornar as classes clientes pf e pj como abstratas e unificar como cliente
+"""
