@@ -17,7 +17,7 @@ class Pessoa(models.Model):
         return self.nome
 
 class PessoaFisica(Pessoa):
-    cpf = models.DecimalField('CPF', max_digits=11, unique=True, help_text='Digite o CPF')
+    cpf = models.DecimalField('CPF', max_digits=11, unique=True, decimal_places=0, help_text='Digite o CPF')
     data_nascimento = models.DateField('Data de nascimento', null=True, blank=True, help_text='Data de nascimento')
 
     class Meta:
@@ -28,7 +28,7 @@ class PessoaFisica(Pessoa):
 
 class PessoaJuridica(Pessoa):
     empresa = models.CharField('Empresa', max_length=100, help_text='Nome da empresa')
-    cnpj = models.DecimalField('CNPJ', max_digits=14, unique=True, help_text='Digite o CNPJ da empresa')
+    cnpj = models.DecimalField('CNPJ', max_digits=14, unique=True, decimal_places=0, help_text='Digite o CNPJ da empresa')
 
     class Meta:
         abstract = True
@@ -37,7 +37,7 @@ class PessoaJuridica(Pessoa):
         return self.empresa
 
 class ClientePF(PessoaFisica):
-    num_cadastro = models.DecimalField('N° cadastro', max_digits=5, help_text='Numero de cadastro')
+    num_cadastro = models.DecimalField('N° cadastro', max_digits=5, decimal_places=0 ,help_text='Numero de cadastro')
     plano = models.CharField('Plano', max_length=15, help_text='Tipo do plano')
 
     class Meta:
@@ -49,7 +49,7 @@ class ClientePF(PessoaFisica):
         return super().nome
 
 class ClientePJ(PessoaJuridica):
-    num_cadastro = models.DecimalField('N° cadastro', max_digits=5, help_text='Numero de cadastro da empresa')
+    num_cadastro = models.DecimalField('N° cadastro', max_digits=5, decimal_places=0, help_text='Numero de cadastro da empresa')
     plano = models.CharField('Plano', max_length=15, help_text='Tipo do plano da empresa')
 
     class Meta:
