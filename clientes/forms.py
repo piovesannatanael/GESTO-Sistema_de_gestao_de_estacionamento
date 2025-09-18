@@ -1,8 +1,30 @@
 from django import forms
 
-from clientes.models import ClientePF, ClientePJ
+from clientes.models import  Cliente
 
 
+class ClienteModelForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = '__all__'
+        widgets = {
+            'tipo_pessoa': forms.RadioSelect(attrs={'class': 'form-control'}),
+        }
+
+        error_messages = {
+            'nome': {'required': 'O nome do cliente é um campo obrigatório'},
+            'cpf': {'required':'O CPF do cliente é um campo obrigatório'},
+            'data_nascimento': {'required':'A data de nascimento do cliente é um campo obrigatório'},
+            'endereco': {'required': 'O endereço do cliente é um campo obrigatório'},
+            'fone': {'required': 'O telefone do cliente é um campo obrigatório'},
+            'email': {'required': 'O email do cliente é um campo obrigatorio',
+                      'invalid': 'Formato invalido para email. Ex: de formato valido: fulano@dominio.com',
+                      'unique': 'E-mail ja cadastrado'
+                      },
+            'plano':  {'requred': 'O plano usado é um campo obrigatório'},
+
+        }
+'''
 class ClientePFModelForm(forms.ModelForm):
     class Meta:
         model = ClientePF
@@ -40,3 +62,4 @@ class ClientePJModelForm(forms.ModelForm):
             'plano': {'requred': 'O plano usado é um campo obrigatório'},
 
         }
+'''
