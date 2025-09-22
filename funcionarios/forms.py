@@ -1,11 +1,11 @@
-from clientes import forms
+from django import forms
 from funcionarios.models import Funcionario
 
 
 class FuncionarioModelForm(forms.ModelForm):
     class Meta:
         model = Funcionario
-        fields = ['nome', 'funcao', 'fone', 'email', 'data_admissao', 'foto']
+        fields = ['nome', 'cpf', 'data_nascimento', 'funcao', 'data_admissao', 'fone', 'email', 'endereco', 'foto']
         error_messages = {
             'nome': {'required': 'O nome do funcionario é um campo obrigatório'},
             'funcao': {'required': 'A função do funcionário é um campo obrigatório'},

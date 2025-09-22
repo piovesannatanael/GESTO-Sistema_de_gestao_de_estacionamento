@@ -43,7 +43,7 @@ class ClienteDeleteView(SuccessMessageMixin, DeleteView):
     model = Cliente
     form_class = ClienteModelForm
     template_name = 'cliente_apagar.html'
-    success_url = reverse_lazy('clientes/')
+    success_url = reverse_lazy('clientes')
     success_message = 'Cliente excluido com sucesso!'
 
 
