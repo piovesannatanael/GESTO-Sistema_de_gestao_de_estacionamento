@@ -50,8 +50,8 @@ class Cliente(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Plano'
-        verbose_name_plural = 'Planos'
+        verbose_name = 'CLiente'
+        verbose_name_plural = 'Clientes'
 
     def __str__(self):
         return self.plano.nome
