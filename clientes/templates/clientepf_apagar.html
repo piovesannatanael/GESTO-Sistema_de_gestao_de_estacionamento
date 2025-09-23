@@ -7,6 +7,7 @@
                 <h3 class="text-center">Dados do cliente</h3>
                 <p class="p-2 mt-2"><strong>Nome: </strong>{{ object.nome }}</p>
                 <p class="p-2 mt-2"><strong>Fone: </strong>{{ object.fone }}</p>
+                <p class="p-2 mt-2"><strong>Plano: </strong>{{ object.plano }}</p>
                 {% if object.foto.url is not empty %}
                     <div class="col-2">
                         <img src="{{ object.foto.url }}" class="img-thumbnail" width="100" height="100" alt="/">
@@ -15,7 +16,6 @@
                 <p class="p-2 mt-2">Confirma a exclusão do cliente: <strong>{{ object }}</strong>?</p>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {% bootstrap_form form %}
                     <div class="text-end">
                         {% bootstrap_button button_type="submit" content="Sim" %}
                         <a href="{% url 'clientes' %}" class="btn btn-secondary text-white" type="button">

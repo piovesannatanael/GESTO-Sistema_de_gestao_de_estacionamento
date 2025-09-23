@@ -8,47 +8,6 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, T
 from clientes.forms import  ClientePFModelForm, ClientePJModelForm
 from clientes.models import ClientePF, ClientePJ
 
-"""class ClientesView(ListView):
-    model = Cliente
-    template_name = 'clientes.html'
-
-    def get_queryset(self):
-        buscar = self.request.GET.get('buscar')
-        qs = super(ClientesView, self).get_queryset()
-        if buscar:
-            qs = qs.filter(nome__icontains=buscar)
-
-        if qs.count() > 0:
-            paginator = Paginator(qs, 5)
-            listagem = paginator.get_page(self.request.GET.get('page'))
-            return listagem
-        else:
-            return messages.info(self.request, 'Nenhum cliente cadastrado!')
-
-class ClienteAddView(SuccessMessageMixin, CreateView):
-    model = Cliente
-    form_class = ClienteModelForm
-    template_name = 'clientepf_form.html'
-    success_url = reverse_lazy('clientes')
-    success_message = 'Cliente cadastrado com sucesso!'
-
-
-class ClienteUpdateView(SuccessMessageMixin, UpdateView):
-    model = Cliente
-    form_class = ClienteModelForm
-    template_name = 'clientepf_form.html'
-    success_url = reverse_lazy('clientes')
-    success_message = 'Cliente atualizado com sucesso!'
-
-class ClienteDeleteView(SuccessMessageMixin, DeleteView):
-    model = Cliente
-    form_class = ClienteModelForm
-    template_name = 'cliente_apagar.html'
-    success_url = reverse_lazy('clientes')
-    success_message = 'Cliente excluido com sucesso!'
-
-"""
-
 
 
 
@@ -75,21 +34,20 @@ class ClientePFAddView(SuccessMessageMixin, CreateView):
     model = ClientePF
     form_class = ClientePFModelForm
     template_name = 'clientepf_form.html'
-    success_url = reverse_lazy('clientespf')
+    success_url = reverse_lazy('clientes')
     success_message = 'Cliente cadastrado com sucesso!'
 
 class ClientePFUpdateView(SuccessMessageMixin, UpdateView):
     model = ClientePF
     form_class = ClientePFModelForm
     template_name = 'clientepf_form.html'
-    success_url = reverse_lazy('clientespf')
+    success_url = reverse_lazy('clientes')
     success_message = 'Cliente atualizado com sucesso!'
 
 class ClientePFDeleteView(SuccessMessageMixin, DeleteView):
     model = ClientePF
-    form_class = ClientePFModelForm
     template_name = 'clientepf_apagar.html'
-    success_url = reverse_lazy('clientespf')
+    success_url = reverse_lazy('clientes')
     success_message = 'Cliente excluido com sucesso!'
 
 
@@ -116,28 +74,54 @@ class ClientePJAddView(SuccessMessageMixin, CreateView):
     model = ClientePJ
     form_class = ClientePJModelForm
     template_name = 'clientepj_form.html'
-    success_url = reverse_lazy('clientespj')
+    success_url = reverse_lazy('clientes')
     success_message = 'Empresa cliente cadastrada com sucesso!'
 
 class ClientePJUpdateView(SuccessMessageMixin, UpdateView):
     model = ClientePJ
     form_class = ClientePJModelForm
     template_name = 'clientepj_form.html'
-    success_url = reverse_lazy('clientespj')
+    success_url = reverse_lazy('clientes')
     success_message = 'Empresa cliente atualizada com sucesso!'
 
 class ClientePJDeleteView(SuccessMessageMixin, DeleteView):
     model = ClientePJ
-    form_class = ClientePJModelForm
     template_name = 'clientepj_apagar.html'
-    success_url = reverse_lazy('clientespj')
+    success_url = reverse_lazy('clientes')
     success_message = 'Empresa cliente excluída com sucesso!'
 
 
 from django.shortcuts import render
 from django.core.paginator import Paginator
 
+
 def ClientesView(request):
+    # Pega o termo de busca da URL, se existir
+    buscar = request.GET.get('buscar')
+
+    # Inicia as querysets
+    clientespf_qs = ClientePF.objects.all().order_by('nome')
+    clientespj_qs = ClientePJ.objects.all().order_by('nome')
+
+    # Se um termo de busca foi fornecido, filtra AMBAS as querysets
+    if buscar:
+        clientespf_qs = clientespf_qs.filter(nome__icontains=buscar)
+        clientespj_qs = clientespj_qs.filter(nome__icontains=buscar)
+
+    # Paginação
+    paginator_pf = Paginator(clientespf_qs, 10)
+    paginator_pj = Paginator(clientespj_qs, 10)
+
+    clientespf = paginator_pf.get_page(request.GET.get('page_pf', 1))
+    clientespj = paginator_pj.get_page(request.GET.get('page_pj', 1))
+
+    context = {
+        'clientespf': clientespf,
+        'clientespj': clientespj,
+        'buscar': buscar if buscar else '', # Envia o termo de busca para o template
+    }
+    return render(request, 'clientes.html', context)
+'''def ClientesView(request):
     clientespf_qs = ClientePF.objects.all().order_by('nome')
     clientespj_qs = ClientePJ.objects.all().order_by('nome')
 
@@ -158,7 +142,7 @@ def ClientesView(request):
         'request': request,  # necessário para bootstrap_pagination url=request.get_full_path
     }
     return render(request, 'clientes.html', context)
-
+'''
 '''class ClientesView(TemplateView):
     template_name = 'clientes.html'
     paginate_by = 10

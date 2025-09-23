@@ -6,10 +6,13 @@ from .views import (
 )
 
 urlpatterns = [
-    path('clientes', ClientesView, name='clientes'),  # <-- sem .as_view()
+    path('clientes', ClientesView, name='clientes'),
+
+        #CLiente pf
     path('pf/adicionar/', ClientePFAddView.as_view(), name='pf_adicionar'),
     path('pf/<int:pk>/editar/', ClientePFUpdateView.as_view(), name='pf_editar'),
     path('pf/<int:pk>/apagar/', ClientePFDeleteView.as_view(), name='pf_apagar'),
+        #cliente pj
     path('pj/adicionar/', ClientePJAddView.as_view(), name='pj_adicionar'),
     path('pj/<int:pk>/editar/', ClientePJUpdateView.as_view(), name='pj_editar'),
     path('pj/<int:pk>/apagar/', ClientePJDeleteView.as_view(), name='pj_apagar'),
