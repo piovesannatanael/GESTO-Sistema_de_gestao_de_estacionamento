@@ -1,9 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-from clientes.models import  ClientePF, ClientePJ
+from clientes.models import  Cliente
 
-'''class ClienteModelForm(forms.ModelForm):
+
+class ClienteModelForm(forms.ModelForm):
 
     class Meta:
         model = Cliente
@@ -82,3 +83,4 @@ class ClientePJModelForm(forms.ModelForm):
             'plano': {'requred': 'O plano usado é um campo obrigatório'},
 
         }
+'''

@@ -42,40 +42,8 @@ class Plano(models.Model):
         ('horario_avulso', 'Horário Avulso'),
         ('mensal', 'Mensal'),
     )
-class ClientePF(PessoaFisica):
-    PLANOS_OPCOES = (
-        ('diaria', 'Diária'),
-        ('horario_avulso', 'Horário Avulso'),
-        ('mensal', 'Mensal'),
-    )
-    plano = models.CharField('Plano', max_length=20, choices=PLANOS_OPCOES)
 
-    class Meta:
-        verbose_name = 'Cliente PF'
-        verbose_name_plural = 'Clientes PF'
-        ordering = [Upper('nome')]
-
-    def __str__(self):
-        return super().nome
-
-class ClientePJ(PessoaJuridica):
-    PLANOS_OPCOES = (
-        ('diaria', 'Diária'),
-        ('horario_avulso', 'Horário Avulso'),
-        ('mensal', 'Mensal'),
-    )
-    plano = models.CharField('Plano', max_length=20, choices=PLANOS_OPCOES)
-
-
-    class Meta:
-        verbose_name = 'Cliente PJ'
-        verbose_name_plural = 'Clientes PJ'
-        ordering = [Upper('nome')]
-
-    def __str__(self):
-        return super().nome
-
-"""class Cliente(models.Model):
+class Cliente(models.Model):
     TIPO_PESSOA_OPCOES = (
         ('PF', 'Pessoa Física'),
         ('PJ', 'Pessoa Jurídica'),
@@ -115,9 +83,44 @@ class ClientePJ(PessoaJuridica):
 
     def __str__(self):
         return self.nome
+
+'''class Cliente(PessoaFisica or PessoaJuridica):
+
+    class Meta:
+        verbose_name = 'Cliente'
+        verbose_name_plural = 'Clientes'
+        ordering = [Upper('nome')]
+
+    def __str__(self):
+        return super().nome
+
+'''
+'''class ClientePF(PessoaFisica):
+    num_cadastro = models.DecimalField('N° cadastro', max_digits=5, decimal_places=0 ,help_text='Numero de cadastro')
+    plano = models.CharField('Plano', max_length=15, help_text='Tipo do plano')
+
+    class Meta:
+        verbose_name = 'Cliente PF'
+        verbose_name_plural = 'Clientes PF'
+        ordering = [Upper('nome')]
+
+    def __str__(self):
+        return super().nome
+
+class ClientePJ(PessoaJuridica):
+    num_cadastro = models.DecimalField('N° cadastro', max_digits=5, decimal_places=0, help_text='Numero de cadastro da empresa')
+    plano = models.CharField('Plano', max_length=15, help_text='Tipo do plano da empresa')
+
+    class Meta:
+        verbose_name = 'Cliente PJ'
+        verbose_name_plural = 'Clientes PJ'
+        ordering = [Upper('nome')]
+
+    def __str__(self):
+        return super().nome
+
+"""class Cliente(ClientePJ or ClientePF):
+
+tornar as classes clientes pf e pj como abstratas e unificar como cliente
 """
-
-
-
-
-
+'''

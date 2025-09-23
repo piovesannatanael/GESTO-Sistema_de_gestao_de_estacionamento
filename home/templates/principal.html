@@ -1,45 +1,84 @@
-{# templates/principal.html #}
-<!doctype html>
+<!DOCTYPE html>
 {% load static %}
-{% load django_bootstrap5 %}
 <html lang="pt-br">
-<head>
-  {% block head %}
-    {% include "head.html" %}
-  {% endblock %}
-</head>
+{% block head %}
+		{% include "head.html" %}
+	{% endblock %}
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark">
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<body>
+ <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">🚗 EasyPark</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Funcionários</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Veículos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Estadas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+  <section class="hero">
+        <h1>Bem-vindo ao <span class="text-warning">EasyPark</span></h1>
+        <p class="lead">O seu sistema de gestão de estacionamento rápido, moderno e eficiente.</p>
+    </section>
     <div class="container">
-      <a class="navbar-brand fw-bold" href="#">🚗 EasyPark</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="#">Início</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Clientes</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Funcionários</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Veículos</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Estadas</a></li>
-        </ul>
-      </div>
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <i class="fas fa-user-tie fa-3x text-warning"></i>
+                    <h5 class="mt-3">Clientes</h5>
+                    <p>Gerencie seus clientes</p>
+                    <a href="{% url 'cliente_adicionar' %}" class="btn btn-warning btn-sm">Cadastrar</a>
+                    <a href="{% url 'clientes' %}" class="btn btn-warning btn-sm">Acessar</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <i class="fas fa-id-badge fa-3x text-info"></i>
+                    <h5 class="mt-3">Funcionários</h5>
+                    <p>Controle e cadastre os colaboradores.</p>
+                    <a href="{% url 'funcionario_adicionar' %}" class="btn btn-warning btn-sm">Cadastrar</a>
+                    <a href="{% url 'funcionarios' %}" class="btn btn-info btn-sm">Acessar</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <i class="fas fa-car fa-3x text-success"></i>
+                    <h5 class="mt-3">Veículos</h5>
+                    <p>Cadastre e acompanhe os veículos.</p>
+                    <a href="#" class="btn btn-success btn-sm">Acessar</a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <i class="fas fa-parking fa-3x text-danger"></i>
+                    <h5 class="mt-3">Estadas</h5>
+                    <p>Monitore as entradas e saídas.</p>
+                    <a href="#" class="btn btn-danger btn-sm">Acessar</a>
+                </div>
+            </div>
+        </div>
     </div>
-  </nav>
 
-  <main class="py-4">
-    <!-- MARCADOR PARA DEBUG (remova depois) -->
-    <div id="base-marker" class="container">PRINCIPAL.HTML RENDERED</div>
 
-    {% block content %}
-    {# Conteúdo dos templates filhos será inserido aqui #}
-    {% endblock %}
-  </main>
+{% block content %}
+        {% endblock %}
 
-  <footer class="text-center py-3">
-    &copy; EasyPark
-  </footer>
+		{% block footer %}
+			{% include "footer.html" %}
+		{% endblock %}
 
-  {% block extra_js %}{% endblock %}
 </body>
 </html>
