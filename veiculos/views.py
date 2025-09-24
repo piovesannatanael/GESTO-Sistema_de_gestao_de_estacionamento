@@ -43,7 +43,6 @@ class VeiculoUpdateView(SuccessMessageMixin, UpdateView):
 
 class VeiculoDeleteView(SuccessMessageMixin, DeleteView):
     model = Veiculo
-    form_class = VeiculoModelForm
     template_name = 'veiculo_apagar.html'
     success_url = reverse_lazy('veiculos')
     success_message = 'Veículo excluído com sucesso!'

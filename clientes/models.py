@@ -75,47 +75,7 @@ class ClientePJ(PessoaJuridica):
     def __str__(self):
         return super().nome
 
-"""class Cliente(models.Model):
-    TIPO_PESSOA_OPCOES = (
-        ('PF', 'Pessoa Física'),
-        ('PJ', 'Pessoa Jurídica'),
-    )
 
-    class Meta:
-        verbose_name = 'CLiente'
-        verbose_name_plural = 'Clientes'
-
-    def __str__(self):
-        return self.plano.nome
-
-    # Campos comuns
-    nome = models.CharField('Nome', max_length=100, help_text='Nome ou Razão Social')
-    fone = models.CharField('Fone', max_length=15, help_text='Número de telefone')
-    email = models.EmailField('E-mail', max_length=100, help_text='E-mail', unique=True)
-    endereco = models.CharField('Endereço', max_length=300, help_text='Endereço completo')
-    plano = models.ForeignKey('Plano', on_delete=models.SET_NULL, null=True, blank=False, verbose_name='Plano')
-    foto = StdImageField('Foto', upload_to='clientes', delete_orphans=True, null=True, blank=True)
-
-    # Seletor do tipo de pessoa
-    tipo_pessoa = models.CharField('Tipo de Pessoa', max_length=2, choices=TIPO_PESSOA_OPCOES, default='PF')
-
-    # Pessoa Fisica
-    cpf = models.CharField('CPF', max_length=14, unique=True, null=True, blank=True, help_text='Digite o CPF')
-    data_nascimento = models.DateField('Data de nascimento', null=True, blank=True, help_text='Data de nascimento')
-
-    # pessoa juridica
-    cnpj = models.CharField('CNPJ', max_length=18, unique=True, null=True, blank=True,
-                            help_text='Digite o CNPJ da empresa')
-
-
-    class Meta:
-        verbose_name = 'Cliente'
-        verbose_name_plural = 'Clientes'
-        ordering = [Upper('nome')]
-
-    def __str__(self):
-        return self.nome
-"""
 
 
 
