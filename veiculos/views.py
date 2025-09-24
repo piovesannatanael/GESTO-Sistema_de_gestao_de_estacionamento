@@ -34,6 +34,9 @@ class VeiculoAddView(SuccessMessageMixin, CreateView):
     success_message = 'Veículo cadastrado com sucesso!'
 
 
+#     criar filtro com join para mostar cliente
+
+
 class VeiculoUpdateView(SuccessMessageMixin, UpdateView):
     model = Veiculo
     form_class = VeiculoModelForm
