@@ -1,0 +1,80 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="card card-body mb-4">
+            <form method="get" action="">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="buscar" value="{{ buscar }}" placeholder="Digite a placa do veículo...">
+                    <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                </div>
+            </form>
+        </div>
+
+        {% if object_list %}
+            <div class="card-body">
+                <h3 class="text-center">Veículos Cadastrados</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-success">
+                            <th>Placa</th>
+                            <th>Cliente</th>
+                            <th>Quantidade de Rodas</th>
+                            <th style="width: 100px; text-align: center">Ações</th>
+                        </thead>
+                        <tbody>
+                            {% for veiculo in object_list %}
+                                <tr>
+                                    <td>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modal-veiculo-{{ veiculo.id }}">
+                                            {{ veiculo.placa }}
+                                        </a>
+                                    </td>
+                                    <td>{{ veiculo.cliente.nome }}</td>
+                                    <td>{{ veiculo.qtd_rodas }}</td>
+                                    <td style="text-align: center">
+                                        <a href="{% url 'veiculo_editar' veiculo.pk %}"><i class="fas fa-edit"></i></a>
+                                        <a href="{% url 'veiculo_apagar' veiculo.pk %}"><i class="far fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+
+                                <div class="modal fade" id="modal-veiculo-{{ veiculo.id }}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Veículo: {{ veiculo.placa }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h6><strong>Dono:</strong> {{ veiculo.cliente.nome }}</h6>
+                                                <p><strong>Marca/Modelo:</strong> {{ veiculo.marca }} / {{ veiculo.modelo }}</p>
+                                                <p><strong>Cor:</strong> {{ veiculo.cor }}</p>
+                                                <hr>
+                                                <p><strong>Contato do Dono:</strong> {{ veiculo.cliente.fone }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Fechar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-center">
+                        {% bootstrap_pagination object_list url=request.get_full_path %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+              Nenhum veículo encontrado.
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
