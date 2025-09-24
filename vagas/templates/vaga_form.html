@@ -1,0 +1,22 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow m-3 col-md-6 mx-auto">
+        <div class="card-body">
+            <h3 class="text-center">
+                {% if object %}Editar Vaga{% else %}Cadastrar Nova Vaga{% endif %}
+            </h3>
+            <form method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <a href="{% url 'vagas' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
