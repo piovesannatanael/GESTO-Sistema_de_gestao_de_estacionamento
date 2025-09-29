@@ -1,17 +1,17 @@
 from django import forms
-from django.contrib.contenttypes.models import ContentType
-
-from clientes.models import ClientePJ, ClientePF
+from clientes.models import Pessoa
 from veiculos.models import Veiculo
 
-
 class VeiculoModelForm(forms.ModelForm):
-    # cliente = forms.ChoiceField(label='Cliente', required=True) = mulktiple choice para definir clientes
+    cliente = forms.ModelMultipleChoiceField(
+        queryset=Pessoa.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+        label="Clientes"
+    )
 
     class Meta:
         model = Veiculo
         fields = ['placa', 'marca', 'modelo', 'cor', 'qtd_rodas', 'cliente']
-        widgets = {'cliente':forms.SelectMultiple(attrs={'class':'form-control'})}
 
 
 

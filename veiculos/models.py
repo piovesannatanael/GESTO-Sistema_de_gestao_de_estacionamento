@@ -12,7 +12,7 @@ class Veiculo(models.Model):
     modelo = models.CharField('Modelo', max_length=15, help_text='Modelo do veiculo')
     cor = models.CharField('Cor', max_length=15, help_text='Cor do veiculo')
     qtd_rodas = models.DecimalField('Quantidade de rodas', max_digits=2, decimal_places=0, help_text='Quantidade de rodas do veículo')
-    cliente = models.ManyToManyField(ClientePF)
+    cliente = models.ManyToManyField(Pessoa, related_name="veiculos")
     # object_id = models.PositiveIntegerField()
 #     cliente = GenericForeignKey('content_type', 'object_id')
     class Meta:
