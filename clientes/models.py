@@ -53,7 +53,7 @@ class ClientePF(PessoaFisica):
         ordering = [Upper('nome')]
 
     def __str__(self):
-        return super().nome
+        return self.nome
 
 class ClientePJ(PessoaJuridica):
     PLANOS_OPCOES = (
@@ -70,7 +70,7 @@ class ClientePJ(PessoaJuridica):
         ordering = [Upper('nome')]
 
     def __str__(self):
-        return super().nome
+        return self.nome
 
 
 

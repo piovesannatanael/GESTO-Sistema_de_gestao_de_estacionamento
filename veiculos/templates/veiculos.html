@@ -49,6 +49,14 @@
                                             </div>
                                             <div class="modal-body">
                                                 <h6><strong>Dono:</strong> {{ veiculo.cliente.nome }}</h6>
+
+                                                {% if veiculo.cliente.cpf %}
+                                                    <p><strong>CPF:</strong> {{ veiculo.cliente.cpf }}</p>
+                                                {% elif veiculo.cliente.cnpj %}
+                                                    <p><strong>Empresa:</strong> {{ veiculo.cliente.empresa }}</p>
+                                                    <p><strong>CNPJ:</strong> {{ veiculo.cliente.cnpj }}</p>
+                                                {% endif %}
+
                                                 <p><strong>Marca/Modelo:</strong> {{ veiculo.marca }} / {{ veiculo.modelo }}</p>
                                                 <p><strong>Cor:</strong> {{ veiculo.cor }}</p>
                                                 <hr>

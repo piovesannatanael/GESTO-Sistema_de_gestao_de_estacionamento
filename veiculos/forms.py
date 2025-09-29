@@ -2,17 +2,47 @@ from django import forms
 from clientes.models import Pessoa
 from veiculos.models import Veiculo
 
+
+# veiculos/forms.py
+
+from django import forms
+from .models import Veiculo
+from clientes.models import ClientePF, ClientePJ  # Importe seus modelos de cliente
+
 class VeiculoModelForm(forms.ModelForm):
-    cliente = forms.ModelMultipleChoiceField(
-        queryset=Pessoa.objects.all(),
-        widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
-        label="Clientes"
-    )
+    # 1. Crie um campo de escolha que não está no modelo
+    # Este campo vai mostrar todos os clientes (PF e PJ) em uma lista.
+    cliente_choice = forms.ChoiceField(label='Cliente', required=True)
 
     class Meta:
         model = Veiculo
-        fields = ['placa', 'marca', 'modelo', 'cor', 'qtd_rodas', 'cliente']
+        # 2. Exclua os campos da GFK da renderização automática do formulário
+        exclude = ('content_type', 'object_id', 'cliente')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # 3. Preencha as opções do campo de escolha dinamicamente
+        clientes_pf = [
+            (f'clientepf_{c.pk}', f'{c.nome} (PF)') for c in ClientePF.objects.all()
+        ]
+        clientes_pj = [
+            (f'clientepj_{c.pk}', f'{c.empresa} (PJ)') for c in ClientePJ.objects.all()
+        ]
+        # Junta as duas listas
+        self.fields['cliente_choice'].choices = [('', '---------')] + clientes_pf + clientes_pj
+
+# class VeiculoModelForm(forms.ModelForm):
+#     cliente = forms.ModelMultipleChoiceField(
+#         queryset=Pessoa.objects.all(),
+#         widget=forms.SelectMultiple(attrs={'class': 'form-control'}),
+#         label="Clientes"
+#     )
+#
+#     class Meta:
+#         model = Veiculo
+#         fields = ['placa', 'marca', 'modelo', 'cor', 'qtd_rodas', 'cliente']
+#
 
 
     # def __init__(self, *args, **kwargs): buscar pj e pf e fazer a junção apra o input
