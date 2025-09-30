@@ -12,28 +12,30 @@
     <div class="logo" aria-label="Logo Garagem Noturna">EasyPark</div>
     <ul class="nav flex-column" role="menu" aria-label="Navegação principal">
       <li class="nav-item" role="none">
-        <a href="{% url 'index' %}" class="nav-link active" role="menuitem" aria-current="page" title="Dashboard"><p>Inicio</p>
+        <a href="{% url 'index' %}" class="nav-link active" role="menuitem" aria-current="page" title="Dashboard">
           <i class="fas fa-tachometer-alt" aria-hidden="true"> </i>
+          <p>Inicio</p>
         </a>
       </li>
       <li class="nav-item" role="none">
         <a href="{% url 'clientes' %}" class="nav-link" role="menuitem" title="Clientes">
-          <i class="fas fa-users" aria-hidden="true"> Clientes</i>
+          <i class="fas fa-users" aria-hidden="true"> </i><p>Clientes</p>
+
         </a>
       </li>
       <li class="nav-item" role="none">
         <a href="{% url 'funcionarios' %}" class="nav-link" role="menuitem" title="Funcionários">
-          <i class="fas fa-user-tie" aria-hidden="true"> Funcionarios</i>
+          <i class="fas fa-user-tie" aria-hidden="true"></i><p>Funcionarios</p>
         </a>
       </li>
       <li class="nav-item" role="none">
         <a href="{% url 'veiculos' %}" class="nav-link" role="menuitem" title="Veículos">
-          <i class="fas fa-car" aria-hidden="true"> Veiculos</i>
+          <i class="fas fa-car" aria-hidden="true"></i><p>Veiculos</p>
         </a>
       </li>
       <li class="nav-item" role="none">
         <a href="{% url 'vagas' %}" class="nav-link" role="menuitem" title="Estadas">
-          <i class="fas fa-stream" aria-hidden="true"> Vagas</i>
+          <i class="fas fa-stream" aria-hidden="true"></i><p>Vagas</p>
         </a>
       </li>
     </ul>

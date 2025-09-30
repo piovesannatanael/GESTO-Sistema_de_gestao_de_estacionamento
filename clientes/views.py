@@ -1,5 +1,6 @@
 from itertools import chain
-
+from django.shortcuts import render
+from django.core.paginator import Paginator
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
@@ -91,8 +92,7 @@ class ClientePJDeleteView(SuccessMessageMixin, DeleteView):
     success_message = 'Empresa cliente excluída com sucesso!'
 
 
-from django.shortcuts import render
-from django.core.paginator import Paginator
+
 
 
 def ClientesView(request):
