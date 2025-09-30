@@ -2,8 +2,9 @@
 {% load django_bootstrap5 %}
 {% load static %}
 {% block content %}
-<section class="section" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
-        <div class="container">
+<!--<section class="section" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">-->
+        <div id="dados" class="container">
+    <a href="{% url 'funcionario_adicionar' %}" class="btn btn-primary mb-3">Adicionar Novo funcionario</a>
             <form action="" method="GET">
                 <div class="form-group row p-3">
                     <label class="col-sm-2 col-form-label">Nome do funcionário: </label>

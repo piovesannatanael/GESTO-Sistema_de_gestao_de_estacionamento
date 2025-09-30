@@ -3,8 +3,10 @@
 {% load static %}
 
 {% block content %}
-<section class="section">
+<section id="dados" class="section">
     <div class="container">
+    <a href="{% url 'pf_adicionar' %}" class="btn btn-primary mb-3">novo cliente PF</a>
+    <a href="{% url 'pj_adicionar' %}" class="btn btn-primary mb-3">novo cliente PJ</a>
         <div class="card card-body mb-4">
             <h4 class="mb-3">Buscar Clientes</h4>
             <form method="get" action="{% url 'clientes' %}">

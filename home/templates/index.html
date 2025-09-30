@@ -3,72 +3,16 @@
 <main id="main-content" role="main" aria-label="Conteúdo principal do dashboard">
     <header id="header-top" role="banner" aria-label="Cabeçalho superior">
       <div class="user-profile" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="Menu do usuário">
-        <img src="https://i.pravatar.cc/36" alt="Avatar do usuário" />
-        <span>Lucas Almeida</span>
+        <img src="static/img/brasao-ufsm.jpg" alt="Avatar do usuário" />
+        <span>Administrador</span>
       </div>
     </header>
 
-    <section aria-label="Indicadores principais do estacionamento">
-      <div class="dashboard-cards">
-        <article class="card-dashboard card-vagas" tabindex="0" aria-labelledby="vagas-title vagas-quantidade">
-          <div id="vagas-quantidade" aria-live="polite" aria-atomic="true">72</div>
-          <small id="vagas-title">Vagas Disponíveis</small>
-        </article>
-
-        <article class="card-dashboard" tabindex="0" aria-label="Total de clientes cadastrados">
-          <i class="fas fa-users card-icon" aria-hidden="true"></i>
-          <div class="card-info">Clientes</div>
-          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">1.254</div>
-        </article>
-
-        <article class="card-dashboard" tabindex="0" aria-label="Total de funcionários">
-          <i class="fas fa-user-tie card-icon" aria-hidden="true"></i>
-          <div class="card-info">Funcionários</div>
-          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">38</div>
-        </article>
-
-        <article class="card-dashboard" tabindex="0" aria-label="Veículos cadastrados">
-          <i class="fas fa-car card-icon" aria-hidden="true"></i>
-          <div class="card-info">Veículos</div>
-          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">1.872</div>
-        </article>
-
-        <article class="card-dashboard" tabindex="0" aria-label="Estadas registradas">
-          <i class="fas fa-stream card-icon" aria-hidden="true"></i>
-          <div class="card-info">Estadas</div>
-          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">4.320</div>
-        </article>
-      </div>
-    </section>
-
-    <section id="chart-container" aria-label="Gráfico de fluxo de veículos por hora">
-      <h2>Fluxo de Veículos por Hora</h2>
-      <canvas id="vehiclesFlowChart" role="img" aria-describedby="chart-desc"></canvas>
-      <p id="chart-desc" class="visually-hidden">Gráfico de barras mostrando o número de veículos que entraram no estacionamento por hora, das 6h às 23h.</p>
-    </section>
-
-    <section aria-label="Últimas 5 estadas registradas">
-      <h2 class="mb-3" style="color: var(--highlight); font-weight: 700;">Últimas 5 Estadas Registradas</h2>
-      <div class="table-responsive" tabindex="0">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Cliente</th>
-              <th scope="col">Veículo</th>
-              <th scope="col">Entrada</th>
-              <th scope="col">Saída</th>
-              <th scope="col">Duração</th>
-              <th scope="col">Pagamento</th>
-              <th scope="col" class="text-center" style="width: 110px;">Ações</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
-    </section>
-</main>
-    {% block registros %}
+  {% block registros %}
         {% include "registros.html" %}
     {% endblock %}
+</main>
+
 {% endblock %}
 
 

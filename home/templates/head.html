@@ -11,7 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    /* Paleta Dark Mode */
+
     :root {
       --bg-primary: #1a202c; /* Grafite Escuro */
       --bg-card: #2d3748; /* Cinza Escuro */
@@ -27,13 +27,18 @@
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
+      margin-left: 5%;
+    }
+
+    #dados {
+    margin-top: 5%;
     }
 
     /* Sidebar */
     #sidebar {
       background-color: var(--bg-primary);
       min-height: 100vh;
-      width: 15%;
+      width: 5%;
       position: fixed;
       top: 0;
       left: 0;
@@ -43,6 +48,18 @@
       align-items: center;
       border-right: 1px solid var(--border-subtle);
       z-index: 1030;
+      transition: 0.7s ease-out;
+
+    }
+    #sidebar p{
+    visibility: hidden
+     }
+    #sidebar:hover{
+    width: 15%;
+    transition: all 0.7s;
+    }
+    #sidebar:hover p{
+    visibility: visible
     }
 
     #sidebar .logo {
@@ -98,7 +115,7 @@
       border-radius: 2px;
     }
 
-    /* Main content wrapper */
+
     #main-content {
       margin-left: 72px;
       padding: 2rem 2.5rem 3rem 2.5rem;
@@ -108,7 +125,7 @@
       background-color: var(--bg-primary);
     }
 
-    /* Header */
+
     #header-top {
       height: 60px;
       border-bottom: 1px solid var(--border-subtle);
@@ -143,7 +160,6 @@
       white-space: nowrap;
     }
 
-    /* Dashboard cards container */
     .dashboard-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -321,6 +337,18 @@
         font-size: 2.5rem;
       }
     }
+    .site-footer {
+  background-color: var(--bg-primary); /* Usa a cor de fundo dos cards para se destacar do fundo principal */
+  color: var(--highlight);
+  text-align: center; /* Centraliza o texto, comum em rodapés */
+  padding: 1.5rem 0; /* Adiciona um bom espaçamento interno vertical */
+  margin-top: 3rem; /* Garante um espaço antes do rodapé */
+  border-top: 1px solid var(--border-subtle); /* Adiciona uma linha sutil de separação */
+}
+
+.site-footer p {
+  margin: 0;
+}
   </style>
 </head>
 

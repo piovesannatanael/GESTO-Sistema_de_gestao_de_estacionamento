@@ -24,7 +24,7 @@ from .views import ClientePFAddView, ClientePFUpdateView, ClientePFDeleteView, \
     ClientePJUpdateView, ClientePJAddView, ClientePJDeleteView, ClientesView
 
 urlpatterns = [
-    path('clientes/', ClientesView.as_view(), name='clientes'),
+    path('clientes/', ClientesView, name='clientes'),
 
     # URLS clientes pessoa fisica
     path('clientepf/adicionar', ClientePFAddView.as_view(), name='pf_adicionar'),
