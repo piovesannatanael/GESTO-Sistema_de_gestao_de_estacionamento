@@ -1,47 +1,77 @@
 {% extends "principal.html" %}
 {% block content %}
-<section class="section bg-success p-2 bg-opacity-75">
-    <div class="container text-center text-white ">
+<main id="main-content" role="main" aria-label="Conteúdo principal do dashboard">
+    <header id="header-top" role="banner" aria-label="Cabeçalho superior">
+      <div class="user-profile" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="Menu do usuário">
+        <img src="https://i.pravatar.cc/36" alt="Avatar do usuário" />
+        <span>Lucas Almeida</span>
+      </div>
+    </header>
 
+    <section aria-label="Indicadores principais do estacionamento">
+      <div class="dashboard-cards">
+        <article class="card-dashboard card-vagas" tabindex="0" aria-labelledby="vagas-title vagas-quantidade">
+          <div id="vagas-quantidade" aria-live="polite" aria-atomic="true">72</div>
+          <small id="vagas-title">Vagas Disponíveis</small>
+        </article>
 
-            <div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">CLientes</h5>
-    <a href="{% url 'pf_adicionar' %}" class="btn btn-primary">cadastrar pf</a>
-    <a href="{% url 'pj_adicionar' %}" class="btn btn-primary">cadastrar PJ</a>
-    <a href="{% url 'clientes' %}" class="btn btn-primary">Listar clientes</a>
-  </div>
-</div>
-            <div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">Funcionarios</h5>
-    <a href="{% url 'funcionario_adicionar' %}" class="btn btn-primary">Cadastrar funcionarios</a>
-    <a href="{% url 'funcionarios' %}" class="btn btn-primary">Listar funcionarios</a>
-  </div>
-</div>
-            <div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">Veiculos</h5>
-      <a href="{% url 'veiculo_adicionar' %}" class="btn btn-primary">Cadastrar veiculos</a>
-      <a href="{% url 'veiculos' %}" class="btn btn-primary">Listar veiculos</a>
-  </div>
-</div>
-            <div class="card" style="width: 18rem;">
-  <img src="..." class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">Vagas</h5>
-    <a href="{% url 'vaga_adicionar' %}" class="btn btn-primary">Cadastrar vagas</a>
-    <a href="{% url 'vagas' %}" class="btn btn-primary">Listar vagas</a>
-  </div>
-</div>
+        <article class="card-dashboard" tabindex="0" aria-label="Total de clientes cadastrados">
+          <i class="fas fa-users card-icon" aria-hidden="true"></i>
+          <div class="card-info">Clientes</div>
+          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">1.254</div>
+        </article>
 
-    </div>
-</section>
+        <article class="card-dashboard" tabindex="0" aria-label="Total de funcionários">
+          <i class="fas fa-user-tie card-icon" aria-hidden="true"></i>
+          <div class="card-info">Funcionários</div>
+          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">38</div>
+        </article>
 
+        <article class="card-dashboard" tabindex="0" aria-label="Veículos cadastrados">
+          <i class="fas fa-car card-icon" aria-hidden="true"></i>
+          <div class="card-info">Veículos</div>
+          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">1.872</div>
+        </article>
+
+        <article class="card-dashboard" tabindex="0" aria-label="Estadas registradas">
+          <i class="fas fa-stream card-icon" aria-hidden="true"></i>
+          <div class="card-info">Estadas</div>
+          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">4.320</div>
+        </article>
+      </div>
+    </section>
+
+    <section id="chart-container" aria-label="Gráfico de fluxo de veículos por hora">
+      <h2>Fluxo de Veículos por Hora</h2>
+      <canvas id="vehiclesFlowChart" role="img" aria-describedby="chart-desc"></canvas>
+      <p id="chart-desc" class="visually-hidden">Gráfico de barras mostrando o número de veículos que entraram no estacionamento por hora, das 6h às 23h.</p>
+    </section>
+
+    <section aria-label="Últimas 5 estadas registradas">
+      <h2 class="mb-3" style="color: var(--highlight); font-weight: 700;">Últimas 5 Estadas Registradas</h2>
+      <div class="table-responsive" tabindex="0">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Cliente</th>
+              <th scope="col">Veículo</th>
+              <th scope="col">Entrada</th>
+              <th scope="col">Saída</th>
+              <th scope="col">Duração</th>
+              <th scope="col">Pagamento</th>
+              <th scope="col" class="text-center" style="width: 110px;">Ações</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </section>
+</main>
+    {% block registros %}
+        {% include "registros.html" %}
+    {% endblock %}
 {% endblock %}
-<h1 class="display-1">EasyPark</h1>
-<h1 class="display-4">Gestão de estacionamento</h1>
-        <h1 class="font-weight-normal">Sistema para agendamento de horários de estacionamento</h1>
+
+
+
+
+
