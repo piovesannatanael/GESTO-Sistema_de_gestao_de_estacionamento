@@ -2,12 +2,12 @@
 {% load django_bootstrap5 %}
 
 {% block content %}
-<section id="dados" class="section">
-    <div class="container">
-        {# CORREÇÃO 1: Nome da URL de adicionar atualizado #}
-        <a href="{% url 'veiculo_adicionar' %}" class="btn btn-primary mb-3">Novo Veículo</a>
-
-        <div class="card card-body mb-4">
+<div id="dados" class="container">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3" >
+        <h3>Lista de Veículos</h3>
+        <a href="{% url 'veiculo_adicionar' %}" class="btn btn-primary">Adicionar Veículo</a>
+    </div>
+        <div class="card card-body mb-4" id="search">
             <form method="get" action="">
                 <div class="input-group">
                     <input class="form-control" type="text" name="buscar" value="{{ buscar }}" placeholder="Buscar por placa, nome do cliente ou empresa...">
@@ -20,8 +20,8 @@
             <div class="card-body">
                 <h3 class="text-center">Veículos Cadastrados</h3>
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-success">
+                    <table class="table table-striped table-dark">
+                        <thead>
                             <th>Placa</th>
                             <th>Proprietário(s)</th>
                             <th>Rodas</th>
@@ -37,22 +37,16 @@
                                         </a>
                                     </td>
                                     <td>
-                                        {# CORREÇÃO 2: Loop para listar todos os proprietários (ManyToManyField) #}
                                         {% for cliente in veiculo.clientes.all %}
                                             {{ cliente }}{% if not forloop.last %}, {% endif %}
                                         {% endfor %}
                                     </td>
-                                    <td>
-                                        {# CORREÇÃO 3: Usar get_..._display para mostrar o texto do 'choice' #}
-                                        {{ veiculo.get_qtd_rodas_display }}
-                                    </td>
+                                    <td>{{ veiculo.get_qtd_rodas_display }}</td>
                                     <td>{{ veiculo.get_plano_display }}</td>
-                                    <td style="text-align: center">
-                                        {# CORREÇÃO 4: Nomes das URLs de editar e apagar atualizados #}
-                                        <a href="{% url 'veiculo_editar' veiculo.pk %}"><i class="fas fa-edit text-warning"></i></a>
-                                        <a href="{% url 'veiculo_apagar' veiculo.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
+                                    <td>
+                                        <a href="{% url 'veiculo_editar' veiculo.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                                        <a href="{% url 'veiculo_apagar' veiculo.pk %}" class="btn btn-sm btn-danger">Apagar</a>
                                     </td>
-                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -69,9 +63,8 @@
             </div>
         {% endif %}
     </div>
-</section>
+</div>
 
-{# Loop para gerar todos os modais necessários #}
 {% for veiculo in veiculos %}
 <div class="modal fade" id="modal-veiculo-{{ veiculo.id }}" tabindex="-1">
     <div class="modal-dialog">
@@ -95,6 +88,7 @@
                             ({{ cliente.get_tipo_cliente_display }}) - Contato: {{ cliente.fone }}
                         </small>
                     </li>
+                    </tr>
                 {% empty %}
                     <li>Nenhum proprietário associado.</li>
                 {% endfor %}

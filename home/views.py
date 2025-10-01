@@ -1,6 +1,13 @@
 from django.views.generic import TemplateView
 
 from clientes.models import ClienteGeral
+from funcionarios.models import Funcionario
+from vagas.models import Vaga
+from veiculos.models import Veiculo
+
+
+class Estada:
+    pass
 
 
 class IndexView(TemplateView):
@@ -9,8 +16,8 @@ class IndexView(TemplateView):
     def get_context_data(self):
         context = super(IndexView, self).get_context_data()
         context['qtd_clientes'] = ClienteGeral.objects.count()
-        # context['qtd_funcionarios'] = Funcionario.objects.count()
-        # context['qtd_veiculos'] = Veiculo.objects.count()
-        # context['qtd_vagas'] = Vaga.objects.count()
+        context['qtd_funcionarios'] = Funcionario.objects.count()
+        context['qtd_veiculos'] = Veiculo.objects.count()
+        context['qtd_vagas'] = Vaga.objects.count()
         # context['qtd_estadas'] = Estada.objects.count()
         return context

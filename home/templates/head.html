@@ -10,15 +10,16 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
+</head>
+<style>
 
     :root {
-      --bg-primary: #1a202c; /* Grafite Escuro */
-      --bg-card: #2d3748; /* Cinza Escuro */
-      --text-primary: #e2e8f0; /* Cinza Claro */
-      --highlight: #38bdf8; /* Azul Elétrico */
+      --bg-primary: #1a202c;
+      --bg-card: #2d3748;
+      --text-primary: #e2e8f0;
+      --highlight: #38bdf8;
       --border-subtle: rgba(56, 223, 248, 0.25);
-      --table-row-alt: #374151; /* tom cinza para linhas alternadas */
+      --table-row-alt: #374151;
     }
 
     body {
@@ -30,11 +31,15 @@
       margin-left: 5%;
     }
 
+    #search{
+    background-color: var(--bg-primary);
+    border-color:var(--bg-primary);
+    }
     #dados {
     margin-top: 5%;
+    margin-bottom: 5%;
     }
 
-    /* Sidebar */
     #sidebar {
       background-color: var(--bg-primary);
       min-height: 100vh;
@@ -42,7 +47,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      padding-top: 1.5rem;
+      padding-top: 0.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -57,10 +62,11 @@
     #sidebar:hover{
     width: 15%;
     transition: all 0.3s;
+
     }
     #sidebar:hover p{
     transition: all 2s;
-    visibility: visible
+    visibility: visible;
     }
 
     #sidebar .logo {
@@ -83,18 +89,26 @@
       width: 100%;
     }
 
+    #link-modal{
+    color: white;
+    }
+
+    #link-modal:hover{
+    color: #38bdf8;
+    }
+
     #sidebar ul.nav li {
       width: 100%;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
       text-align: center;
     }
 
     #sidebar ul.nav li a {
       color: var(--text-primary);
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       display: block;
       width: 100%;
-      padding: 0.5rem 0;
+      padding: 0.2rem 0;
       transition: color 0.3s;
       position: relative;
     }
@@ -104,17 +118,17 @@
       color: var(--highlight);
     }
 
-    #sidebar ul.nav li a.active::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 4px;
-      height: 24px;
-      background-color: var(--highlight);
-      border-radius: 2px;
-    }
+<!--    #sidebar ul.nav li a.active::after {-->
+<!--      content: "";-->
+<!--      position: absolute;-->
+<!--      left: 0;-->
+<!--      top: 50%;-->
+<!--      transform: translateY(-50%);-->
+<!--      width: 4px;-->
+<!--      height: 24px;-->
+<!--      background-color: var(&#45;&#45;highlight);-->
+<!--      border-radius: 2px;-->
+<!--    }-->
 
 
     #main-content {
@@ -168,7 +182,6 @@
       margin-bottom: 2.5rem;
     }
 
-    /* Card base */
     .card-dashboard {
       background-color: var(--bg-card);
       border: 1px solid var(--border-subtle);
@@ -187,7 +200,7 @@
       box-shadow: 0 0 20px var(--highlight);
     }
 
-    /* Card destaque vagas */
+
     .card-vagas {
       grid-column: span 2;
       font-weight: 700;
@@ -207,7 +220,7 @@
       opacity: 0.75;
     }
 
-    /* Cards menores info */
+
     .card-info {
       font-weight: 600;
       font-size: 1.25rem;
@@ -215,7 +228,6 @@
       color: var(--text-primary);
     }
 
-    /* Ícones nos cards */
     .card-icon {
       font-size: 2.5rem;
       color: var(--highlight);
@@ -223,7 +235,6 @@
       align-self: center;
     }
 
-    /* Gráfico container */
     #chart-container {
       background-color: var(--bg-card);
       border: 1px solid var(--border-subtle);
@@ -242,7 +253,6 @@
       user-select: none;
     }
 
-    /* Tabela estilizada */
     .table-responsive {
       border-radius: 0.75rem;
       overflow: hidden;
@@ -292,7 +302,7 @@
       vertical-align: middle;
     }
 
-    /* Ações da tabela */
+
     .table-actions {
       display: flex;
       gap: 1rem;
@@ -309,20 +319,20 @@
     }
 
     .table-actions button:hover {
-      color: #0ea5e9; /* tom mais claro do azul elétrico */
+      color: #0ea5e9;
     }
 
-    /* Scrollbar customizada para sidebar */
-    #sidebar::-webkit-scrollbar {
-      width: 6px;
-    }
+<!--    #sidebar::-webkit-scrollbar {-->
+<!--      width: 60px;-->
+<!--    }-->
 
     #sidebar::-webkit-scrollbar-thumb {
       background-color: rgba(56, 223, 248, 0.3);
       border-radius: 3px;
     }
 
-    /* Responsividade */
+
+
     @media (max-width: 991.98px) {
       #sidebar {
         width: 56px;
@@ -339,56 +349,16 @@
       }
     }
     .site-footer {
-  background-color: var(--bg-primary); /* Usa a cor de fundo dos cards para se destacar do fundo principal */
+  background-color: var(--bg-primary);
   color: var(--highlight);
-  text-align: center; /* Centraliza o texto, comum em rodapés */
-  padding: 1.5rem 0; /* Adiciona um bom espaçamento interno vertical */
-  margin-top: 3rem; /* Garante um espaço antes do rodapé */
-  border-top: 1px solid var(--border-subtle); /* Adiciona uma linha sutil de separação */
+  text-align: center;
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .site-footer p {
   margin: 0;
 }
-  </style>
-</head>
+</style>
 
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>EasyPark - Gestão de Estacionamento</title>-->
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">-->
-
-<!--    <style>-->
-<!--        body {-->
-<!--            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);-->
-<!--            color: #fff;-->
-<!--            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
-<!--        }-->
-<!--        .navbar {-->
-<!--            background-color: #111;-->
-<!--        }-->
-<!--        .hero {-->
-<!--            text-align: center;-->
-<!--            padding: 80px 20px;-->
-<!--        }-->
-<!--        .hero h1 {-->
-<!--            font-size: 3rem;-->
-<!--            font-weight: bold;-->
-<!--        }-->
-<!--        .card {-->
-<!--            background-color: white;-->
-<!--            border: none;-->
-<!--            border-radius: 15px;-->
-<!--            transition: 0.3s;-->
-<!--        }-->
-
-<!--        footer {-->
-<!--            background-color: #111;-->
-<!--            padding: 15px;-->
-<!--            text-align: center;-->
-<!--            margin-top: 50px;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->

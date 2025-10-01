@@ -9,35 +9,36 @@
 </head>
 <body>
   <nav id="sidebar" aria-label="Menu principal">
-    <div class="logo" aria-label="Logo Garagem Noturna">EasyPark</div>
+    <div class="logo" aria-label="Logo GESTO">
+        <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">GESTO</a></div>
     <ul class="nav flex-column" role="menu" aria-label="Navegação principal">
       <li class="nav-item" role="none">
-        <a href="{% url 'index' %}" class="nav-link active" role="menuitem" aria-current="page" title="Dashboard">
-          <i class="fas fa-tachometer-alt" aria-hidden="true"> </i>
-          <p>Inicio</p>
+        <a href="{% url 'vagas' %}" class="nav-link {% if request.resolver_match.url_name == 'vagas' %}active{% endif %}">
+            <i class="fa-solid fa-warehouse" aria-hidden="true"></i><p>Estadias</p>
         </a>
       </li>
-      <li class="nav-item" role="none">
-        <a href="{% url 'cliente_list' %}" class="nav-link" role="menuitem" title="Clientes">
-          <i class="fas fa-users" aria-hidden="true"> </i><p>Clientes</p>
 
+    <li class="nav-item" role="none">
+        <a href="{% url 'clientes' %}" class="nav-link {% if request.resolver_match.url_name == 'clientes' %}active{% endif %}">
+            <i class="fas fa-users"></i><p>Clientes</p>
         </a>
-      </li>
+    </li>
       <li class="nav-item" role="none">
-        <a href="{% url 'funcionarios' %}" class="nav-link" role="menuitem" title="Funcionários">
+        <a href="{% url 'funcionarios' %}" class="nav-link {% if request.resolver_match.url_name == 'funcionarios' %}active{% endif %}">
           <i class="fas fa-user-tie" aria-hidden="true"></i><p>Funcionarios</p>
         </a>
       </li>
       <li class="nav-item" role="none">
-        <a href="{% url 'veiculos' %}" class="nav-link" role="menuitem" title="Veículos">
+        <a href="{% url 'veiculos' %}" class="nav-link {% if request.resolver_match.url_name == 'veiculos' %}active{% endif %}">
           <i class="fas fa-car" aria-hidden="true"></i><p>Veiculos</p>
         </a>
       </li>
       <li class="nav-item" role="none">
-        <a href="{% url 'vagas' %}" class="nav-link" role="menuitem" title="Estadas">
+        <a href="{% url 'vagas' %}" class="nav-link {% if request.resolver_match.url_name == 'vagas' %}active{% endif %}">
           <i class="fas fa-stream" aria-hidden="true"></i><p>Vagas</p>
         </a>
       </li>
+
     </ul>
   </nav>
 
@@ -53,5 +54,6 @@
 		{% block footer %}
 			{% include "footer.html" %}
 		{% endblock %}
+
 </body>
 </html>

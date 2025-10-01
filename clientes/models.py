@@ -46,11 +46,8 @@ class ClienteGeral(Pessoa):
         ('PJ', 'Pessoa Jurídica'),
     )
     tipo_cliente = models.CharField('Tipo de Cliente', max_length=2, choices=TIPO_CLIENTE_CHOICES)
-
-    # campos opcionais que serão usados dependendo do tipo
     cpf = models.CharField('CPF', max_length=14, unique=True, null=True, blank=True)
     data_nascimento = models.DateField('Data de Nascimento', null=True, blank=True)
-
     empresa = models.CharField('Nome da Empresa', max_length=100, null=True, blank=True)
     cnpj = models.CharField('CNPJ', max_length=18, unique=True, null=True, blank=True)
 
@@ -76,25 +73,4 @@ class ClienteGeral(Pessoa):
                 raise ValidationError('Nome da Empresa é obrigatório para Pessoa Jurídica.')
             self.cpf = None
             self.data_nascimento = None
-
-# class ClientePF(PessoaFisica):
-#
-#     class Meta:
-#         verbose_name = 'Cliente PF'
-#         verbose_name_plural = 'Clientes PF'
-#         ordering = [Upper('nome')]
-#
-#     def __str__(self):
-#         return self.nome
-#
-# class ClientePJ(PessoaJuridica):
-#
-#     class Meta:
-#         verbose_name = 'Cliente PJ'
-#         verbose_name_plural = 'Clientes PJ'
-#         ordering = [Upper('nome')]
-#
-#     def __str__(self):
-#         return self.nome
-
 
