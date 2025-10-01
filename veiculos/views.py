@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.forms import models
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -11,15 +12,16 @@ class VeiculosView(ListView):
     paginate_by = 1
 
     def get_queryset(self):
-        qs = super().get_queryset().prefetch_related('clientes')
-        buscar = self.request.GET.get('buscar')
-        if buscar:
-            qs = qs.filter(
-                models.Q(placa__icontains=buscar) |
-                models.Q(clientes__nome__icontains=buscar) |
-                models.Q(clientes__empresa__icontains=buscar)
-            ).distinct()
-        return qs
+            qs = super().get_queryset().prefetch_related('clientes')
+
+            buscar = self.request.GET.get('buscar')
+            if buscar:
+                qs = qs.filter(
+                    Q(placa__icontains=buscar) |
+                    Q(clientes__nome__icontains=buscar) |
+                    Q(clientes__empresa__icontains=buscar)
+                ).distinct()
+            return qs
 
 class VeiculoAddView(CreateView):
     model = Veiculo
