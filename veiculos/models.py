@@ -4,31 +4,51 @@ from django.db.models import CheckConstraint, Q
 from django.db.models.functions import Upper
 from django.db import models
 
-from clientes.models import Pessoa, ClientePF, ClientePJ
+
+from django.db import models
+from django.db.models.functions import Upper
+from clientes.models import ClienteGeral  # Importe o modelo unificado
 
 
 class Veiculo(models.Model):
-    placa = models.CharField('Placa', max_length=8, help_text='Placa do veiculo', unique=True)
-    marca = models.CharField('Marca', max_length=15, help_text='Marca do veiculo')
-    modelo = models.CharField('Modelo', max_length=15, help_text='Modelo do veiculo')
-    cor = models.CharField('Cor', max_length=15, help_text='Cor do veiculo')
-    qtd_rodas = models.DecimalField('Quantidade de rodas', max_digits=2, decimal_places=0, help_text='Quantidade de rodas do veículo')
+    RODAS_CHOICES = (
+        (2, '2 rodas'),
+        (3, '3 rodas'),
+        (4, '4 rodas ou mais'),
+    )
+    PLANOS_CHOICES = (
+        ('diaria', 'Diária'),
+        ('horario_avulso', 'Horário Avulso'),
+        ('mensal', 'Mensal'),
+    )
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
-    object_id = models.PositiveIntegerField()
-    cliente = GenericForeignKey('content_type', 'object_id')
-
+    placa = models.CharField('Placa', max_length=8, unique=True)
+    marca = models.CharField('Marca', max_length=50)
+    modelo = models.CharField('Modelo', max_length=50)
+    cor = models.CharField('Cor', max_length=30)
+    qtd_rodas = models.IntegerField('Quantidade de Rodas', choices=RODAS_CHOICES)
+    plano = models.CharField('Plano', max_length=20, choices=PLANOS_CHOICES)
+    clientes = models.ManyToManyField(ClienteGeral,verbose_name='Proprietário(s)',related_name='veiculos')
 
     class Meta:
-        ordering = ['placa']
+        verbose_name = 'Veículo'
+        verbose_name_plural = 'Veículos'
+        ordering = [Upper('placa')]
 
     def __str__(self):
-        @property
-        def cliente_nome(self):
-            c = self.cliente
-            if not c:
-                return ''
-            return getattr(c, 'nome', None) or getattr(c, 'empresa', None) or str(c)
+        return f'{self.placa} ({self.clientes})'
+
+
+    # class Meta:
+    #     ordering = ['placa']
+    #
+    # def __str__(self):
+    #     @property
+    #     def cliente_nome(self):
+    #         c = self.cliente
+    #         if not c:
+    #             return ''
+    #         return getattr(c, 'nome', None) or getattr(c, 'empresa', None) or str(c)
 
 
 

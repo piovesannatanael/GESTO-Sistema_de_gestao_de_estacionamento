@@ -1,0 +1,53 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <h3 class="mt-4 mb-4">{{ titulo }}</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{% url 'cliente_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<script>
+    // Pega os elementos do formulário
+    const tipoClienteSelect = document.getElementById('id_tipo_cliente');
+    
+    // Pega os campos de PF e PJ (o Bootstrap envolve os campos em divs)
+    const cpfField = document.getElementById('id_cpf').closest('div');
+    const dataNascimentoField = document.getElementById('id_data_nascimento').closest('div');
+    const empresaField = document.getElementById('id_empresa').closest('div');
+    const cnpjField = document.getElementById('id_cnpj').closest('div');
+
+    function toggleFields() {
+        const tipo = tipoClienteSelect.value;
+        if (tipo === 'PF') {
+            cpfField.style.display = '';
+            dataNascimentoField.style.display = '';
+            empresaField.style.display = 'none';
+            cnpjField.style.display = 'none';
+        } else if (tipo === 'PJ') {
+            cpfField.style.display = 'none';
+            dataNascimentoField.style.display = 'none';
+            empresaField.style.display = '';
+            cnpjField.style.display = '';
+        } else {
+            // Esconde tudo se nada for selecionado
+            cpfField.style.display = 'none';
+            dataNascimentoField.style.display = 'none';
+            empresaField.style.display = 'none';
+            cnpjField.style.display = 'none';
+        }
+    }
+
+    // Adiciona o 'escutador' de eventos para quando o select mudar
+    tipoClienteSelect.addEventListener('change', toggleFields);
+
+    // Chama a função uma vez no carregamento da página para ajustar o estado inicial
+    document.addEventListener('DOMContentLoaded', toggleFields);
+</script>
+{% endblock %}

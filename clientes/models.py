@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.functions import Upper
 from stdimage import StdImageField
@@ -39,42 +40,61 @@ class PessoaJuridica(Pessoa):
         return self.empresa
 
 
-class ClientePF(PessoaFisica):
-    PLANOS_OPCOES = (
-        ('diaria', 'Diária'),
-        ('horario_avulso', 'Horário Avulso'),
-        ('mensal', 'Mensal'),
+class ClienteGeral(Pessoa):
+    TIPO_CLIENTE_CHOICES = (
+        ('PF', 'Pessoa Física'),
+        ('PJ', 'Pessoa Jurídica'),
     )
-    plano = models.CharField('Plano', max_length=20, choices=PLANOS_OPCOES)
+    tipo_cliente = models.CharField('Tipo de Cliente', max_length=2, choices=TIPO_CLIENTE_CHOICES)
+
+    # campos opcionais que serão usados dependendo do tipo
+    cpf = models.CharField('CPF', max_length=14, unique=True, null=True, blank=True)
+    data_nascimento = models.DateField('Data de Nascimento', null=True, blank=True)
+
+    empresa = models.CharField('Nome da Empresa', max_length=100, null=True, blank=True)
+    cnpj = models.CharField('CNPJ', max_length=18, unique=True, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Cliente PF'
-        verbose_name_plural = 'Clientes PF'
-        ordering = [Upper('nome')]
+        verbose_name = 'Cliente'
+        verbose_name_plural = 'Clientes'
+        ordering = [Upper('nome'), Upper('empresa')]
 
     def __str__(self):
-        return self.nome
+        return self.empresa if self.tipo_cliente == 'PJ' and self.empresa else self.nome
 
-class ClientePJ(PessoaJuridica):
-    PLANOS_OPCOES = (
-        ('diaria', 'Diária'),
-        ('horario_avulso', 'Horário Avulso'),
-        ('mensal', 'Mensal'),
-    )
-    plano = models.CharField('Plano', max_length=20, choices=PLANOS_OPCOES)
+    def clean(self):
+        super().clean()
+        if self.tipo_cliente == 'PF':
+            if not self.cpf:
+                raise ValidationError('CPF é obrigatório para Pessoa Física.')
+            self.cnpj = None
+            self.empresa = None
+        elif self.tipo_cliente == 'PJ':
+            if not self.cnpj:
+                raise ValidationError('CNPJ é obrigatório para Pessoa Jurídica.')
+            if not self.empresa:
+                raise ValidationError('Nome da Empresa é obrigatório para Pessoa Jurídica.')
+            self.cpf = None
+            self.data_nascimento = None
 
-
-    class Meta:
-        verbose_name = 'Cliente PJ'
-        verbose_name_plural = 'Clientes PJ'
-        ordering = [Upper('nome')]
-
-    def __str__(self):
-        return self.nome
-
-
-
-
-
+# class ClientePF(PessoaFisica):
+#
+#     class Meta:
+#         verbose_name = 'Cliente PF'
+#         verbose_name_plural = 'Clientes PF'
+#         ordering = [Upper('nome')]
+#
+#     def __str__(self):
+#         return self.nome
+#
+# class ClientePJ(PessoaJuridica):
+#
+#     class Meta:
+#         verbose_name = 'Cliente PJ'
+#         verbose_name_plural = 'Clientes PJ'
+#         ordering = [Upper('nome')]
+#
+#     def __str__(self):
+#         return self.nome
 
 

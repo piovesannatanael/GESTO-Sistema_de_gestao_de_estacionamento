@@ -4,78 +4,62 @@
 {% block content %}
 <section id="dados" class="section">
     <div class="container">
-            <a href="{% url 'veiculo_adicionar' %}" class="btn btn-primary mb-3">novo veiculo</a>
+        {# CORREÇÃO 1: Nome da URL de adicionar atualizado #}
+        <a href="{% url 'veiculo_adicionar' %}" class="btn btn-primary mb-3">Novo Veículo</a>
+
         <div class="card card-body mb-4">
             <form method="get" action="">
                 <div class="input-group">
-                    <input class="form-control" type="text" name="buscar" value="{{ buscar }}" placeholder="Digite a placa do veículo...">
+                    <input class="form-control" type="text" name="buscar" value="{{ buscar }}" placeholder="Buscar por placa, nome do cliente ou empresa...">
                     <button type="submit" class="btn btn-primary">🔍 Buscar</button>
                 </div>
             </form>
         </div>
 
-        {% if object_list %}
+        {% if veiculos %}
             <div class="card-body">
                 <h3 class="text-center">Veículos Cadastrados</h3>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-success">
                             <th>Placa</th>
-                            <th>Cliente</th>
-                            <th>Quantidade de Rodas</th>
+                            <th>Proprietário(s)</th>
+                            <th>Rodas</th>
+                            <th>Plano</th>
                             <th style="width: 100px; text-align: center">Ações</th>
                         </thead>
                         <tbody>
-                            {% for veiculo in object_list %}
+                            {% for veiculo in veiculos %}
                                 <tr>
                                     <td>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#modal-veiculo-{{ veiculo.id }}">
                                             {{ veiculo.placa }}
                                         </a>
                                     </td>
-                                    <td>{{ veiculo.cliente.nome }}</td>
-                                    <td>{{ veiculo.qtd_rodas }}</td>
+                                    <td>
+                                        {# CORREÇÃO 2: Loop para listar todos os proprietários (ManyToManyField) #}
+                                        {% for cliente in veiculo.clientes.all %}
+                                            {{ cliente }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        {# CORREÇÃO 3: Usar get_..._display para mostrar o texto do 'choice' #}
+                                        {{ veiculo.get_qtd_rodas_display }}
+                                    </td>
+                                    <td>{{ veiculo.get_plano_display }}</td>
                                     <td style="text-align: center">
-                                        <a href="{% url 'veiculo_editar' veiculo.pk %}"><i class="fas fa-edit"></i></a>
-                                        <a href="{% url 'veiculo_apagar' veiculo.pk %}"><i class="far fa-trash-alt"></i></a>
+                                        {# CORREÇÃO 4: Nomes das URLs de editar e apagar atualizados #}
+                                        <a href="{% url 'veiculo_editar' veiculo.pk %}"><i class="fas fa-edit text-warning"></i></a>
+                                        <a href="{% url 'veiculo_apagar' veiculo.pk %}"><i class="far fa-trash-alt text-danger"></i></a>
                                     </td>
                                 </tr>
-
-                                <div class="modal fade" id="modal-veiculo-{{ veiculo.id }}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Veículo: {{ veiculo.placa }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <h6><strong>Dono:</strong> {{ veiculo.cliente_choice.nome }}</h6>
-
-                                                {% if veiculo.cliente.cpf %}
-                                                    <p><strong>CPF:</strong> {{ veiculo.cliente.cpf }}</p>
-                                                {% elif veiculo.cliente.cnpj %}
-                                                    <p><strong>Empresa:</strong> {{ veiculo.cliente.empresa }}</p>
-                                                    <p><strong>CNPJ:</strong> {{ veiculo.cliente.cnpj }}</p>
-                                                {% endif %}
-
-                                                <p><strong>Marca/Modelo:</strong> {{ veiculo.marca }} / {{ veiculo.modelo }}</p>
-                                                <p><strong>Cor:</strong> {{ veiculo.cor }}</p>
-                                                <hr>
-                                                <p><strong>Contato do Dono:</strong> {{ veiculo.cliente.fone }}</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    Fechar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             {% endfor %}
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-center">
-                        {% bootstrap_pagination object_list url=request.get_full_path %}
+                        {% if is_paginated %}
+                            {% bootstrap_pagination page_obj url=request.get_full_path %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -86,4 +70,44 @@
         {% endif %}
     </div>
 </section>
+
+{# Loop para gerar todos os modais necessários #}
+{% for veiculo in veiculos %}
+<div class="modal fade" id="modal-veiculo-{{ veiculo.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Veículo: {{ veiculo.placa }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Marca/Modelo:</strong> {{ veiculo.marca }} / {{ veiculo.modelo }}</p>
+                <p><strong>Cor:</strong> {{ veiculo.cor }}</p>
+                <p><strong>Plano Contratado:</strong> {{ veiculo.get_plano_display }}</p>
+                <hr>
+                <h6><strong>Proprietário(s):</strong></h6>
+
+                <ul>
+                {% for cliente in veiculo.clientes.all %}
+                    <li>
+                        <strong>{{ cliente }}:</strong>
+                        <small class="text-muted">
+                            ({{ cliente.get_tipo_cliente_display }}) - Contato: {{ cliente.fone }}
+                        </small>
+                    </li>
+                {% empty %}
+                    <li>Nenhum proprietário associado.</li>
+                {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}
