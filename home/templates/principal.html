@@ -12,8 +12,9 @@
     <div class="logo" aria-label="Logo GESTO">
         <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">GESTO</a></div>
     <ul class="nav flex-column" role="menu" aria-label="Navegação principal">
+
       <li class="nav-item" role="none">
-        <a href="{% url 'vagas' %}" class="nav-link {% if request.resolver_match.url_name == 'vagas' %}active{% endif %}">
+        <a href="{% url 'estadias' %}" class="nav-link {% if request.resolver_match.url_name == 'estadias' %}active{% endif %}">
             <i class="fa-solid fa-warehouse" aria-hidden="true"></i><p>Estadias</p>
         </a>
       </li>

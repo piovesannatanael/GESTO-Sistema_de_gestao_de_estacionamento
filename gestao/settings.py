@@ -47,7 +47,7 @@ INSTALLED_APPS += ['home',
                    'clientes',
                    'funcionarios',
                    'veiculos',
-                   # 'estadias',
+                   'estadias',
                    'vagas',
                    ]
 

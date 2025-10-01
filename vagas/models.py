@@ -6,13 +6,13 @@ from django.db.models.functions import Upper
 
 class Vaga(models.Model):
     STATUS = (
-        ('L', 'Livre'),
-        ('O', 'Ocupada'),
-        ('M', 'Em Manutenção'),
+        ('livre', 'Livre'),
+        ('ocupada', 'Ocupada'),
+        ('manutencao', 'Em Manutenção'),
     )
 
     codigo = models.CharField('Código da Vaga', max_length=10, unique=True, help_text='Ex: A01, B12, etc.')
-    status = models.CharField('Status', max_length=1, choices=STATUS, default='L')
+    status = models.CharField('Status', max_length=10, choices=STATUS, default='L')
 
     class Meta:
         verbose_name = 'Vaga'

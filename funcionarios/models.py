@@ -15,5 +15,5 @@ class Funcionario(PessoaFisica):
         ordering = [Upper('nome')]
 
 
-def __str__(self):
-    return super().nome
+    def __str__(self):
+        return self.nome

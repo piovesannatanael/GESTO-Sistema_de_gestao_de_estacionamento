@@ -26,6 +26,6 @@ urlpatterns = [
     path('', include('funcionarios.urls')),
     path('', include('veiculos.urls')),
     path('', include('vagas.urls')),
-    # path('', include('estadias.urls')),
+    path('', include('estadias.urls')),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

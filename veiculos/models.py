@@ -1,13 +1,6 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
-from django.db.models import CheckConstraint, Q
-from django.db.models.functions import Upper
-from django.db import models
-
-
 from django.db import models
 from django.db.models.functions import Upper
-from clientes.models import ClienteGeral  # Importe o modelo unificado
+from clientes.models import ClienteGeral
 
 
 class Veiculo(models.Model):
@@ -36,65 +29,5 @@ class Veiculo(models.Model):
         ordering = [Upper('placa')]
 
     def __str__(self):
-        return f'{self.placa} ({self.clientes})'
-
-
-    # class Meta:
-    #     ordering = ['placa']
-    #
-    # def __str__(self):
-    #     @property
-    #     def cliente_nome(self):
-    #         c = self.cliente
-    #         if not c:
-    #             return ''
-    #         return getattr(c, 'nome', None) or getattr(c, 'empresa', None) or str(c)
-
-
-
-
-
-
-    # cliente_pf = models.ForeignKey(
-    #     ClientePF,
-    #     verbose_name='Cliente PF',
-    #     related_name="veiculos",
-    #     on_delete=models.CASCADE,
-    #     null=True, blank=True  # Permite que este campo seja nulo
-    # )
-    # cliente_pj = models.ForeignKey(
-    #     ClientePJ,
-    #     verbose_name='Cliente PJ',
-    #     related_name="veiculos",
-    #     on_delete=models.CASCADE,
-    #     null=True, blank=True  # Permite que este campo seja nulo
-    # )
-    #
-    # class Meta:
-    #     verbose_name = 'Veiculo'
-    #     verbose_name_plural = 'Veiculos'
-    #     ordering = [Upper('placa')]
-    #
-    # constraints = [
-    #     # Garante que ou cliente_pf ou cliente_pj seja preenchido, mas não ambos.
-    #     CheckConstraint(
-    #         check=(
-    #                 Q(cliente_pf__isnull=False, cliente_pj__isnull=True) |
-    #                 Q(cliente_pf__isnull=True, cliente_pj__isnull=False)
-    #         ),
-    #         name='apenas_um_tipo_de_cliente'
-    #     )
-    # ]
-    #
-    # @property
-    # def cliente(self):
-    #     return self.cliente_pf or self.cliente_pj
-    #
-    # def __str__(self):
-    #     return self.placa
-
-    # def __str__(self):
-    #     return self.placa
-
-
+        return f'{self.placa} ({self.modelo})'
 
