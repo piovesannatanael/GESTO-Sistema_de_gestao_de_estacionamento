@@ -74,11 +74,7 @@ class EstadiaSaidaUpdateView(UpdateView):
         return context
 
     def get_success_url(self):
-        """
-        CORREÇÃO: Após salvar a data de saída, redireciona para a tela de pagamento
-        passando o ID da estada que acabamos de atualizar.
-        """
-        # Assumindo que a URL de pagamento se chama 'pagamento_processar' e recebe 'estada_pk'
+
         return reverse('pagamentos', kwargs={'estada_pk': self.object.pk})
 
 # class EstadiaDetailView(DetailView):
