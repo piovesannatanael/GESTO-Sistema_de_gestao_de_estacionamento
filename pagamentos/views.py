@@ -3,41 +3,53 @@ from django.views import View
 from estadias.models import Estadia
 from .models import Pagamento
 from .forms import PagamentoForm
-from datetime import timedelta
 
 
 class ProcessarPagamentoView(View):
-    # CORREÇÃO: O caminho do template foi padronizado
     template_name = 'pagamentos.html'
 
-    def get(self, request, estada_pk):
+    def _get_context(self, request, estada_pk, form=None):
+        """Função auxiliar para evitar repetição de código."""
         estada = get_object_or_404(Estadia, pk=estada_pk)
         pagamento, created = Pagamento.objects.get_or_create(estada=estada)
 
         if not estada.data_saida:
-            return redirect('estada_list')
+            return None  # Sinaliza que devemos redirecionar
 
+        # --- LÓGICA DE CÁLCULO DA DURAÇÃO ---
         duracao = estada.data_saida - estada.data_chegada
+        total_seconds = int(duracao.total_seconds())
 
-        # O formulário é preenchido com os dados do pagamento
-        form = PagamentoForm(instance=pagamento)
+        duracao_dias = total_seconds // 86400
+        duracao_horas = (total_seconds % 86400) // 3600
+        duracao_minutos = (total_seconds % 3600) // 60
+
+        if not form:
+            form = PagamentoForm(instance=pagamento)
 
         context = {
             'form': form,
             'pagamento': pagamento,
             'estada': estada,
-            'duracao': duracao,
+            'duracao_dias': duracao_dias,
+            'duracao_horas': duracao_horas,
+            'duracao_minutos': duracao_minutos,
         }
+        return context
+
+    def get(self, request, estada_pk):
+        context = self._get_context(request, estada_pk)
+        if context is None:
+            return redirect('estadias')
         return render(request, self.template_name, context)
 
     def post(self, request, estada_pk):
-        estada = get_object_or_404(Estadia, pk=estada_pk)
-        pagamento = get_object_or_404(Pagamento, estada=estada)
-        form = PagamentoForm(request.POST, instance=pagamento)
-
+        form = PagamentoForm(request.POST)
         if form.is_valid():
-            pagamento = form.save(commit=False)
+            estada = get_object_or_404(Estadia, pk=estada_pk)
+            pagamento = get_object_or_404(Pagamento, estada=estada)
 
+            pagamento.metodo = form.cleaned_data['metodo']
             desconto = form.cleaned_data.get('desconto', 0)
             adicional = form.cleaned_data.get('valor_adicional', 0)
             valor_base = pagamento.calcular_valor()
@@ -45,23 +57,17 @@ class ProcessarPagamentoView(View):
 
             pagamento.save()
 
-            metodo = form.cleaned_data.get('metodo')
+            metodo = pagamento.metodo
             if metodo == 'pix':
                 return redirect('pagamento_pix', pagamento_pk=pagamento.pk)
             elif metodo in ['cartao_credito', 'cartao_debito']:
                 return redirect('pagamento_cartao', pagamento_pk=pagamento.pk)
-            else:  # Dinheiro ou outros
+            else:
                 pagamento.status = 'pago'
                 pagamento.save()
                 return redirect('pagamento_concluido', pagamento_pk=pagamento.pk)
 
-        duracao = estada.data_saida - estada.data_chegada
-        context = {
-            'form': form,
-            'pagamento': pagamento,
-            'estada': estada,
-            'duracao': duracao,
-        }
+        context = self._get_context(request, estada_pk, form=form)
         return render(request, self.template_name, context)
 
 
@@ -95,6 +101,4 @@ class PagamentoConcluidoView(View):
 
         context = {'pagamento': pagamento}
         return render(request, self.template_name, context)
-
-
 

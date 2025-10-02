@@ -3,10 +3,7 @@ from .models import Pagamento
 
 
 class PagamentoForm(forms.ModelForm):
-    """
-    Formulário para processar o pagamento, ligado diretamente ao modelo Pagamento.
-    """
-    # Adicionamos campos que não estão no modelo, mas que precisamos no formulário.
+
     desconto = forms.DecimalField(
         label='Desconto (R$)',
         required=False,
