@@ -7,24 +7,26 @@
             <div class="row">
                 <h1 class="text-center">EXCLUIR AUTOMÓVEL?</h1>
                 <h3 class="text-center">Dados do veículo</h3>
-
-                <p class="p-2 mt-2"><strong>Placa: </strong>{{ object.placa }}</p>
+                {% if object.foto.url is not empty %}
+                    <div class="col-2">
+                        <img src="{{ object.foto.url }}" class="img-thumbnail" width="500" height="500" alt="/">
+                    </div>
+                {% endif %}
+                <p class="p-2 mt-2"><strong>Placa: </strong>{{ object.placa }} </p>
                 <p class="p-2 mt-2"><strong>Marca/Modelo: </strong>{{ object.marca }} / {{ object.modelo }}</p>
                 <p class="p-2 mt-2"><strong>Cor: </strong>{{ object.cor }}</p>
-<p><strong>Proprietário(s): </strong>
+<p><strong>Cliente(s): </strong>
     {% for cliente in object.clientes.all %}
         {{ cliente }}{% if not forloop.last %}, {% endif %}
     {% empty %}
         Nenhum proprietário associado.
     {% endfor %}
 </p>
+
+
                 <p class="p-2 mt-2">Confirma a exclusão do veículo de placa <strong>{{ object.placa }}</strong>?</p>
 
-                {% if object.foto.url is not empty %}
-                    <div class="col-2">
-                        <img src="{{ object.foto.url }}" class="img-thumbnail" width="100" height="100" alt="/">
-                    </div>
-                {% endif %}
+
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% bootstrap_form form %}

@@ -1,5 +1,7 @@
 from django.db import models
 from django.db.models.functions import Upper
+from stdimage import StdImageField
+
 from clientes.models import ClienteGeral
 
 
@@ -22,6 +24,7 @@ class Veiculo(models.Model):
     qtd_rodas = models.IntegerField('Quantidade de Rodas', choices=RODAS_CHOICES)
     plano = models.CharField('Plano', max_length=20, choices=PLANOS_CHOICES)
     clientes = models.ManyToManyField(ClienteGeral,verbose_name='Proprietário(s)',related_name='veiculos')
+    foto = StdImageField('Foto', upload_to='pessoas', delete_orphans=True, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Veículo'

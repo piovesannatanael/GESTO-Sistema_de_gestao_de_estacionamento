@@ -1,7 +1,6 @@
 {% extends 'principal.html' %}
 {% load django_bootstrap5 %}
 {% load static %}
-
 {% block content %}
 <div id="dados" class="container">
     <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
@@ -17,68 +16,54 @@
             </div>
         </form>
     </div>
+
     {% if object_list %}
-        <div class="card-body">
-            <h3 class="text-center">Veículos no Pátio</h3>
-            <div class="table-responsive">
-                <table class="table table-striped table-dark">
-                    <thead>
-                        <tr>
-                            <th>Veículo (Placa)</th>
-                            <th>Cliente</th>
-                            <th>Vaga</th>
-                            <th>Data de Chegada</th>
-                            <th class="text-center">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for estada in object_list %}
-                            <tr>
-                                <td>
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modal-estada-{{ estada.id }}">
-                                        {{ estada.veiculo.placa }}
-                                    </a>
-                                </td>
-                                <td>{{ estada.cliente }}</td>
-                                <td>{{ estada.vaga }}</td>
-                                <td>{{ estada.data_chegada|date:"d/m/Y H:i" }}</td>
-                                <td class="text-center">
-                                    <a href="{% url 'estadia_saida' estada.pk %}" class="btn btn-sm btn-danger">Registrar Saída</a>
-                                    <a href="{% url 'estadia_detail' estada.pk %}" class="btn btn-sm btn-info">Detalhes</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <div class="d-flex justify-content-center mt-4">
-                    {% if is_paginated %}
-                        <div class="pagination">
-                            <span class="step-links">
-                                {% if page_obj.has_previous %}
-                                    <a href="?page=1">&laquo; primeira</a>
-                                    <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
-                                {% endif %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for estada in object_list %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        {% if estada.veiculo.foto %}
+                            <img src="{{ estada.veiculo.foto.url }}" class="card-img-top" alt="Foto do veículo {{ estada.veiculo.placa }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            {# 3. O ícone de placeholder foi trocado para um carro #}
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-car fa-4x text-light"></i>
+                            </div>
+                        {% endif %}
 
-                                <span class="current">
-                                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-                                </span>
-
-                                {% if page_obj.has_next %}
-                                    <a href="?page={{ page_obj.next_page_number }}">próxima</a>
-                                    <a href="?page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
-                                {% endif %}
-                            </span>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ estada.veiculo.placa }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ estada.veiculo.marca }} {{ estada.veiculo.modelo }}</h6>
                         </div>
-                    {% endif %}
+
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Cliente:</strong> {{ estada.cliente }}</li>
+                            <li class="list-group-item"><strong>Vaga:</strong> {{ estada.vaga }}</li>
+                            <li class="list-group-item"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</li>
+                        </ul>
+
+                        <div class="card-footer d-flex justify-content-end gap-2">
+                            <a href="{% url 'estadia_editar' estada.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="{% url 'estadia_saida' estada.pk %}" class="btn btn-sm btn-danger">Registrar Saída</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            {% if is_paginated %}
+                {% bootstrap_pagination page_obj url=request.get_full_path %}
+            {% endif %}
+        </div>
+
     {% else %}
         <div class="alert alert-info text-center mt-4">
             Nenhuma estada ativa encontrada.
         </div>
     {% endif %}
 </div>
+
 {% for estada in object_list %}
 <div class="modal fade" tabindex="-1" id="modal-estada-{{ estada.id }}">
     <div class="modal-dialog modal-dialog-centered">
