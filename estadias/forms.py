@@ -26,13 +26,8 @@ class EstadiaChegadaForm(forms.ModelForm):
         self.fields['funcionario'].queryset = Funcionario.objects.order_by('nome')
 
     def clean_veiculo(self):
-        """
-        Validação para impedir a entrada de um veículo que já tem uma estada ativa,
-        permitindo a edição da estada atual.
-        """
         veiculo = self.cleaned_data.get('veiculo')
         if veiculo:
-            # CORREÇÃO: A indentação foi ajustada neste bloco
             query = Estadia.objects.filter(veiculo=veiculo, finalizada=False)
             if self.instance and self.instance.pk:
                 query = query.exclude(pk=self.instance.pk)
@@ -45,9 +40,10 @@ class EstadiaChegadaForm(forms.ModelForm):
 
 
 class EstadiaSaidaForm(forms.ModelForm):
+
     class Meta:
         model = Estadia
-        fields = ['data_saida', 'finalizada']
+        fields = ['data_saida']
         widgets = {
             'data_saida': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
@@ -56,6 +52,4 @@ class EstadiaSaidaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if not self.instance.data_saida:
             self.initial['data_saida'] = timezone.now().strftime('%Y-%m-%dT%H:%M')
-        self.initial['finalizada'] = True
-        self.fields['finalizada'].disabled = True
 

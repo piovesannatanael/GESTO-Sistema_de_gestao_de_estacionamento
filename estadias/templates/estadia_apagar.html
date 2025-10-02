@@ -8,10 +8,11 @@
                 <h1 class="text-center">EXCLUIR ESTADIA?</h1>
                 <h3 class="text-center">Dados do registro</h3>
                 <p><strong>Cliente: </strong>{{ estadia.cliente }}</p>
-                <p><strong>Veículo: </strong>{{ estadia.veiculo.marca }} {{ estadia.veiculo.modelo }}</p>
+                <p><strong>Veículo: </strong>{{ estadia.veiculo.marca }} {{ estadia.veiculo.modelo }} - {{ estadia.veiculo.placa }}</p>
                 <p><strong>Cor: </strong>{{ estadia.veiculo.cor }}</p>
                 <p><strong>Funcionário (Entrada): </strong>{{ estadia.funcionario }}</p>
                 <p><strong>Vaga Ocupada: </strong>{{ estadia.vaga }}</p>
+                <p><strong>Plano do veiculo: </strong>{{ estadia.veiculo.plano }}</p>
                 <p><strong>Data de Chegada: </strong>{{ estadia.data_chegada|date:"d/m/Y H:i" }}</p>
                {% if estadia.veiculo.foto %}
                         <img src="{{ estadia.veiculo.foto.url }}" class="img-thumbnail" width="150" alt="Foto de {{ estadia.veiculo }}"/>

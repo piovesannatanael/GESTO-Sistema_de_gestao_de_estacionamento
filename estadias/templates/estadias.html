@@ -38,6 +38,7 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item"><strong>Cliente:</strong> {{ estada.cliente }}</li>
                             <li class="list-group-item"><strong>Vaga:</strong> {{ estada.vaga }}</li>
+                            <li class="list-group-item"><strong>Plano do veículo:</strong> {{ estada.veiculo.plano }}</li>
                             <li class="list-group-item"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</li>
                         </ul>
 
@@ -81,8 +82,8 @@
                 <p><strong>Cliente: </strong>{{ estada.cliente }}</p>
                 <p><strong>Veículo: </strong>{{ estada.veiculo.marca }} {{ estada.veiculo.modelo }} - Cor: {{ estada.veiculo.cor }}</p>
                 <p><strong>Funcionário (Entrada): </strong>{{ estada.funcionario }}</p>
-                <hr>
                 <p><strong>Vaga Ocupada: </strong>{{ estada.vaga }}</p>
+                <p><strong>Plano do veiculo: </strong>{{ estada.veiculo.plano }}</p>
                 <p><strong>Data de Chegada: </strong>{{ estada.data_chegada|date:"d/m/Y H:i" }}</p>
             </div>
             <div class="modal-footer">

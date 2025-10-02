@@ -1,0 +1,20 @@
+{% extends 'principal.html' %}
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="card shadow m-3 col-md-6 mx-auto">
+        <div class="card-body">
+            <h3 class="card-title">Pagamento com PIX</h3>
+            <p>Aponte a câmera do seu celular para o QR Code abaixo.</p>
+            
+            <!-- Placeholder para o QR Code -->
+            <img src="https://placehold.co/250x250/2d3748/e2e8f0?text=QR+Code+PIX" class="img-fluid my-3" alt="QR Code PIX">
+
+            <h4>Valor: R$ {{ pagamento.valor_calculado|floatformat:2 }}</h4>
+            <p class="text-muted">Após o pagamento, o sistema irá confirmar automaticamente.</p>
+            
+            {# No futuro, você pode adicionar um form aqui que finaliza o pagamento #}
+            <a href="{% url 'pagamento_concluido' pagamento.pk %}" class="btn btn-success mt-3">Confirmar Pagamento (Simulação)</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

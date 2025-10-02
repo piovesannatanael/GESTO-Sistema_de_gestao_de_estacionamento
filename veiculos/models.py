@@ -24,7 +24,7 @@ class Veiculo(models.Model):
     qtd_rodas = models.IntegerField('Quantidade de Rodas', choices=RODAS_CHOICES)
     plano = models.CharField('Plano', max_length=20, choices=PLANOS_CHOICES)
     clientes = models.ManyToManyField(ClienteGeral,verbose_name='Proprietário(s)',related_name='veiculos')
-    foto = StdImageField('Foto', upload_to='pessoas', delete_orphans=True, null=True, blank=True)
+    foto = StdImageField('Foto', upload_to='carros', delete_orphans=True, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Veículo'
@@ -32,5 +32,5 @@ class Veiculo(models.Model):
         ordering = [Upper('placa')]
 
     def __str__(self):
-        return f'{self.placa} ({self.modelo})'
+        return f'{self.placa} ({self.modelo}) ({self.plano})'
 
