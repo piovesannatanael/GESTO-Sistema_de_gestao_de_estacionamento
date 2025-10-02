@@ -7,29 +7,6 @@
         <div class="card-body">
             <div class="container">
                 <h3 class="mt-4 mb-4 text-center">Registrar Saída de Veículo</h3>
-
-                <div class="card" style="width: 18rem;">
-  {% if object.foto.url is not empty %}
-                    <div class="col-2">
-                        <img src="{{ veiculo.foto }}" class="img-thumbnail" width="100" height="100" alt="/">
-                    </div>
-                {% endif %}
-  <div class="card-body">
-  </div>
-  <ul class="list-group list-group-flush">
-      <img src="{{ veiculo.foto }}" class="img-thumbnail" width="100" height="100" alt="/">
-    <li class="list-group-item">Veiculo: <strong>{{ object.veiculo.placa }} ({{ object.veiculo.marca }} {{ object.veiculo.modelo }})</strong></li>
-    <li class="list-group-item">Veiculo: <strong>{{ object.veiculo.placa }} ({{ object.veiculo.marca }} {{ object.veiculo.modelo }})</strong></li>
-    <li class="list-group-item">Cliente: <strong>{{ object.cliente }}</strong></li>
-    <li class="list-group-item">Vaga: <strong>{{ object.vaga }}</strong></li>
-    <li class="list-group-item">Data e hora de chegada: <strong>{{ object.data_chegada|date:"d/m/Y H:i" }}</strong></li>
-  </ul>
-  <div class="card-body">
-    <button type="submit" class="btn btn-danger">Confirmar Saída</button>
-    <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
-  </div>
-</div>
-
                 <div class="alert alert-secondary">
                     <p><strong>Veículo:</strong> {{ object.veiculo.placa }} ({{ object.veiculo.marca }} {{ object.veiculo.modelo }})</p>
                     <p><strong>Cliente:</strong> {{ object.cliente }}</p>

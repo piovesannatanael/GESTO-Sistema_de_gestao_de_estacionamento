@@ -20,6 +20,7 @@ class EstadiaListView(ListView):
         if buscar:
             queryset = queryset.filter(
                 Q(veiculo__placa__icontains=buscar) |
+                Q(veiculo__modelo__icontains=buscar) |
                 Q(cliente__nome__icontains=buscar) |
                 Q(cliente__empresa__icontains=buscar) |
                 Q(vaga__codigo__icontains=buscar)

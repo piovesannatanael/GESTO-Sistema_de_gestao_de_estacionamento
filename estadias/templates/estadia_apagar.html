@@ -1,10 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+<div id="dados">
+    <div class="card shadow m-3 col-md-6 mx-auto">
+        <div class="card-body">
+            <div class="row">
+                <h1 class="text-center">EXCLUIR ESTADIA?</h1>
+                <h3 class="text-center">Dados do registro</h3>
+                <p><strong>Cliente: </strong>{{ estadia.cliente }}</p>
+                <p><strong>Veículo: </strong>{{ estadia.veiculo.marca }} {{ estadia.veiculo.modelo }}</p>
+                <p><strong>Cor: </strong>{{ estadia.veiculo.cor }}</p>
+                <p><strong>Funcionário (Entrada): </strong>{{ estadia.funcionario }}</p>
+                <p><strong>Vaga Ocupada: </strong>{{ estadia.vaga }}</p>
+                <p><strong>Data de Chegada: </strong>{{ estadia.data_chegada|date:"d/m/Y H:i" }}</p>
+               {% if estadia.veiculo.foto %}
+                        <img src="{{ estadia.veiculo.foto.url }}" class="img-thumbnail" width="150" alt="Foto de {{ estadia.veiculo }}"/>
+                    {% endif %}
+                <p class="p-2 mt-2">Confirma a exclusão da estadia?</p>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="text-end">
+                        {% bootstrap_button button_type="submit" content="Sim" %}
+                        <a href="{% url 'estadias' %}" class="btn btn-secondary text-white" type="button">
+                           <span class="text">Cancelar</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

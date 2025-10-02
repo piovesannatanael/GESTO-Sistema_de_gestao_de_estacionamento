@@ -1,6 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 from veiculos.models import Veiculo
 from clientes.models import ClienteGeral
 from funcionarios.models import Funcionario
@@ -27,17 +27,20 @@ class Estadia(models.Model):
         return f'{self.veiculo.placa} - {self.data_chegada.strftime("%d/%m/%Y %H:%M")}'
 
     def save(self, *args, **kwargs):
-        if not self.pk and not self.finalizada:
-            estada_ativa_existente = Estadia.objects.filter(veiculo=self.veiculo, finalizada=False).exists()
-            if estada_ativa_existente:
-                raise ValidationError(
-                    f'O veículo de placa {self.veiculo.placa} já possui uma estada ativa.'
-                )
-
+        original_vaga = None
+        if self.pk:
+            try:
+                original_vaga = Estadia.objects.get(pk=self.pk).vaga
+            except Estadia.DoesNotExist:
+                pass
         if self.finalizada:
             self.vaga.status = 'livre'
         else:
             self.vaga.status = 'ocupada'
         self.vaga.save()
+        if original_vaga and original_vaga != self.vaga:
+            original_vaga.status = 'livre'
+            original_vaga.save()
 
         super().save(*args, **kwargs)
+

@@ -4,14 +4,14 @@
 {% block content %}
 <div id="dados" class="container">
     <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
-        <h3>Estadas Ativas</h3>
+        <h3>Estadias Ativas</h3>
         <a href="{% url 'estadia_chegada' %}" class="btn btn-primary">Registrar Chegada</a>
     </div>
 
     <div class="card card-body mb-4" id="search">
         <form method="get" action="">
             <div class="input-group">
-                <input class="form-control" type="text" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar por placa, cliente ou vaga...">
+                <input class="form-control" type="text" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar por placa, cliente, modelo ou vaga...">
                 <button type="submit" class="btn btn-outline-secondary">🔍 Buscar</button>
             </div>
         </form>
@@ -23,9 +23,8 @@
                 <div class="col">
                     <div class="card h-100 shadow-sm">
                         {% if estada.veiculo.foto %}
-                            <img src="{{ estada.veiculo.foto.url }}" class="card-img-top" alt="Foto do veículo {{ estada.veiculo.placa }}" style="height: 200px; object-fit: cover;">
+                            <img src="{{ estada.veiculo.foto }}" class="card-img-top" alt="Foto do veículo {{ estada.veiculo.placa }}" style="height: 200px; object-fit: cover;">
                         {% else %}
-                            {# 3. O ícone de placeholder foi trocado para um carro #}
                             <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
                                 <i class="fas fa-car fa-4x text-light"></i>
                             </div>
@@ -42,9 +41,10 @@
                             <li class="list-group-item"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</li>
                         </ul>
 
-                        <div class="card-footer d-flex justify-content-end gap-2">
-                            <a href="{% url 'estadia_editar' estada.pk %}" class="btn btn-sm btn-warning">Editar</a>
-                            <a href="{% url 'estadia_saida' estada.pk %}" class="btn btn-sm btn-danger">Registrar Saída</a>
+                        <div class="card-footer d-flex justify-content-between gap-2">
+                            <a href="{% url 'estadia_apagar' estada.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                            <a href="{% url 'estadia_editar' estada.pk %}" class="btn btn-info">Editar</a>
+                            <a href="{% url 'estadia_saida' estada.pk %}" class="btn btn-success">Registrar Saída</a>
                         </div>
                     </div>
                 </div>

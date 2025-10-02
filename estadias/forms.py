@@ -13,21 +13,33 @@ class EstadiaChegadaForm(forms.ModelForm):
         model = Estadia
         fields = ['veiculo', 'cliente', 'funcionario', 'vaga']
 
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['vaga'].queryset = Vaga.objects.filter(status="livre")
+
+        vagas_livres = Vaga.objects.filter(status="livre")
+        if self.instance and self.instance.pk:
+            vagas_livres = vagas_livres | Vaga.objects.filter(pk=self.instance.vaga.pk)
+        self.fields['vaga'].queryset = vagas_livres.distinct()
+
         self.fields['veiculo'].queryset = Veiculo.objects.order_by('placa')
         self.fields['cliente'].queryset = ClienteGeral.objects.order_by('nome', 'empresa')
         self.fields['funcionario'].queryset = Funcionario.objects.order_by('nome')
 
     def clean_veiculo(self):
+        """
+        Validação para impedir a entrada de um veículo que já tem uma estada ativa,
+        permitindo a edição da estada atual.
+        """
         veiculo = self.cleaned_data.get('veiculo')
         if veiculo:
-            estada_ativa = Estadia.objects.filter(veiculo=veiculo, finalizada=False).exists()
-            if estada_ativa:
+            # CORREÇÃO: A indentação foi ajustada neste bloco
+            query = Estadia.objects.filter(veiculo=veiculo, finalizada=False)
+            if self.instance and self.instance.pk:
+                query = query.exclude(pk=self.instance.pk)
+
+            if query.exists():
                 raise ValidationError(
-                    f'Este veículo (placa {veiculo.placa}) já se encontra no pátio e não pode dar entrada novamente.'
+                    f'Este veículo (placa {veiculo.placa}) já se encontra no pátio em outra estada ativa.'
                 )
         return veiculo
 
