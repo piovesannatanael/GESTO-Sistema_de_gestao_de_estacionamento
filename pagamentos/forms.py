@@ -19,11 +19,9 @@ class PagamentoForm(forms.ModelForm):
 
     class Meta:
         model = Pagamento
-        # Incluímos os campos do modelo que o usuário pode alterar nesta tela.
         fields = ['valor_calculado', 'metodo']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Torna o campo de valor calculado somente leitura, pois ele é definido pelo sistema.
         self.fields['valor_calculado'].disabled = True
 

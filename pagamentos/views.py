@@ -9,14 +9,16 @@ class ProcessarPagamentoView(View):
     template_name = 'pagamentos.html'
 
     def _get_context(self, request, estada_pk, form=None):
-        """Função auxiliar para evitar repetição de código."""
         estada = get_object_or_404(Estadia, pk=estada_pk)
+
         pagamento, created = Pagamento.objects.get_or_create(estada=estada)
+        if created or not pagamento.valor_calculado:
+            pagamento.valor_calculado = pagamento.calcular_valor()
+            pagamento.save()
 
         if not estada.data_saida:
-            return None  # Sinaliza que devemos redirecionar
+            return None
 
-        # --- LÓGICA DE CÁLCULO DA DURAÇÃO ---
         duracao = estada.data_saida - estada.data_chegada
         total_seconds = int(duracao.total_seconds())
 
@@ -44,20 +46,22 @@ class ProcessarPagamentoView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, estada_pk):
-        form = PagamentoForm(request.POST)
-        if form.is_valid():
-            estada = get_object_or_404(Estadia, pk=estada_pk)
-            pagamento = get_object_or_404(Pagamento, estada=estada)
+        # Usamos uma função auxiliar para não repetir a lógica de buscar e calcular
+        context = self._get_context(request, estada_pk)
+        pagamento = context['pagamento']
+        form = PagamentoForm(request.POST, instance=pagamento)
 
-            pagamento.metodo = form.cleaned_data['metodo']
-            desconto = form.cleaned_data.get('desconto', 0)
-            adicional = form.cleaned_data.get('valor_adicional', 0)
-            valor_base = pagamento.calcular_valor()
+        if form.is_valid():
+            pagamento = form.save(commit=False)
+            desconto = form.cleaned_data.get('desconto') or 0
+            adicional = form.cleaned_data.get('valor_adicional') or 0
+
+            valor_base = pagamento.valor_calculado
             pagamento.valor_calculado = valor_base - desconto + adicional
 
             pagamento.save()
 
-            metodo = pagamento.metodo
+            metodo = form.cleaned_data.get('metodo')
             if metodo == 'pix':
                 return redirect('pagamento_pix', pagamento_pk=pagamento.pk)
             elif metodo in ['cartao_credito', 'cartao_debito']:
@@ -67,7 +71,6 @@ class ProcessarPagamentoView(View):
                 pagamento.save()
                 return redirect('pagamento_concluido', pagamento_pk=pagamento.pk)
 
-        context = self._get_context(request, estada_pk, form=form)
         return render(request, self.template_name, context)
 
 
