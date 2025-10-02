@@ -28,5 +28,9 @@ urlpatterns = [
     path('', include('vagas.urls')),
     path('', include('estadias.urls')),
     path('', include('pagamentos.urls')),
+    path('', include('modalidades.urls')),
+    path('', include('pagamentos_modal.urls')),
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

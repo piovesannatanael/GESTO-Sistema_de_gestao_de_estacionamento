@@ -1,0 +1,21 @@
+{% extends 'principal.html' %}
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="card shadow m-3 col-md-6 mx-auto">
+        <div class="card-body">
+            <h3 class="card-title">Pagamento via PIX</h3>
+            <p>Aponte a câmera do seu celular para o QR Code abaixo para pagar.</p>
+
+            {# Placeholder para o QR Code. Você precisará de uma biblioteca para gerá-lo #}
+            <div class="my-4">
+                <img src="https://placehold.co/250x250/2d3748/e2e8f0?text=QR+Code+PIX" alt="QR Code para pagamento via PIX">
+            </div>
+
+            <h4>Valor: R$ {{ pagamento.valor_calculado|floatformat:2 }}</h4>
+            <p class="text-muted">Após o pagamento, clique no botão abaixo para finalizar.</p>
+
+            <a href="{% url 'pagamento_concluido' pagamento.pk %}" class="btn btn-success btn-lg mt-3">Já Paguei, Finalizar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

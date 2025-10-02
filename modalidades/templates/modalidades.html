@@ -1,0 +1,74 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div id="dados" class="container">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h3>Gestão de Planos e Modalidades</h3>
+    </div>
+
+    <div class="card card-body mb-4" id="search">
+        <form method="get" action="">
+            <div class="row g-2 align-items-center">
+                <div class="col-sm-6">
+                    <input class="form-control" type="text" name="buscar" value="{{ buscar }}" placeholder="Buscar por placa...">
+                </div>
+                <div class="col-sm-4">
+                    <select name="plano" class="form-select">
+                        <option value="" {% if not plano_selecionado %}selected{% endif %}>Todos os Planos</option>
+                        <option value="diaria" {% if plano_selecionado == 'diaria' %}selected{% endif %}>Diária</option>
+                        <option value="semanal" {% if plano_selecionado == 'semanal' %}selected{% endif %}>Semanal</option>
+                        <option value="mensal" {% if plano_selecionado == 'mensal' %}selected{% endif %}>Mensal</option>
+                    </select>
+                </div>
+                <div class="col-sm-2 d-grid">
+                    <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if veiculos %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for veiculo in veiculos %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm {% if veiculo.modalidade.esta_atrasado %}border-danger{% endif %}">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">{{ veiculo.placa }}</h5>
+                            {% if veiculo.modalidade.esta_atrasado %}
+                                <span class="badge bg-danger">Atrasado</span>
+                            {% else %}
+                                <span class="badge bg-success">Em Dia</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">{{ veiculo.marca }} {{ veiculo.modelo }}</h6>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Plano:</strong> {{ veiculo.modalidade.plano }}</li>
+                            <li class="list-group-item"><strong>Último Pag.:</strong> {{ veiculo.modalidade.ultimo_pagamento|date:"d/m/Y H:i"|default:"--" }}</li>
+                            <li class="list-group-item"><strong>Válido Até:</strong> {{ veiculo.modalidade.valido_ate|date:"d/m/Y H:i"|default:"--" }}</li>
+                        </ul>
+                        <div class="card-footer text-end">
+                            <a href="{% url 'pagar_modalidade' veiculo.modalidade.pk %}" class="btn btn-primary">
+                                Pagar / Renovar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            {% if is_paginated %}
+                {% bootstrap_pagination page_obj url=request.get_full_path %}
+            {% endif %}
+        </div>
+
+    {% else %}
+        <div class="alert alert-info text-center mt-4">
+            Nenhum veículo com plano encontrado para os critérios informados.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
