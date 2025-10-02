@@ -43,11 +43,6 @@
         <a href="{% url 'vagas' %}" class="nav-link {% if request.resolver_match.url_name == 'vagas' %}active{% endif %}">
           <i class="fas fa-stream" aria-hidden="true"></i><p>Vagas</p>
         </a>
-      </li><li class="nav-item" role="none">
-        <a href="{% url 'pagamentos' %}" class="nav-link {% if request.resolver_match.url_name == 'vagas' %}active{% endif %}">
-          <i class="fa-solid fa-money-bill" aria-hidden="true"></i><p>Pagamentos</p>
-        </a>
-      </li>
 
     </ul>
   </nav>

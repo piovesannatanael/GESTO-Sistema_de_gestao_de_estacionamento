@@ -1,36 +1,32 @@
 from django import forms
 from .models import Pagamento
-from decimal import Decimal
 
-class ProcessarPagamentoForm(forms.Form):
-    # Pega as opções de método do modelo Pagamento
-    metodo = forms.ChoiceField(
-        choices=Pagamento.METODO_CHOICES,
-        widget=forms.RadioSelect, # Mostra como botões de rádio, mais amigável
-        label="Método de Pagamento"
-    )
-    valor_calculado = forms.DecimalField(
-        label="Valor Calculado (R$)",
-        disabled=True,
-        required=False
-    )
+
+class PagamentoForm(forms.ModelForm):
+    """
+    Formulário para processar o pagamento, ligado diretamente ao modelo Pagamento.
+    """
+    # Adicionamos campos que não estão no modelo, mas que precisamos no formulário.
     desconto = forms.DecimalField(
-        label="Desconto (R$)",
+        label='Desconto (R$)',
         required=False,
         min_value=0,
         widget=forms.NumberInput(attrs={'placeholder': '0.00'})
     )
     valor_adicional = forms.DecimalField(
-        label="Valor Adicional (R$)",
+        label='Valor Adicional (R$)',
         required=False,
         min_value=0,
         widget=forms.NumberInput(attrs={'placeholder': '0.00'})
     )
 
-    def clean_desconto(self):
-        # Garante que o desconto não seja maior que o valor calculado
-        desconto = self.cleaned_data.get('desconto') or Decimal('0.00')
-        valor_calculado = self.initial.get('valor_calculado')
-        if valor_calculado and desconto > valor_calculado:
-            raise forms.ValidationError("O desconto não pode ser maior que o valor calculado.")
-        return desconto
+    class Meta:
+        model = Pagamento
+        # Incluímos os campos do modelo que o usuário pode alterar nesta tela.
+        fields = ['valor_calculado', 'metodo']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Torna o campo de valor calculado somente leitura, pois ele é definido pelo sistema.
+        self.fields['valor_calculado'].disabled = True
+

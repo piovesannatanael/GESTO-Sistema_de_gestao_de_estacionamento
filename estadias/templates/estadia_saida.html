@@ -6,22 +6,23 @@
     <div class="card shadow m-3 col-md-6 mx-auto">
         <div class="card-body">
             <div class="container">
-                <h3 class="mt-4 mb-4 text-center">Registrar Saída de Veículo</h3>
+                <h3 class="mt-4 mb-4 text-center">{{ titulo|default:"Registrar Saída de Veículo" }}</h3>
+
                 <div class="alert alert-secondary">
                     <p><strong>Veículo:</strong> {{ object.veiculo.placa }} ({{ object.veiculo.marca }} {{ object.veiculo.modelo }})</p>
                     <p><strong>Cliente:</strong> {{ object.cliente }}</p>
                     <p><strong>Vaga:</strong> {{ object.vaga }}</p>
                     <p><strong>Data de Chegada:</strong> {{ object.data_chegada|date:"d/m/Y H:i" }}</p>
                 </div>
-                
+
                 <form method="post">
                     {% csrf_token %}
-                    
+
                     {% bootstrap_form form %}
 
-                    <p class="text-muted mt-3">Ao confirmar, a estada será marcada como finalizada e a vaga será liberada.</p>
+                    <p class="text-muted mt-3">Ao confirmar, a data de saída será registrada e você será redirecionado para a tela de pagamento.</p>
 
-                    <a href="../../pagamentos/templates/pagamentos.html" class="btn btn-success">Confirmar saida</a>
+                    <button type="submit" class="btn btn-danger">Ir para Pagamento</button>
                     <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
                 </form>
             </div>

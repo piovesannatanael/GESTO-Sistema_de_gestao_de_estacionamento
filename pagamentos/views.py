@@ -1,27 +1,26 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import View, DetailView
-from django.utils import timezone
+from django.views import View
 from estadias.models import Estadia
 from .models import Pagamento
-from .forms import ProcessarPagamentoForm
-from decimal import Decimal
+from .forms import PagamentoForm
+from datetime import timedelta
 
 
 class ProcessarPagamentoView(View):
-    template_name = 'pagamentos/pagamento_detail.html'
+    # CORREÇÃO: O caminho do template foi padronizado
+    template_name = 'pagamentos.html'
 
     def get(self, request, estada_pk):
-        estada = get_object_or_404(Estadia, pk=estada_pk, finalizada=False)
+        estada = get_object_or_404(Estadia, pk=estada_pk)
         pagamento, created = Pagamento.objects.get_or_create(estada=estada)
 
         if not estada.data_saida:
-            estada.data_saida = timezone.now()
+            return redirect('estada_list')
 
-        valor_calculado = pagamento.calcular_valor()
-        pagamento.valor_calculado = valor_calculado
         duracao = estada.data_saida - estada.data_chegada
 
-        form = ProcessarPagamentoForm(initial={'valor_calculado': valor_calculado})
+        # O formulário é preenchido com os dados do pagamento
+        form = PagamentoForm(instance=pagamento)
 
         context = {
             'form': form,
@@ -34,30 +33,29 @@ class ProcessarPagamentoView(View):
     def post(self, request, estada_pk):
         estada = get_object_or_404(Estadia, pk=estada_pk)
         pagamento = get_object_or_404(Pagamento, estada=estada)
-        form = ProcessarPagamentoForm(request.POST, initial={'valor_calculado': pagamento.calcular_valor()})
+        form = PagamentoForm(request.POST, instance=pagamento)
 
         if form.is_valid():
-            metodo = form.cleaned_data['metodo']
-            desconto = form.cleaned_data.get('desconto') or Decimal('0.00')
-            valor_adicional = form.cleaned_data.get('valor_adicional') or Decimal('0.00')
+            pagamento = form.save(commit=False)
 
-            valor_final = pagamento.calcular_valor() - desconto + valor_adicional
+            desconto = form.cleaned_data.get('desconto', 0)
+            adicional = form.cleaned_data.get('valor_adicional', 0)
+            valor_base = pagamento.calcular_valor()
+            pagamento.valor_calculado = valor_base - desconto + adicional
 
-            pagamento.valor_calculado = valor_final
-            pagamento.metodo = metodo
-            # Não salva o status ainda, isso será feito na tela de pagamento final
-            pagamento.save(update_fields=['valor_calculado', 'metodo'])
+            pagamento.save()
 
+            metodo = form.cleaned_data.get('metodo')
             if metodo == 'pix':
                 return redirect('pagamento_pix', pagamento_pk=pagamento.pk)
             elif metodo in ['cartao_credito', 'cartao_debito']:
                 return redirect('pagamento_cartao', pagamento_pk=pagamento.pk)
-            else:  # Dinheiro
+            else:  # Dinheiro ou outros
                 pagamento.status = 'pago'
                 pagamento.save()
                 return redirect('pagamento_concluido', pagamento_pk=pagamento.pk)
 
-        duracao = estada.data_saida - estada.data_chegada if estada.data_saida else None
+        duracao = estada.data_saida - estada.data_chegada
         context = {
             'form': form,
             'pagamento': pagamento,
@@ -67,22 +65,36 @@ class ProcessarPagamentoView(View):
         return render(request, self.template_name, context)
 
 
-# --- NOVAS VIEWS PARA AS PRÓXIMAS ETAPAS ---
+class PagamentoPixView(View):
+    template_name = 'pagamento_pix.html'
 
-class PagamentoPixView(DetailView):
-    model = Pagamento
-    template_name = 'pagamentos/pagamento_pix.html'
-    context_object_name = 'pagamento'
-
-
-class PagamentoCartaoView(DetailView):
-    model = Pagamento
-    template_name = 'pagamentos/pagamento_cartao.html'
-    context_object_name = 'pagamento'
+    def get(self, request, pagamento_pk):
+        pagamento = get_object_or_404(Pagamento, pk=pagamento_pk)
+        context = {'pagamento': pagamento}
+        return render(request, self.template_name, context)
 
 
-class PagamentoConcluidoView(DetailView):
-    model = Pagamento
-    template_name = 'pagamentos/pagamento_concluido.html'
-    context_object_name = 'pagamento'
+class PagamentoCartaoView(View):
+    template_name = 'pagamento_cartao.html'
+
+    def get(self, request, pagamento_pk):
+        pagamento = get_object_or_404(Pagamento, pk=pagamento_pk)
+        context = {'pagamento': pagamento}
+        return render(request, self.template_name, context)
+
+
+class PagamentoConcluidoView(View):
+    template_name = 'pagamento_concluido.html'
+
+    def get(self, request, pagamento_pk):
+        pagamento = get_object_or_404(Pagamento, pk=pagamento_pk)
+
+        if pagamento.status != 'pago':
+            pagamento.status = 'pago'
+            pagamento.save()
+
+        context = {'pagamento': pagamento}
+        return render(request, self.template_name, context)
+
+
 

@@ -4,14 +4,14 @@
     <div class="card shadow m-3 col-md-6 mx-auto">
         <div class="card-body">
             <h3 class="card-title">Pagamento com Cartão</h3>
-            <p>Insira o cartão na máquina e siga as instruções.</p>
+            <p>Insira o cartão na maquininha e siga as instruções.</p>
 
             <i class="fas fa-credit-card fa-7x my-4 text-primary"></i>
 
             <h4>Valor: R$ {{ pagamento.valor_calculado|floatformat:2 }}</h4>
-            
-            {# No futuro, você pode adicionar um form aqui que finaliza o pagamento #}
-            <a href="{% url 'pagamento_concluido' pagamento.pk %}" class="btn btn-success mt-3">Confirmar Pagamento (Simulação)</a>
+            <p class="text-muted">Após a confirmação do pagamento na maquininha, clique no botão abaixo.</p>
+
+            <a href="{% url 'pagamento_concluido' pagamento.pk %}" class="btn btn-success btn-lg mt-3">Pagamento Aprovado, Finalizar</a>
         </div>
     </div>
 </div>

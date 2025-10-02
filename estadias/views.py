@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from .models import Estadia
 from .forms import EstadiaChegadaForm, EstadiaSaidaForm
@@ -57,16 +57,11 @@ class EstadiaChegadaUpdateView(UpdateView):
         context["titulo"] = "Editar Dados da Chegada"
         return context
 
-class EstadiaDeleteView(DeleteView):
-    model = Estadia
-    template_name = 'estadia_apagar.html'
-    success_url = reverse_lazy('estadias')
 
 class EstadiaSaidaUpdateView(UpdateView):
     model = Estadia
     form_class = EstadiaSaidaForm
     template_name = 'estadia_saida.html'
-    success_url = reverse_lazy('estadias')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,13 +69,11 @@ class EstadiaSaidaUpdateView(UpdateView):
         return context
 
     def get_success_url(self):
-
-        return reverse('pagamentos', kwargs={'estada_pk': self.object.pk})
-
-# class EstadiaDetailView(DetailView):
-#     model = Estadia
-#     template_name = 'estadias/estada_detail.html'
+        return reverse('pagamento_processar', kwargs={'estada_pk': self.object.pk})
 
 
-
+class EstadiaDeleteView(DeleteView):
+    model = Estadia
+    template_name = 'estadia_apagar.html'
+    success_url = reverse_lazy('estadias')
 
