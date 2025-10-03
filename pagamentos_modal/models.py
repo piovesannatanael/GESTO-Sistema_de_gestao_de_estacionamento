@@ -19,5 +19,6 @@ class PagamentoModalidade(models.Model):
         super().save(*args, **kwargs)
         self.modalidade.registrar_pagamento()
 
+
     def __str__(self):
         return f'Pagamento do plano para {self.modalidade.veiculo.placa} - R$ {self.valor_pago}'

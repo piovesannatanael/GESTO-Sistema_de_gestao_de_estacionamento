@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from .models import Estadia
@@ -20,7 +21,6 @@ class EstadiaListView(ListView):
         if buscar:
             queryset = queryset.filter(
                 Q(veiculo__placa__icontains=buscar) |
-                Q(veiculo__modelo__icontains=buscar) |
                 Q(cliente__nome__icontains=buscar) |
                 Q(cliente__empresa__icontains=buscar) |
                 Q(vaga__codigo__icontains=buscar)
@@ -40,9 +40,15 @@ class EstadiaChegadaCreateView(CreateView):
     template_name = 'estadia_form.html'
     success_url = reverse_lazy('estadias')
 
+    def form_valid(self, form):
+        veiculo = form.cleaned_data.get('veiculo')
+        if veiculo:
+            form.instance.plano = veiculo.plano
+        return super().form_valid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["titulo"] = "Registrar Chegada de Veículo"
+        context["titulo"] = "Registar Chegada de Veículo"
         return context
 
 
@@ -51,6 +57,12 @@ class EstadiaChegadaUpdateView(UpdateView):
     form_class = EstadiaChegadaForm
     template_name = 'estadia_form.html'
     success_url = reverse_lazy('estadias')
+
+    def form_valid(self, form):
+        veiculo = form.cleaned_data.get('veiculo')
+        if veiculo:
+            form.instance.plano = veiculo.plano
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,10 +77,21 @@ class EstadiaSaidaUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["titulo"] = "Registrar Saída de Veículo"
+        context["titulo"] = "Registar Saída de Veículo"
         return context
 
+    def form_valid(self, form):
+        """
+        Garante que o formulário é guardado antes de redirecionar.
+        """
+        self.object = form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
+        """
+        Após guardar a data de saída, redireciona para a tela de pagamento
+        passando o ID da estada que acabámos de atualizar.
+        """
         return reverse('pagamento_processar', kwargs={'estada_pk': self.object.pk})
 
 

@@ -1,83 +1,64 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views import View
-from django.views.generic import ListView
-from django.db.models import Q
+from django.db import models
+from django.utils import timezone
 from veiculos.models import Veiculo
-from .models import Modalidade
-from pagamentos.models import PagamentoModalidade
-from .forms import PagamentoModalidadeForm
+from decimal import Decimal
+from datetime import timedelta
+
+# Definição de preços dos planos
+PRECO_DIARIA = Decimal('50.00')
+PRECO_SEMANAL = Decimal('100.00')
+PRECO_MENSAL = Decimal('300.00')
 
 
-class ModalidadeListView(ListView):
-    """
-    Lista todos os veículos que possuem planos e o status de suas modalidades,
-    com funcionalidade de busca e filtro.
-    """
-    model = Veiculo
-    template_name = 'modalidades/modalidade_list.html'
-    context_object_name = 'veiculos'
-    paginate_by = 9
+class Modalidade(models.Model):
+    veiculo = models.OneToOneField(Veiculo, on_delete=models.CASCADE, related_name='modalidade')
+    ultimo_pagamento = models.DateTimeField(null=True, blank=True)
+    valido_ate = models.DateTimeField(null=True, blank=True)
 
-    def get_queryset(self):
-        # Começa com os veículos que têm planos
-        queryset = Veiculo.objects.exclude(plano='horario_avulso')
+    class Meta:
+        verbose_name = 'Modalidade de Plano'
+        verbose_name_plural = 'Modalidades de Planos'
 
-        # Pega os parâmetros da URL
-        buscar = self.request.GET.get('buscar')
-        plano_filtro = self.request.GET.get('plano')
+    @property
+    def plano(self):
+        return self.veiculo.get_plano_display()
 
-        # Aplica o filtro de busca por placa
-        if buscar:
-            queryset = queryset.filter(placa__icontains=buscar)
+    @property
+    def valor(self):
+        if self.veiculo.plano == 'mensal':
+            return PRECO_MENSAL
+        if self.veiculo.plano == 'semanal':
+            return PRECO_SEMANAL
+        if self.veiculo.plano == 'diaria':
+            return PRECO_DIARIA
+        return Decimal('0.00')
 
-        # Aplica o filtro de plano
-        if plano_filtro:
-            queryset = queryset.filter(plano=plano_filtro)
+    @property
+    def esta_atrasado(self):
+        if not self.valido_ate:
+            return True  # Se nunca pagou, está atrasado
+        # Adiciona 24h de tolerância
+        return timezone.now() > self.valido_ate + timedelta(days=1)
 
-        return queryset.order_by('placa')
+    @property
+    def valor_com_multa(self):
+        valor_base = self.valor
+        if self.esta_atrasado:
+            multa = valor_base * Decimal('0.10')  # Multa de 10%
+            return (valor_base + multa).quantize(Decimal('0.01'))
+        return valor_base
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Garante que a modalidade exista para cada veículo listado
-        for veiculo in context['veiculos']:
-            Modalidade.objects.get_or_create(veiculo=veiculo)
+    def registrar_pagamento(self):
+        """Atualiza as datas de validade do plano."""
+        self.ultimo_pagamento = timezone.now()
+        if self.veiculo.plano == 'mensal':
+            self.valido_ate = self.ultimo_pagamento + timedelta(days=30)
+        elif self.veiculo.plano == 'semanal':
+            self.valido_ate = self.ultimo_pagamento + timedelta(days=7)
+        elif self.veiculo.plano == 'diaria':
+            self.valido_ate = self.ultimo_pagamento + timedelta(days=1)
+        self.save()
 
-        # Envia os valores dos filtros de volta para o template
-        context['buscar'] = self.request.GET.get('buscar', '')
-        context['plano_selecionado'] = self.request.GET.get('plano', '')
-        return context
-
-
-class PagarModalidadeView(View):
-    """
-    Processa o pagamento de uma modalidade específica.
-    """
-    template_name = 'modalidades/pagamento_modalidade.html'
-
-    def get(self, request, modalidade_pk):
-        modalidade = get_object_or_404(Modalidade, pk=modalidade_pk)
-        form = PagamentoModalidadeForm(initial={'valor_pago': modalidade.valor_com_multa})
-
-        context = {
-            'form': form,
-            'modalidade': modalidade,
-        }
-        return render(request, self.template_name, context)
-
-    def post(self, request, modalidade_pk):
-        modalidade = get_object_or_404(Modalidade, pk=modalidade_pk)
-        form = PagamentoModalidadeForm(request.POST)
-
-        if form.is_valid():
-            pagamento = form.save(commit=False)
-            pagamento.modalidade = modalidade
-            pagamento.save()
-
-            return redirect('modalidade_list')
-
-        context = {
-            'form': form,
-            'modalidade': modalidade,
-        }
-        return render(request, self.template_name, context)
+    def __str__(self):
+        return f'Plano {self.plano} para {self.veiculo.placa}'
 

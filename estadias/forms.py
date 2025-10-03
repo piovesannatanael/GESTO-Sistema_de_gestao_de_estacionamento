@@ -1,6 +1,6 @@
 from django import forms
+from django.utils.timezone import localtime, now  # CORREÇÃO: Garante que 'localtime' e 'now' estão importados
 from django.core.exceptions import ValidationError
-from django.utils import timezone
 from .models import Estadia
 from vagas.models import Vaga
 from veiculos.models import Veiculo
@@ -17,7 +17,8 @@ class EstadiaChegadaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         vagas_livres = Vaga.objects.filter(status="livre")
-        if self.instance and self.instance.pk:
+        # Garante que, na edição, a vaga atual do veículo apareça na lista de opções
+        if self.instance and self.instance.pk and self.instance.vaga:
             vagas_livres = vagas_livres | Vaga.objects.filter(pk=self.instance.vaga.pk)
         self.fields['vaga'].queryset = vagas_livres.distinct()
 
@@ -40,7 +41,6 @@ class EstadiaChegadaForm(forms.ModelForm):
 
 
 class EstadiaSaidaForm(forms.ModelForm):
-
     class Meta:
         model = Estadia
         fields = ['data_saida']
@@ -50,6 +50,8 @@ class EstadiaSaidaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Preenche o campo 'data_saida' com o horário local atual por padrão
         if not self.instance.data_saida:
-            self.initial['data_saida'] = timezone.now().strftime('%Y-%m-%dT%H:%M')
+            # CORREÇÃO: Usa localtime() para converter a hora UTC para o fuso horário local (ex: São Paulo)
+            self.initial['data_saida'] = localtime(now()).strftime('%Y-%m-%dT%H:%M')
 

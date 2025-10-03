@@ -3,12 +3,14 @@ from django.views import View
 from estadias.models import Estadia
 from .models import Pagamento
 from .forms import PagamentoForm
+from datetime import timedelta
 
 
 class ProcessarPagamentoView(View):
     template_name = 'pagamentos.html'
 
     def _get_context(self, request, estada_pk, form=None):
+        """Função auxiliar para evitar repetição de código."""
         estada = get_object_or_404(Estadia, pk=estada_pk)
 
         pagamento, created = Pagamento.objects.get_or_create(estada=estada)
@@ -46,13 +48,13 @@ class ProcessarPagamentoView(View):
         return render(request, self.template_name, context)
 
     def post(self, request, estada_pk):
-        # Usamos uma função auxiliar para não repetir a lógica de buscar e calcular
         context = self._get_context(request, estada_pk)
         pagamento = context['pagamento']
         form = PagamentoForm(request.POST, instance=pagamento)
 
         if form.is_valid():
             pagamento = form.save(commit=False)
+
             desconto = form.cleaned_data.get('desconto') or 0
             adicional = form.cleaned_data.get('valor_adicional') or 0
 
@@ -67,8 +69,7 @@ class ProcessarPagamentoView(View):
             elif metodo in ['cartao_credito', 'cartao_debito']:
                 return redirect('pagamento_cartao', pagamento_pk=pagamento.pk)
             else:
-                pagamento.status = 'pago'
-                pagamento.save()
+                # Para dinheiro, já podemos considerar pago e ir para a tela de concluído
                 return redirect('pagamento_concluido', pagamento_pk=pagamento.pk)
 
         return render(request, self.template_name, context)
@@ -98,10 +99,15 @@ class PagamentoConcluidoView(View):
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(Pagamento, pk=pagamento_pk)
 
-        if pagamento.status != 'pago':
-            pagamento.status = 'pago'
-            pagamento.save()
+        # Guarda os dados para o template antes de apagar o objeto
+        dados_para_template = {
+            'valor_pago': pagamento.valor_calculado,
+            'placa_veiculo': pagamento.estada.veiculo.placa,
+        }
 
-        context = {'pagamento': pagamento}
+        # Apaga a estada (que por sua vez apagará o pagamento via CASCADE)
+        pagamento.estada.delete()
+
+        context = {'dados': dados_para_template}
         return render(request, self.template_name, context)
 

@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from veiculos.models import Veiculo
@@ -7,13 +8,16 @@ from vagas.models import Vaga
 
 
 class Estadia(models.Model):
+    # Relacionamentos
     veiculo = models.ForeignKey(Veiculo, on_delete=models.PROTECT)
     cliente = models.ForeignKey(ClienteGeral, on_delete=models.SET_NULL, null=True, blank=True)
     funcionario = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, blank=True)
-    vaga = models.ForeignKey(Vaga, on_delete=models.PROTECT)
+
+    vaga = models.ForeignKey(Vaga, on_delete=models.SET_NULL, null=True, blank=True)
+
     plano = models.CharField('Plano', max_length=20, choices=Veiculo.PLANOS_CHOICES, null=True, blank=True)
 
-
+    # Controle de Tempo e Status
     data_chegada = models.DateTimeField(default=timezone.now)
     data_saida = models.DateTimeField(null=True, blank=True)
     finalizada = models.BooleanField(default=False)
@@ -28,20 +32,24 @@ class Estadia(models.Model):
         return f'{self.veiculo.placa} - {self.data_chegada.strftime("%d/%m/%Y %H:%M")}'
 
     def save(self, *args, **kwargs):
-        original_vaga = None
+        vaga_original = None
         if self.pk:
             try:
-                original_vaga = Estadia.objects.get(pk=self.pk).vaga
+                vaga_original = Estadia.objects.get(pk=self.pk).vaga
             except Estadia.DoesNotExist:
                 pass
-        if self.finalizada:
-            self.vaga.status = 'livre'
-        else:
-            self.vaga.status = 'ocupada'
-        self.vaga.save()
-        if original_vaga and original_vaga != self.vaga:
-            original_vaga.status = 'livre'
-            original_vaga.save()
 
         super().save(*args, **kwargs)
+
+        # CORREÇÃO: A indentação deste bloco foi ajustada
+        if self.vaga:
+            if self.finalizada:
+                self.vaga.status = 'livre'
+            else:
+                self.vaga.status = 'ocupada'
+            self.vaga.save()
+
+        if vaga_original and vaga_original != self.vaga:
+            vaga_original.status = 'livre'
+            vaga_original.save()
 
