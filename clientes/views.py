@@ -1,8 +1,13 @@
+from django.contrib import messages
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
+
+from estadias.models import Estadia
 from .models import ClienteGeral
 from .forms import ClienteGeralModelForm
+
 
 class ClienteListView(ListView):
     model = ClienteGeral
@@ -23,6 +28,7 @@ class ClienteListView(ListView):
             )
         return qs
 
+
 class ClienteCreateView(CreateView):
     model = ClienteGeral
     form_class = ClienteGeralModelForm
@@ -33,6 +39,7 @@ class ClienteCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context["titulo"] = "Cadastrar Novo Cliente"
         return context
+
 
 class ClienteUpdateView(UpdateView):
     model = ClienteGeral
@@ -45,8 +52,22 @@ class ClienteUpdateView(UpdateView):
         context["titulo"] = "Editar Cliente"
         return context
 
+
 class ClienteDeleteView(DeleteView):
     model = ClienteGeral
     template_name = 'cliente_apagar.html'
     success_url = reverse_lazy('clientes')
 
+    def post(self, request, *args, **kwargs):
+        cliente = self.get_object()
+
+        if Estadia.objects.filter(cliente=cliente, finalizada=False).exists():
+            if cliente.empresa:
+                nome_saida = f'{cliente.nome} / {cliente.empresa}'
+            else:
+                nome_saida = cliente.nome
+            messages.error(request,
+                           f'O cliente "{nome_saida}" não pode ser apagado pois possui uma estada ativa no pátio.')
+            return redirect('clientes')
+
+        return super().post(request, *args, **kwargs)

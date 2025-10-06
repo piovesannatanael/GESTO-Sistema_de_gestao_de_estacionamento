@@ -6,6 +6,7 @@ class Vaga(models.Model):
     STATUS = (
         ('livre', 'Livre'),
         ('ocupada', 'Ocupada'),
+        ('manutencao', 'Em manutenção'),
     )
 
     codigo = models.CharField('Código da Vaga', max_length=10, unique=True, help_text='Ex: A01, B12, etc.')
