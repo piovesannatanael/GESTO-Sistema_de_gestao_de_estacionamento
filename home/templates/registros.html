@@ -1,38 +1,49 @@
 <section id="dados" aria-label="Indicadores principais do estacionamento">
-      <div class="dashboard-cards">
+    <div class="dashboard-cards">
+
         <article class="card-dashboard card-vagas" tabindex="0" aria-labelledby="vagas-title vagas-quantidade">
-          <div id="vagas-quantidade" aria-live="polite" aria-atomic="true">{{ qtd_vagas }}</div>
-          <small id="vagas-title">Vagas Disponíveis</small>
+            <div class="d-flex justify-content-around align-items-center h-100">
+                <div class="text-center">
+                    <div id="vagas-disponiveis" aria-live="polite" aria-atomic="true">{{ qtd_vagas }}</div>
+                    <small id="vagas-disponives">Vagas Disponíveis</small>
+                </div>
+                <div class="vr"></div>
+                <div class="text-center">
+                    <div id="vagas-quantidade" aria-live="polite" aria-atomic="true">{{ qtd_vagas_totais }}</div>
+                    <small id="vagas-title">Vagas Totais</small>
+                </div>
+            </div>
         </article>
 
         <article class="card-dashboard" tabindex="0" aria-label="Total de clientes cadastrados">
-          <i class="fas fa-users card-icon" aria-hidden="true"></i>
-          <div class="card-info">Clientes</div>
-          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true"> {{ qtd_clientes }}</div>
+            <i class="fas fa-users card-icon" aria-hidden="true"></i>
+            <div class="card-info">Clientes</div>
+            <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true"> {{ qtd_clientes }}</div>
         </article>
 
         <article class="card-dashboard" tabindex="0" aria-label="Total de funcionários">
-          <i class="fas fa-user-tie card-icon" aria-hidden="true"></i>
-          <div class="card-info">Funcionários</div>
-          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">{{ qtd_funcionarios}}</div>
+            <i class="fas fa-user-tie card-icon" aria-hidden="true"></i>
+            <div class="card-info">Funcionários</div>
+            <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">{{ qtd_funcionarios}}</div>
         </article>
 
         <article class="card-dashboard" tabindex="0" aria-label="Veículos cadastrados">
-          <i class="fas fa-car card-icon" aria-hidden="true"></i>
-          <div class="card-info">Veículos</div>
-          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">{{ qtd_veiculos }}</div>
+            <i class="fas fa-car card-icon" aria-hidden="true"></i>
+            <div class="card-info">Veículos</div>
+            <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">{{ qtd_veiculos }}</div>
         </article>
 
         <article class="card-dashboard" tabindex="0" aria-label="Estadas registradas">
-          <i class="fas fa-stream card-icon" aria-hidden="true"></i>
-          <div class="card-info">Estadias</div>
-          <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">{{ qtd_estadias }}</div>
+            <i class="fas fa-stream card-icon" aria-hidden="true"></i>
+            <div class="card-info">Estadias</div>
+            <div class="fs-3 mt-1" aria-live="polite" aria-atomic="true">{{ qtd_estadias }}</div>
         </article>
-      </div>
-    </section>
+    </div>
+</section>
 
-    <section id="chart-container" aria-label="Gráfico de fluxo de veículos por hora">
-      <h2>Fluxo de Veículos </h2>
-      <canvas id="vehiclesFlowChart" role="img" aria-describedby="chart-desc"></canvas>
-      <p id="chart-desc" class="visually-hidden">Gráfico mostrando o número de veículos que entraram no estacionamento.</p>
-    </section>
+<section id="chart-container" aria-label="Gráfico de fluxo de veículos por hora">
+    <h2>Fluxo de Veículos </h2>
+    <canvas id="vehiclesFlowChart" role="img" aria-describedby="chart-desc"></canvas>
+    <p id="chart-desc" class="visually-hidden">Gráfico mostrando o número de veículos que entraram no
+        estacionamento.</p>
+</section>

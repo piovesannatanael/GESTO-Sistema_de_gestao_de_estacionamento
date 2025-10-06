@@ -105,7 +105,6 @@ class PagamentoConcluidoView(View):
             'placa_veiculo': pagamento.estada.veiculo.placa,
         }
 
-        # Apaga a estada (que por sua vez apagará o pagamento via CASCADE)
         pagamento.estada.delete()
 
         context = {'dados': dados_para_template}

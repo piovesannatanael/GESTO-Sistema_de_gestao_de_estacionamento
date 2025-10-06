@@ -14,6 +14,7 @@ class IndexView(TemplateView):
         context['qtd_clientes'] = ClienteGeral.objects.count()
         context['qtd_funcionarios'] = Funcionario.objects.count()
         context['qtd_veiculos'] = Veiculo.objects.count()
-        context['qtd_vagas'] = Vaga.objects.count()
+        context['qtd_vagas'] = Vaga.objects.filter(status="livre").count()
+        context['qtd_vagas_totais'] = Vaga.objects.count()
         context['qtd_estadias'] = Estadia.objects.count()
         return context

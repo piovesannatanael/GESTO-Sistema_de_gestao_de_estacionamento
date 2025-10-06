@@ -2,14 +2,14 @@
 {% block content %}
 <main id="main-content" role="main" aria-label="Conteúdo principal do dashboard">
     <header id="header-top" role="banner" aria-label="Cabeçalho superior">
-      <div class="user-profile" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="Menu do usuário">
-        <img src="static/img/brasao-ufsm.jpg" alt="Avatar do usuário" />
-        <span>Administrador</span>
-      </div>
+        <div class="user-profile" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="Menu do usuário">
+            <img src="static/img/brasao-ufsm.jpg" alt="Avatar do usuário"/>
+            <span>Administrador</span>
+        </div>
     </header>
 
-  {% block registros %}
-        {% include "registros.html" %}
+    {% block registros %}
+    {% include "registros.html" %}
     {% endblock %}
 </main>
 

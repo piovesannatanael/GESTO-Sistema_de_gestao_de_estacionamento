@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from modalidades.models import Modalidade
-from pagamentos.models import Pagamento # Reutiliza as choices
+from pagamentos.models import Pagamento
 
 class PagamentoModalidade(models.Model):
     modalidade = models.ForeignKey(Modalidade, on_delete=models.CASCADE, related_name='pagamentos')
@@ -15,7 +15,6 @@ class PagamentoModalidade(models.Model):
         ordering = ['-data_pagamento']
 
     def save(self, *args, **kwargs):
-        # Garante que, ao salvar este pagamento, o status da modalidade seja atualizado.
         super().save(*args, **kwargs)
         self.modalidade.registrar_pagamento()
 

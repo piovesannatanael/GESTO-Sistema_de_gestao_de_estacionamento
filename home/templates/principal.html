@@ -3,62 +3,75 @@
 {% load django_bootstrap5 %}
 <html lang="pt-br">
 <head>
-  {% block head %}
+    {% block head %}
     {% include "head.html" %}
-  {% endblock %}
+    {% endblock %}
 </head>
 <body>
-  <nav id="sidebar" aria-label="Menu principal">
+<nav id="sidebar" aria-label="Menu principal">
     <div class="logo" aria-label="Logo GESTO">
-        <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">GESTO</a></div>
+        <a href="{% url 'index' %}"
+           class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">GESTO</a></div>
     <ul class="nav flex-column" role="menu" aria-label="Navegação principal">
 
         <li class="nav-item" role="none">
-        <a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'estadias' %}active{% endif %}">
-            <i class="fa-solid fa-gauge-high" aria-hidden="true"></i><p>Dashboard</p>
-        </a>
-      </li>
-      <li class="nav-item" role="none">
-        <a href="{% url 'estadias' %}" class="nav-link {% if request.resolver_match.url_name == 'estadias' %}active{% endif %}">
-            <i class="fa-solid fa-warehouse" aria-hidden="true"></i><p>Estadias</p>
-        </a>
-      </li>
+            <a href="{% url 'index' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'estadias' %}active{% endif %}">
+                <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+        <li class="nav-item" role="none">
+            <a href="{% url 'estadias' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'estadias' %}active{% endif %}">
+                <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+                <p>Estadias</p>
+            </a>
+        </li>
 
-    <li class="nav-item" role="none">
-        <a href="{% url 'clientes' %}" class="nav-link {% if request.resolver_match.url_name == 'clientes' %}active{% endif %}">
-            <i class="fas fa-users"></i><p>Clientes</p>
-        </a>
-    </li>
-      <li class="nav-item" role="none">
-        <a href="{% url 'funcionarios' %}" class="nav-link {% if request.resolver_match.url_name == 'funcionarios' %}active{% endif %}">
-          <i class="fas fa-user-tie" aria-hidden="true"></i><p>Funcionarios</p>
-        </a>
-      </li>
-      <li class="nav-item" role="none">
-        <a href="{% url 'veiculos' %}" class="nav-link {% if request.resolver_match.url_name == 'veiculos' %}active{% endif %}">
-          <i class="fas fa-car" aria-hidden="true"></i><p>Veiculos</p>
-        </a>
-      </li>
-      <li class="nav-item" role="none">
-        <a href="{% url 'vagas' %}" class="nav-link {% if request.resolver_match.url_name == 'vagas' %}active{% endif %}">
-          <i class="fas fa-stream" aria-hidden="true"></i><p>Vagas</p>
-        </a>
+        <li class="nav-item" role="none">
+            <a href="{% url 'clientes' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'clientes' %}active{% endif %}">
+                <i class="fas fa-users"></i>
+                <p>Clientes</p>
+            </a>
+        </li>
+        <li class="nav-item" role="none">
+            <a href="{% url 'funcionarios' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'funcionarios' %}active{% endif %}">
+                <i class="fas fa-user-tie" aria-hidden="true"></i>
+                <p>Funcionarios</p>
+            </a>
+        </li>
+        <li class="nav-item" role="none">
+            <a href="{% url 'veiculos' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'veiculos' %}active{% endif %}">
+                <i class="fas fa-car" aria-hidden="true"></i>
+                <p>Veiculos</p>
+            </a>
+        </li>
+        <li class="nav-item" role="none">
+            <a href="{% url 'vagas' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'vagas' %}active{% endif %}">
+                <i class="fas fa-stream" aria-hidden="true"></i>
+                <p>Vagas</p>
+            </a>
 
     </ul>
-  </nav>
+</nav>
 
 
 {% if messages %}
-			<div class="container-fluid p3">
-				{% bootstrap_messages %}
-			</div>
-		{% endif %}
+<div class="container-fluid p3">
+    {% bootstrap_messages %}
+</div>
+{% endif %}
 
-		{% block content %} {% endblock %}
+{% block content %} {% endblock %}
 
-		{% block footer %}
-			{% include "footer.html" %}
-		{% endblock %}
+{% block footer %}
+{% include "footer.html" %}
+{% endblock %}
 
 </body>
 </html>

@@ -4,7 +4,6 @@ from veiculos.models import Veiculo
 from decimal import Decimal
 from datetime import timedelta
 
-# Definição de preços dos planos
 PRECO_DIARIA = Decimal('50.00')
 PRECO_SEMANAL = Decimal('100.00')
 PRECO_MENSAL = Decimal('300.00')
@@ -36,20 +35,18 @@ class Modalidade(models.Model):
     @property
     def esta_atrasado(self):
         if not self.valido_ate:
-            return True  # Se nunca pagou, está atrasado
-        # Adiciona 24h de tolerância
+            return True
         return timezone.now() > self.valido_ate + timedelta(days=1)
 
     @property
     def valor_com_multa(self):
         valor_base = self.valor
         if self.esta_atrasado:
-            multa = valor_base * Decimal('0.10')  # Multa de 10%
+            multa = valor_base * Decimal('0.10')
             return (valor_base + multa).quantize(Decimal('0.01'))
         return valor_base
 
     def registrar_pagamento(self):
-        """Atualiza as datas de validade do plano."""
         self.ultimo_pagamento = timezone.now()
         if self.veiculo.plano == 'mensal':
             self.valido_ate = self.ultimo_pagamento + timedelta(days=30)
