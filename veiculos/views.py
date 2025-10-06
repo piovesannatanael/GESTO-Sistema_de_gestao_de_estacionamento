@@ -9,7 +9,7 @@ class VeiculosView(ListView):
     model = Veiculo
     template_name = 'veiculos.html'
     context_object_name = 'veiculos'
-    paginate_by = 1
+    paginate_by = 5
 
     def get_queryset(self):
             qs = super().get_queryset().prefetch_related('clientes')

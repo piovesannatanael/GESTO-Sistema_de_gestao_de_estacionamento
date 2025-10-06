@@ -81,17 +81,10 @@ class EstadiaSaidaUpdateView(UpdateView):
         return context
 
     def form_valid(self, form):
-        """
-        Garante que o formulário é guardado antes de redirecionar.
-        """
         self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        """
-        Após guardar a data de saída, redireciona para a tela de pagamento
-        passando o ID da estada que acabámos de atualizar.
-        """
         return reverse('pagamento_processar', kwargs={'estada_pk': self.object.pk})
 
 

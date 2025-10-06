@@ -13,7 +13,7 @@ class ClienteListView(ListView):
     model = ClienteGeral
     template_name = 'clientes.html'
     context_object_name = 'clientes'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -63,11 +63,11 @@ class ClienteDeleteView(DeleteView):
 
         if Estadia.objects.filter(cliente=cliente, finalizada=False).exists():
             if cliente.empresa:
-                nome_saida = f'{cliente.nome} / {cliente.empresa}'
+                nome_display = f'{cliente.nome} / {cliente.empresa}'
             else:
-                nome_saida = cliente.nome
+                nome_display = cliente.nome
             messages.error(request,
-                           f'O cliente "{nome_saida}" não pode ser apagado pois possui uma estada ativa no pátio.')
+                           f'O cliente "{nome_display}" não pode ser apagado pois possui uma estada ativa.')
             return redirect('clientes')
 
         return super().post(request, *args, **kwargs)

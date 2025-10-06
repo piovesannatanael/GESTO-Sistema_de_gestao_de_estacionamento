@@ -14,6 +14,7 @@ class Veiculo(models.Model):
     PLANOS_CHOICES = (
         ('diaria', 'Diária'),
         ('horario_avulso', 'Horário Avulso'),
+        ('semanal', 'Semanal'),
         ('mensal', 'Mensal'),
     )
 

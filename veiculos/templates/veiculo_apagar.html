@@ -7,22 +7,21 @@
             <div class="row">
                 <h1 class="text-center">EXCLUIR AUTOMÓVEL?</h1>
                 <h3 class="text-center">Dados do veículo</h3>
-                {% if object.foto.url is not empty %}
-                    <div class="col-2">
-                        <img src="{{ object.foto.url }}" class="img-thumbnail" width="500" height="500" alt="/">
-                    </div>
-                {% endif %}
+
                 <p class="p-2 mt-2"><strong>Placa: </strong>{{ object.placa }} </p>
                 <p class="p-2 mt-2"><strong>Marca/Modelo: </strong>{{ object.marca }} / {{ object.modelo }}</p>
                 <p class="p-2 mt-2"><strong>Cor: </strong>{{ object.cor }}</p>
-<p><strong>Cliente(s): </strong>
-    {% for cliente in object.clientes.all %}
-        {{ cliente }}{% if not forloop.last %}, {% endif %}
-    {% empty %}
-        Nenhum proprietário associado.
-    {% endfor %}
-</p>
+                <p><strong>Cliente(s): </strong>
+                    {% for cliente in object.clientes.all %}
+                    {{ cliente }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                    Nenhum proprietário associado.
+                    {% endfor %}
+                </p>
 
+                {% if object.foto.url is not empty %}
+                    <img src="{{ veiculo.foto.url }}" class="img-thumbnail" width="150" alt="Foto de {{ veiculo }}/">
+                {% endif %}
 
                 <p class="p-2 mt-2">Confirma a exclusão do veículo de placa <strong>{{ object.placa }}</strong>?</p>
 
@@ -33,12 +32,12 @@
                     <div class="text-end">
                         {% bootstrap_button button_type="submit" content="Sim" %}
                         <a href="{% url 'veiculos' %}" class="btn btn-secondary text-white" type="button">
-                           <span class="text">Cancelar</span>
+                            <span class="text">Cancelar</span>
                         </a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    </div>
+</div>
 {% endblock %}

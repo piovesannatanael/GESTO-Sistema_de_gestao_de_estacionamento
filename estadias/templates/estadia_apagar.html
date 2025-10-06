@@ -2,7 +2,7 @@
 {% load django_bootstrap5 %}
 {% block content %}
 <div id="dados">
-    <div class="card shadow m-3 col-md-6 mx-auto">
+    <div class="card m-3 col-md-6 mx-auto">
         <div class="card-body">
             <div class="row">
                 <h1 class="text-center">EXCLUIR ESTADIA?</h1>
@@ -14,9 +14,10 @@
                 <p><strong>Vaga Ocupada: </strong>{{ estadia.vaga }}</p>
                 <p><strong>Plano do veiculo: </strong>{{ estadia.veiculo.plano }}</p>
                 <p><strong>Data de Chegada: </strong>{{ estadia.data_chegada|date:"d/m/Y H:i" }}</p>
-               {% if estadia.veiculo.foto %}
-                        <img src="{{ estadia.veiculo.foto.url }}" class="img-thumbnail" width="150" alt="Foto de {{ estadia.veiculo }}"/>
-                    {% endif %}
+                {% if estadia.veiculo.foto %}
+                <img src="{{ estadia.veiculo.foto.url }}" class="img-thumbnail" width="150"
+                     alt="Foto de {{ estadia.veiculo }}"/>
+                {% endif %}
                 <p class="p-2 mt-2">Confirma a exclusão da estadia?</p>
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -24,12 +25,12 @@
                     <div class="text-end">
                         {% bootstrap_button button_type="submit" content="Sim" %}
                         <a href="{% url 'estadias' %}" class="btn btn-secondary text-white" type="button">
-                           <span class="text">Cancelar</span>
+                            <span class="text">Cancelar</span>
                         </a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    </div>
+</div>
 {% endblock %}
