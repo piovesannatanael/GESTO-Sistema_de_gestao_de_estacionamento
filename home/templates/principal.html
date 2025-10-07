@@ -13,8 +13,18 @@
     <div class="dropdown">
         <a href="#" class="user-profile text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
            aria-expanded="false">
-            Usuário: {{ request.user.username }}
 
+            {% if user.is_authenticated %}
+                {% if user.funcionario.foto %}
+                    <img src="{{ user.funcionario.foto.url }}" alt="Avatar do utilizador"/>
+                {% else %}
+                    <img src="{% static 'img/desconhecido.png' %}" alt="Avatar do utilizador"/>
+                {% endif %}
+                <span>{{ user.username }}</span>
+            {% else %}
+                <i class="fas fa-sign-in-alt me-2"></i>
+                <span>Acesso</span>
+            {% endif %}
         </a>
         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end text-small shadow">
             {% if user.is_authenticated %}

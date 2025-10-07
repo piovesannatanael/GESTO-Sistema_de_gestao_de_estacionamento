@@ -88,12 +88,9 @@
 
                 <ul class="list-group list-group-flush">
 
-                    <li class="list-group-item bg-transparent"><small class="text-muted"><strong>Veículo:</strong> {{
-                        estada.veiculo.placa }} ({{ estada.veiculo.modelo }})</small></li>
-                    <li class="list-group-item bg-transparent"><small class="text-muted"><strong>Cliente:</strong> {{
-                        estada.cliente }}</small></li>
-                    <li class="list-group-item bg-transparent"><small class="text-muted"><strong>Chegada:</strong> {{
-                        estada.data_chegada|date:"d/m/Y H:i" }}</small></li>
+                    <li class="list-group-item bg-transparent"><small class="text-muted"><strong>Veículo:</strong> {{ estada.veiculo.placa }} ({{ estada.veiculo.modelo }})</small></li>
+                    <li class="list-group-item bg-transparent"><small class="text-muted"><strong>Cliente:</strong> {{ estada.cliente }}</small></li>
+                    <li class="list-group-item bg-transparent"><small class="text-muted"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</small></li>
                 </ul>
 
                 {% else %}

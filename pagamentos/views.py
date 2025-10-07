@@ -3,16 +3,16 @@ from django.views import View
 from estadias.models import Estadia
 from .models import Pagamento
 from .forms import PagamentoForm
-from datetime import timedelta
 
 
 class ProcessarPagamentoView(View):
-    template_name = 'pagamentos.html'
+    template_name = 'pagamentos/pagamentos.html'
 
     def _get_context(self, request, estada_pk, form=None):
         """Função auxiliar para evitar repetição de código."""
         estada = get_object_or_404(Estadia, pk=estada_pk)
 
+        # Cria ou obtém o pagamento e calcula o valor se for a primeira vez
         pagamento, created = Pagamento.objects.get_or_create(estada=estada)
         if created or not pagamento.valor_calculado:
             pagamento.valor_calculado = pagamento.calcular_valor()
@@ -44,10 +44,11 @@ class ProcessarPagamentoView(View):
     def get(self, request, estada_pk):
         context = self._get_context(request, estada_pk)
         if context is None:
-            return redirect('estadias')
+            return redirect('estada_list')
         return render(request, self.template_name, context)
 
     def post(self, request, estada_pk):
+        # Usamos uma função auxiliar para não repetir a lógica de buscar e calcular
         context = self._get_context(request, estada_pk)
         pagamento = context['pagamento']
         form = PagamentoForm(request.POST, instance=pagamento)
@@ -55,9 +56,11 @@ class ProcessarPagamentoView(View):
         if form.is_valid():
             pagamento = form.save(commit=False)
 
+            # CORREÇÃO: Trata o 'None' dos campos vazios, convertendo para 0
             desconto = form.cleaned_data.get('desconto') or 0
             adicional = form.cleaned_data.get('valor_adicional') or 0
 
+            # O valor base já foi calculado e guardado no GET, agora apenas ajustamos
             valor_base = pagamento.valor_calculado
             pagamento.valor_calculado = valor_base - desconto + adicional
 
@@ -69,14 +72,16 @@ class ProcessarPagamentoView(View):
             elif metodo in ['cartao_credito', 'cartao_debito']:
                 return redirect('pagamento_cartao', pagamento_pk=pagamento.pk)
             else:
-                # Para dinheiro, já podemos considerar pago e ir para a tela de concluído
+                pagamento.status = 'pago'
+                pagamento.save()
                 return redirect('pagamento_concluido', pagamento_pk=pagamento.pk)
 
+        # Se o formulário for inválido, renderiza a página novamente com os erros
         return render(request, self.template_name, context)
 
 
 class PagamentoPixView(View):
-    template_name = 'pagamento_pix.html'
+    template_name = 'pagamentos/pagamento_pix.html'
 
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(Pagamento, pk=pagamento_pk)
@@ -85,7 +90,7 @@ class PagamentoPixView(View):
 
 
 class PagamentoCartaoView(View):
-    template_name = 'pagamento_cartao.html'
+    template_name = 'pagamentos/pagamento_cartao.html'
 
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(Pagamento, pk=pagamento_pk)
@@ -94,19 +99,15 @@ class PagamentoCartaoView(View):
 
 
 class PagamentoConcluidoView(View):
-    template_name = 'pagamento_concluido.html'
+    template_name = 'pagamentos/pagamento_concluido.html'
 
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(Pagamento, pk=pagamento_pk)
 
-        # Guarda os dados para o template antes de apagar o objeto
-        dados_para_template = {
-            'valor_pago': pagamento.valor_calculado,
-            'placa_veiculo': pagamento.estada.veiculo.placa,
-        }
+        if pagamento.status != 'pago':
+            pagamento.status = 'pago'
+            pagamento.save()
 
-        pagamento.estada.delete()
-
-        context = {'dados': dados_para_template}
+        context = {'pagamento': pagamento}
         return render(request, self.template_name, context)
 

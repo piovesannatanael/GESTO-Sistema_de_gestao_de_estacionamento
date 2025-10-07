@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -11,8 +12,7 @@ from .forms import ClienteGeralModelForm
 
 
 class ClienteListView(PermissionRequiredMixin, ListView):
-    permission_required = 'clientes.view_cliente'
-    permission_denied_message = 'Visualizar cliente'
+    permission_required = 'clientes.view_clientegeral'
     model = ClienteGeral
     template_name = 'clientes.html'
     context_object_name = 'clientes'
@@ -32,13 +32,13 @@ class ClienteListView(PermissionRequiredMixin, ListView):
         return qs
 
 
-class ClienteCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = 'clientes.add_cliente'
-    permission_denied_message = 'Cadastrar cliente'
+class ClienteCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'clientes.add_clientegeral'
     model = ClienteGeral
     form_class = ClienteGeralModelForm
     template_name = 'cliente_form.html'
     success_url = reverse_lazy('clientes')
+    success_message = 'Cliente cadastrado com sucesso!'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,13 +46,13 @@ class ClienteCreateView(PermissionRequiredMixin, CreateView):
         return context
 
 
-class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
-    permission_required = 'clientes.update_cliente'
-    permission_denied_message = 'Editar cliente'
+class ClienteUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = 'clientes.change_clientegeral'
     model = ClienteGeral
     form_class = ClienteGeralModelForm
     template_name = 'cliente_form.html'
     success_url = reverse_lazy('clientes')
+    success_message = 'Cliente atualizado com sucesso!'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -61,8 +61,7 @@ class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
 
 
 class ClienteDeleteView(PermissionRequiredMixin, DeleteView):
-    permission_required = 'clientes.delete_cliente'
-    permission_denied_message = 'Excluir cliente'
+    permission_required = 'clientes.delete_clientegeral'
     model = ClienteGeral
     template_name = 'cliente_apagar.html'
     success_url = reverse_lazy('clientes')

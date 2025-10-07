@@ -12,10 +12,10 @@ class Veiculo(models.Model):
         (4, '4 rodas ou mais'),
     )
     PLANOS_CHOICES = (
-        ('diaria', 'Diária'),
-        ('horario_avulso', 'Horário Avulso'),
-        ('semanal', 'Semanal'),
-        ('mensal', 'Mensal'),
+        ('Diaria', 'Diária'),
+        ('Avulso', 'Horário Avulso'),
+        ('Semanal', 'Semanal'),
+        ('Mensal', 'Mensal'),
     )
 
     placa = models.CharField('Placa', max_length=8, unique=True)

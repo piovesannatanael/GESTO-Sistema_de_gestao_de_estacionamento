@@ -46,6 +46,8 @@ class VagaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 class VagaUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = 'vagas.update_vaga'
+    permission_denied_message = 'Editar vaga'
     model = Vaga
     form_class = VagaModelForm
     template_name = 'vaga_form.html'
