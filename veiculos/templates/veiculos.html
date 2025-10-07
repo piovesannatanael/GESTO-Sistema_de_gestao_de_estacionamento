@@ -23,36 +23,35 @@
         <div class="table-responsive">
             <table class="table table-striped table-dark">
                 <thead>
-                    <tr>
-                        <th>Placa</th>
-                        <th>Modelo</th>
-                        <th>Proprietário(s)</th>
-                        <th>Categoria</th>
-                        <th>Plano</th>
-                        <th style="width: 100px; text-align: center">Ações</th>
-                    </tr>
+                <tr>
+                    <th>Placa</th>
+                    <th>Modelo</th>
+                    <th>Proprietário(s)</th>
+                    <th>Categoria</th>
+                    <th>Plano</th>
+                    <th class="text-center">Ações</th>
+                </tr>
                 </thead>
                 <tbody>
                 {% for veiculo in veiculos %}
                 <tr>
                     <td>
-                        <a href="#" data-bs-toggle="modal" id="link-modal" data-bs-target="#modal-veiculo-{{ veiculo.id }}">
+                        <a href="#" data-bs-toggle="modal"
+                           data-bs-target="#modal-veiculo-{{ veiculo.id }}">
                             {{ veiculo.placa }}
                         </a>
                     </td>
                     <td>{{ veiculo.modelo }}</td>
                     <td>
-                        {% for cliente in veiculo.clientes.all %}
-                        {{ cliente }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                        {% for cliente in veiculo.clientes.all %}{{ cliente }}{% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
                     <td>{{ veiculo.get_qtd_rodas_display }}</td>
                     <td>{{ veiculo.get_plano_display }}</td>
-                    <td>
+                    <td class="text-center">
+                        {# Os botões agora têm o mesmo estilo e espaçamento do template de clientes #}
                         <a href="{% url 'veiculo_editar' veiculo.pk %}" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="{% url 'veiculo_apagar' veiculo.pk %}" class="btn btn-sm btn-danger">Agpagar</a>
+                        <a href="{% url 'veiculo_apagar' veiculo.pk %}" class="btn btn-sm btn-danger">Apagar</a>
                     </td>
-
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -83,7 +82,7 @@
             <div class="modal-body text-center">
 
                 {% if veiculo.foto %}
-                <img src="{{ veiculo.foto.url }}" class="img-fluid img-thumbnail" width="150"
+                <img src="{{ veiculo.foto.url }}" class="img-fluid img-thumbnail mb-3" width="150"
                      alt="Foto de {{ veiculo.modelo }}"/>
                 {% endif %}
 
@@ -92,15 +91,14 @@
                 <p><strong>Plano Contratado:</strong> {{ veiculo.get_plano_display }}</p>
                 <hr>
                 <h6><strong>Proprietário(s):</strong></h6>
-                <ul>
+                <ul class="list-unstyled">
                     {% for cliente in veiculo.clientes.all %}
                     <li>
                         <strong>{{ cliente }}</strong>
-
-                    </li><small class="text-muted" >
+                        <small class="d-block text-muted">
                             ({{ cliente.get_tipo_cliente_display }}) - Contato: {{ cliente.fone }}
                         </small>
-                    </tr>
+                    </li>
                     {% empty %}
                     <li>Nenhum proprietário associado.</li>
                     {% endfor %}
