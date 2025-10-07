@@ -86,12 +86,13 @@ class EstadiaChegadaCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
 
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        if self.enviar_email(self.object):
-            messages.success(self.request, "Estadia registrada e email enviado.")
-        else:
-            messages.warning(self.request, "Estadia registrada, mas não foi possível enviar o email.")
-        return response
+
+        estadia = form.save(commit=False)
+        if estadia.veiculo:
+            estadia.plano = estadia.veiculo.plano
+        estadia.save()
+        self.object = estadia
+        return super().form_valid(form)
 
 
 class EstadiaChegadaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -125,10 +126,11 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
     def get_success_url(self):
         estadia = self.object
 
-        if estadia.plano == 'avulso':
+        if estadia.veiculo.plano == 'avulso':
             return reverse('pagamento_avulso', kwargs={'estada_pk': estadia.pk})
         else:
             return reverse('pagamento_modal_processar', kwargs={'estada_pk': estadia.pk})
+
 
 
 

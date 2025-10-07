@@ -5,7 +5,7 @@ from funcionarios.models import Funcionario
 from decimal import Decimal
 from datetime import timedelta
 
-PRECO_HORA_BASE = Decimal('10.00')
+PRECO_HORA_BASE = Decimal('15.00')
 
 class PagamentoAvulso(models.Model):
     METODO_CHOICES = (
@@ -21,10 +21,10 @@ class PagamentoAvulso(models.Model):
 
     estadia = models.OneToOneField(
         Estadia,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name='pagamento_avulso'
     )
-    metodo = models.CharField('Método', max_length=20, choices=METODO_CHOICES)
+    metodo = models.CharField('Método', max_length=20, choices=METODO_CHOICES, default='Cartão')
 
     valor_bruto = models.DecimalField(
         'Valor Bruto (sem descontos)',
@@ -115,13 +115,12 @@ class PagamentoAvulso(models.Model):
         return vals.get('valor_final', Decimal('0.00'))
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            valores = self.calcular_valores()
-            self.valor_bruto = valores['valor_bruto']
-            self.desconto_aplicado = valores['desconto']
-            self.valor_final = valores['valor_final']
+        valores = self.calcular_valores()
+        self.valor_bruto = valores['valor_bruto']
+        self.desconto_aplicado = valores['desconto']
+        self.valor_final = valores['valor_final']
 
-        if self.valor_final is not None and self.estadia:
+        if self.status == 'PAGO':
             self.estadia.valor_total = self.valor_final
             self.estadia.finalizada = True
             self.estadia.save()
