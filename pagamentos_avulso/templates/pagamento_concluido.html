@@ -1,0 +1,16 @@
+{% extends 'principal.html' %}
+{% block content %}
+<div class="container text-center mt-5">
+    <div class="card shadow m-3 col-md-6 mx-auto">
+        <div class="card-body">
+            <i class="fas fa-check-circle fa-7x my-4 text-success"></i>
+            <h3 class="card-title">Pagamento Concluído!</h3>
+            <p>O pagamento de <strong>R$ {{ pagamento.valor_final|floatformat:2 }}</strong> foi processado com sucesso.</p>
+            <p>A estada do veículo <strong>{{ pagamento.estadia.veiculo.placa }}</strong> foi finalizada.</p>
+            <p class="text-muted">Um recibo foi enviado para o e-mail cadastrado.</p>
+
+            <a href="{% url 'estadias' %}" class="btn btn-primary mt-3">Voltar para Estadias</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

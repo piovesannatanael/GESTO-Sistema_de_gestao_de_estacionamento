@@ -1,0 +1,21 @@
+Olá {{ cliente_nome }},
+
+Obrigado! Este é o seu recibo de pagamento para a estadia no GESTO Parking System.
+
+--- DETALHES DA ESTADIA ---
+Veículo: {{ veiculo_modelo }} - {{ veiculo_placa }}
+Chegada: {{ data_chegada|date:"d/m/Y H:i" }}
+Saída: {{ data_saida|date:"d/m/Y H:i" }}
+
+--- RECIBO DO PAGAMENTO ---
+Valor Bruto: R$ {{ valor_bruto }}
+Desconto Aplicado: - R$ {{ desconto_aplicado }}
+VALOR FINAL PAGO: R$ {{ valor_final }}
+
+Método de Pagamento: {{ metodo_pagamento }}
+Data do Pagamento: {{ data_pagamento|date:"d/m/Y H:i" }}
+
+Agradecemos pela sua preferência!
+
+Atenciosamente,
+Equipe GESTO Parking System

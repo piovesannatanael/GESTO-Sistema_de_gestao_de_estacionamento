@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <section id="dados" aria-label="Indicadores principais do estacionamento">
     <div class="dashboard-cards">
 
@@ -40,10 +42,42 @@
         </article>
     </div>
 </section>
-
-<section id="chart-container" aria-label="Gráfico de fluxo de veículos por hora">
-    <h2>Fluxo de Veículos </h2>
-    <canvas id="vehiclesFlowChart" role="img" aria-describedby="chart-desc"></canvas>
-    <p id="chart-desc" class="visually-hidden">Gráfico mostrando o número de veículos que entraram no
-        estacionamento.</p>
+<section class="section">
+  <div class="container">
+    {% if estadias_chegadas %}
+    <div class="card shadow m-3">
+      <div class="card-body">
+        <h3 class="text-center mb-4">Últimas Chegadas</h3>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-success">
+              <tr>
+                <th>Data Entrada</th>
+                <th>Veículo</th>
+                <th>Cliente</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for estadia in estadias_chegadas %}
+              <tr>
+                <td>{{ estadia.data_entrada|date:"d/m/Y H:i" }}</td>
+                <td>{{ estadia.veiculo.placa }}</td>
+                <td>{{ estadia.veiculo.cliente.nome }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      Nenhuma chegada registrada recentemente.
+    </div>
+    {% endif %}
+  </div>
 </section>
+
+
+
+

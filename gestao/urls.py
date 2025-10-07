@@ -16,7 +16,7 @@ urlpatterns = [
     path('', include('veiculos.urls')),
     path('', include('vagas.urls')),
     path('', include('estadias.urls')),
-    path('', include('pagamentos.urls')),
+    path('', include('pagamentos_avulso.urls')),
     path('', include('modalidades.urls')),
     path('', include('pagamentos_modal.urls')),
 

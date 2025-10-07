@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo de Pagamento - GESTO</title>
+</head>
+<body style="margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f4f4f4;">
+
+    <table style="max-width:600px; margin:20px auto; border-collapse:collapse; background-color:#ffffff; border: 1px solid #ddd;">
+        <tr>
+            <td align="center" style="background-color:#2d3748; padding:20px 0;">
+                <h1 style="color:#ffffff; margin:0; font-size:24px;">GESTO - Parking System</h1>
+            </td>
+        </tr>
+
+        <tr>
+            <td style="padding:40px 30px;">
+                <h2 style="color:#333333; font-size:20px; margin-top:0;">Olá {{ cliente_nome }},</h2>
+                <p style="color:#555555; font-size:16px; line-height:1.5;">
+                    Obrigado! Confirmamos o recebimento do seu pagamento. Segue abaixo o resumo da sua estadia e o recibo.
+                </p>
+
+                <hr style="border:0; border-top:1px solid #eeeeee; margin:20px 0;">
+
+                <h3 style="color:#333333; font-size:18px; margin-bottom: 15px;">Detalhes da Estadia</h3>
+                <p style="color:#555555; font-size:16px; margin: 5px 0;"><strong>Veículo:</strong> {{ veiculo_modelo }} - {{ veiculo_placa }}</p>
+                <p style="color:#555555; font-size:16px; margin: 5px 0;"><strong>Chegada:</strong> {{ data_chegada|date:"d/m/Y H:i" }}</p>
+                <p style="color:#555555; font-size:16px; margin: 5px 0;"><strong>Saída:</strong> {{ data_saida|date:"d/m/Y H:i" }}</p>
+
+                <hr style="border:0; border-top:1px solid #eeeeee; margin:20px 0;">
+
+                <h3 style="color:#333333; font-size:18px; margin-bottom: 15px;">Recibo do Pagamento</h3>
+                <table style="width:100%; border-collapse:collapse;">
+                    <tr>
+                        <td style="padding:8px; font-size:16px; color:#555;">Valor Bruto:</td>
+                        <td align="right" style="padding:8px; font-size:16px; color:#555;">R$ {{ valor_bruto }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px; font-size:16px; color:#555;">Desconto Aplicado:</td>
+                        <td align="right" style="padding:8px; font-size:16px; color:#555;">- R$ {{ desconto_aplicado }}</td>
+                    </tr>
+                    <tr style="border-top: 2px solid #eee;">
+                        <td style="padding:10px 8px; font-size:18px; color:#333;"><strong>Valor Final Pago:</strong></td>
+                        <td align="right" style="padding:10px 8px; font-size:18px; color:#333;"><strong>R$ {{ valor_final }}</strong></td>
+                    </tr>
+                </table>
+
+                 <p style="color:#555555; font-size:16px; margin: 20px 0 5px 0;"><strong>Método de Pagamento:</strong> {{ metodo_pagamento }}</p>
+                 <p style="color:#555555; font-size:16px; margin: 5px 0;"><strong>Data do Pagamento:</strong> {{ data_pagamento|date:"d/m/Y H:i" }}</p>
+
+
+                <p style="color:#555555; font-size:16px; line-height:1.5; margin-top:30px;">
+                    Agradecemos pela confiança e esperamos vê-lo novamente em breve!
+                </p>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="center" style="background-color:#eeeeee; padding:15px;">
+                <p style="color:#888888; font-size:12px; margin:0;">Este é um e-mail automático. Por favor, não responda.</p>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

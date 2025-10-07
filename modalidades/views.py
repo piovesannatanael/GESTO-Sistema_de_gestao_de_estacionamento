@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
 
-from pagamentos.forms import PagamentoForm
+from pagamentos_avulso.forms import PagamentoAvulsoForm
 from veiculos.models import Veiculo
 from .models import Modalidade
 
@@ -37,7 +37,7 @@ class PagarModalidadeView(View):
 
     def get(self, request, modalidade_pk):
         modalidade = get_object_or_404(Modalidade, pk=modalidade_pk)
-        form = PagamentoForm(initial={'valor_pago': modalidade.valor_com_multa})
+        form = PagamentoAvulsoForm(initial={'valor_pago': modalidade.valor_com_multa})
 
         context = {
             'form': form,
@@ -47,7 +47,7 @@ class PagarModalidadeView(View):
 
     def post(self, request, modalidade_pk):
         modalidade = get_object_or_404(Modalidade, pk=modalidade_pk)
-        form = PagamentoForm(request.POST)
+        form = PagamentoAvulsoForm(request.POST)
 
         if form.is_valid():
             pagamento = form.save(commit=False)

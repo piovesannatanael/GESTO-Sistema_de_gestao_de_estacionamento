@@ -49,7 +49,7 @@ INSTALLED_APPS += ['home',
                    'veiculos',
                    'estadias',
                    'vagas',
-                   'pagamentos',
+                   'pagamentos_avulso',
                    'modalidades',
                    'pagamentos_modal',
                    ]

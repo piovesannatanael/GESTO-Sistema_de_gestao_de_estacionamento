@@ -1,3 +1,4 @@
+
 from django.views.generic import TemplateView
 from clientes.models import ClienteGeral
 from estadias.models import Estadia
@@ -18,3 +19,4 @@ class IndexView(TemplateView):
         context['qtd_vagas_totais'] = Vaga.objects.count()
         context['qtd_estadias'] = Estadia.objects.count()
         return context
+

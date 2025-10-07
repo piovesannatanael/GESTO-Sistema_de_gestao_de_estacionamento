@@ -1,7 +1,9 @@
 from django.urls import path
 from .views import (
 
-    EstadiaListView, EstadiaChegadaCreateView, EstadiaChegadaUpdateView, EstadiaSaidaUpdateView, EstadiaDeleteView)
+    EstadiaListView, EstadiaChegadaCreateView, EstadiaChegadaUpdateView, EstadiaSaidaUpdateView, EstadiaDeleteView,
+    DashboardView,
+)
 
 urlpatterns = [
     path('estadias', EstadiaListView.as_view(), name='estadias'),
@@ -9,5 +11,6 @@ urlpatterns = [
     path('estadia/<int:pk>/editar/', EstadiaChegadaUpdateView.as_view(), name='estadia_editar'),
     path('estadia/<int:pk>/saida/', EstadiaSaidaUpdateView.as_view(), name='estadia_saida'),
     path('estadia/<int:pk>/apagar/', EstadiaDeleteView.as_view(), name='estadia_apagar'),
+    path('estadias/grafico', DashboardView.as_view(), name='grafico'),
 ]
 

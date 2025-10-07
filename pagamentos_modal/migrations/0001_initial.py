@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('valor_pago', models.DecimalField(decimal_places=2, max_digits=8)),
                 ('data_pagamento', models.DateTimeField(default=django.utils.timezone.now)),
                 ('metodo', models.CharField(choices=[('dinheiro', 'Dinheiro'), ('cartao_credito', 'Cartão de Crédito'), ('cartao_debito', 'Cartão de Débito'), ('pix', 'PIX')], max_length=20, verbose_name='Método')),
-                ('modalidade', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pagamentos', to='modalidades.modalidade')),
+                ('modalidade', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pagamentos_avulso', to='modalidades.modalidade')),
             ],
             options={
                 'verbose_name': 'Pagamento de Plano',

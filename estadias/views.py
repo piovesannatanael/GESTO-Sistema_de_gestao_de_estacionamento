@@ -55,7 +55,6 @@ class EstadiaChegadaCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return context
 
     def enviar_email(self, estadia):
-
         cliente = estadia.cliente
         recipient = [estadia.cliente.email]
         if cliente.tipo_cliente == 'PF':
@@ -97,47 +96,6 @@ class EstadiaChegadaCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return response
 
 
-
-# def form_valid(self, form):
-#     veiculo = form.cleaned_data.get('veiculo')
-#     if veiculo:
-#         form.instance.plano = veiculo.plano
-#
-#     response = super().form_valid(form)
-#
-#     # --- LÓGICA DE ENVIO DE EMAIL ADAPTADA E ADICIONADA ---
-#     # self.object agora contém a estada que acabámos de criar.
-#     estada = self.object
-#
-#     try:
-#
-#         dados = {
-#             'cliente': estada.cliente,
-#             'veiculo': estada.veiculo,
-#             'horario': estada.data_chegada,
-#             'funcionario': estada.funcionario,
-#         }
-#
-#         # 2. Renderiza o template HTML do e-mail e cria uma versão em texto simples
-#         html_email = render_to_string('emails/texto_email.html', dados)
-#         texto_email = strip_tags(html_email)
-#
-#         # 3. Envia o e-mail
-#         send_mail(
-#             subject='GESTO - Confirmação de Chegada do Veículo',
-#             message=texto_email,
-#             from_email='nao-responda@gesto.com.br',  # Substitua pelo seu e-mail de envio
-#             recipient_list=[estada.cliente.email],
-#             html_message=html_email,
-#             fail_silently=False  # Levanta um erro se o envio falhar
-#         )
-#         messages.success(self.request, "Estada registada e e-mail de confirmação enviado com sucesso!")
-#     except Exception as e:
-#         messages.error(self.request, f"A estada foi registada, mas o e-mail de confirmação falhou: {e}")
-#
-#     return response
-
-
 class EstadiaChegadaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'estadias.change_estadia'
     model = Estadia
@@ -163,11 +121,27 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
         return context
 
     def form_valid(self, form):
+        # O self.object é populado aqui quando o formulário é salvo
         self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('pagamento_processar', kwargs={'estada_pk': self.object.pk})
+        """
+        Verifica o plano da estadia e redireciona para a tela de pagamento correta.
+        """
+        # Acessa a estadia que acabou de ser atualizada através de self.object
+        estadia = self.object
+
+        # ATENÇÃO: Confirme se o valor 'avulso' é exatamente o que você usa no seu modelo.
+        # Em alguns arquivos, usamos 'horario_avulso'.
+        if estadia.plano == 'avulso':
+            # Se o plano for avulso, vai para a URL de pagamento avulso
+            return reverse('pagamento_avulso', kwargs={'estada_pk': estadia.pk})
+        else:
+            # Para qualquer outro plano (diaria, semanal, mensal),
+            # redireciona para a URL de pagamento por modalidade.
+            return reverse('pagamento_modal', kwargs={'estada_pk': estadia.pk})
+
 
 
 class EstadiaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -186,3 +160,15 @@ class EstadiaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         messages.success(request, f"A estada do veículo {estada.veiculo.placa} foi apagada e a vaga foi liberada.")
 
         return response
+
+class DashboardView(ListView):
+    model = Estadia
+    template_name = 'dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # estadias em andamento
+        context['object_list'] = Estadia.objects.filter(data_saida__isnull=True)
+        # últimas chegadas (ordenadas por entrada, limitando a 10)
+        context['estadias_chegadas'] = Estadia.objects.filter(data_chegada__isnull=False).order_by('-data_chegada')[:10]
+        return context
