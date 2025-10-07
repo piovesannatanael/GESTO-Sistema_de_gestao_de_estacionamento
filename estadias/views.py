@@ -92,6 +92,7 @@ class EstadiaChegadaCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
             estadia.plano = estadia.veiculo.plano
         estadia.save()
         self.object = estadia
+        self.enviar_email(self.object)
         return super().form_valid(form)
 
 
@@ -116,22 +117,25 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["titulo"] = "Registar Saída de Veículo"
+        context["titulo"] = "Registrar Saída de Veículo"
         return context
 
     def form_valid(self, form):
         self.object = form.save()
-        return HttpResponseRedirect(self.get_success_url())
 
-    def get_success_url(self):
-        estadia = self.object
+        vaga = self.object.vaga
+        if vaga:
+            vaga.status = 'livre'
+            vaga.save()
 
-        if estadia.veiculo.plano == 'avulso':
-            return reverse('pagamento_avulso', kwargs={'estada_pk': estadia.pk})
+        logger.info(f"Plano do veículo: {self.object.veiculo.plano}")
+
+        if self.object.veiculo.plano == 'Avulso':
+            logger.info("Redirecionando para pagamento_avulso")
+            return HttpResponseRedirect(reverse('pagamento_avulso', kwargs={'estada_pk': self.object.pk}))
         else:
-            return reverse('pagamento_modal_processar', kwargs={'estada_pk': estadia.pk})
-
-
+            logger.info("Redirecionando para pagamento_modal_processar")
+            return HttpResponseRedirect(reverse('pagamento_modal_processar', kwargs={'estada_pk': self.object.pk}))
 
 
 class EstadiaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
