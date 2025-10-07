@@ -6,7 +6,7 @@ from stdimage import StdImageField
 
 class Pessoa(models.Model):
     nome = models.CharField('Nome', max_length=50, help_text='Nome completo')
-    fone = models.CharField('Fone', max_length=15, help_text='Número de telefone (Apenas números)', unique=True)
+    fone = models.CharField('Fone', max_length=12, help_text='Número de telefone (Apenas números)', unique=True)
     email = models.EmailField('E-mail', max_length=100, help_text='E-mail', unique=True)
     endereco = models.CharField('Endereço', max_length=300, help_text='Endereço completo')
     foto = StdImageField('Foto', upload_to='pessoas', delete_orphans=True, null=True, blank=True)
@@ -21,7 +21,7 @@ class Pessoa(models.Model):
 
 
 class PessoaFisica(Pessoa):
-    cpf = models.CharField('CPF', max_length=11, unique=True, null=True, blank=True, help_text='Digite o CPF')
+    cpf = models.CharField('CPF', max_length=14, unique=True, null=True, blank=True, help_text='Digite o CPF')
     data_nascimento = models.DateField('Data de nascimento', null=True, blank=True, help_text='Data de nascimento')
 
     class Meta:

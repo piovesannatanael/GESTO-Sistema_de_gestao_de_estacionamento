@@ -21,15 +21,15 @@ class FuncionarioModelForm(forms.ModelForm):
         widgets = {
             'cpf': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'XXXXXXXXXXX',
-                'pattern': '[0-9]{11}',
-                'title': 'Formato esperado: XXXXXXXXXXX'
+                'placeholder': 'XXX.XXX.XXX-XX',
+                'pattern': '[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2}',
+                'title': 'Formato esperado: XXX.XXX.XXX-XX'
             }),
             'fone': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'XXXXXXXXXXX',
-                'pattern': '\\[0-9]{2}\\[0-9]{9}',
-                'title': 'Formato esperado: XXXXXXXXXXX'
+                'placeholder': 'XX XXXXXXXXX',
+                'pattern': '\\[0-9]{2}\\ [0-9]{9}',
+                'title': 'Formato esperado: XX XXXXXXXXX'
             }),
         }
 
