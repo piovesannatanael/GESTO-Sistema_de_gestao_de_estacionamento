@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView
 
@@ -11,19 +12,20 @@ from funcionarios.models import Funcionario
 class FuncionariosView(ListView):
     model = Funcionario
     template_name = 'funcionarios.html'
+    context_object_name = 'funcionarios'
+    paginate_by = 5
 
     def get_queryset(self):
+        qs = super().get_queryset()
         buscar = self.request.GET.get('buscar')
-        qs = super(FuncionariosView, self).get_queryset()
-        if buscar:
-            qs = qs.filter(nome__icontains=buscar)
 
-        if qs.count()>0:
-            paginator = Paginator(qs, 1)
-            listagem = paginator.get_page(self.request.GET.get('page'))
-            return listagem
-        else:
-            return messages.info(self.request, 'Nenhum funcionário cadastrado!')
+        if buscar:
+            qs = qs.filter(
+                Q(nome__icontains=buscar) |
+                Q(funcao__icontains=buscar)
+            )
+        return qs
+
 
 class FuncionarioAddView(SuccessMessageMixin, CreateView):
     model = Funcionario
@@ -32,6 +34,7 @@ class FuncionarioAddView(SuccessMessageMixin, CreateView):
     success_url = reverse_lazy('funcionarios')
     success_message = 'Funcionario cadastrado com sucesso!'
 
+
 class FuncionarioUpdateView(SuccessMessageMixin, UpdateView):
     model = Funcionario
     form_class = FuncionarioModelForm
@@ -39,9 +42,9 @@ class FuncionarioUpdateView(SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy('funcionarios')
     success_message = 'Funcionario alterado com sucesso!'
 
+
 class FuncionarioDeleteView(SuccessMessageMixin, DeleteView):
     model = Funcionario
     template_name = 'funcionario_apagar.html'
     success_url = reverse_lazy('funcionarios')
     success_message = 'Funcionario excluído com sucesso!'
-

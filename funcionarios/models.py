@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models.functions import Upper
-from stdimage import StdImageField
 
 from clientes.models import PessoaFisica
 

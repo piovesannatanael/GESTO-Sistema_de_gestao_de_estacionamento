@@ -17,11 +17,9 @@ class EstadiaChegadaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         vagas_livres = Vaga.objects.filter(status="livre")
-        # Garante que, na edição, a vaga atual do veículo apareça na lista de opções
         if self.instance and self.instance.pk and self.instance.vaga:
             vagas_livres = vagas_livres | Vaga.objects.filter(pk=self.instance.vaga.pk)
         self.fields['vaga'].queryset = vagas_livres.distinct()
-
         self.fields['veiculo'].queryset = Veiculo.objects.order_by('placa')
         self.fields['cliente'].queryset = ClienteGeral.objects.order_by('nome', 'empresa')
         self.fields['funcionario'].queryset = Funcionario.objects.order_by('nome')
@@ -50,8 +48,6 @@ class EstadiaSaidaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Preenche o campo 'data_saida' com o horário local atual por padrão
         if not self.instance.data_saida:
-            # CORREÇÃO: Usa localtime() para converter a hora UTC para o fuso horário local (ex: São Paulo)
             self.initial['data_saida'] = localtime(now()).strftime('%Y-%m-%dT%H:%M')
 
