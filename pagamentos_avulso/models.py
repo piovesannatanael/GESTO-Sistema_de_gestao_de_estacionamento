@@ -1,4 +1,3 @@
-# pagamentos_avulso/models.py
 from django.db import models
 from django.utils import timezone
 from estadias.models import Estadia
@@ -68,7 +67,6 @@ class PagamentoAvulso(models.Model):
         veiculo = self.estadia.veiculo
         acrescimo = Decimal('0.00')
         qtd_rodas = getattr(veiculo, 'qtd_rodas', None)
-        # normalize to int/string as appropriate
         try:
             qtd_rodas_int = int(qtd_rodas)
         except Exception:
@@ -106,11 +104,9 @@ class PagamentoAvulso(models.Model):
             'valor_final': round(valor_final, 2),
         }
 
-    # compatibilidade com views que chamavam calcular_valor()
     def calcular_valor(self):
         return self.calcular_valores()
 
-    # expositor read-only para uso em forms/templates
     @property
     def valor_calculado(self):
         if self.valor_final is not None:
@@ -119,14 +115,12 @@ class PagamentoAvulso(models.Model):
         return vals.get('valor_final', Decimal('0.00'))
 
     def save(self, *args, **kwargs):
-        # Ao criar, calcula e popula campos
         if not self.pk:
             valores = self.calcular_valores()
             self.valor_bruto = valores['valor_bruto']
             self.desconto_aplicado = valores['desconto']
             self.valor_final = valores['valor_final']
 
-        # Atualiza a estadia relacionada com segurança se existe
         if self.valor_final is not None and self.estadia:
             self.estadia.valor_total = self.valor_final
             self.estadia.finalizada = True

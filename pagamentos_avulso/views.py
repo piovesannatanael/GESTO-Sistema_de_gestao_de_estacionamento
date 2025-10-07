@@ -98,13 +98,11 @@ class PagamentoConcluidoView(View):
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(PagamentoAvulso, pk=pagamento_pk)
 
-        # A lógica de envio de e-mail é chamada aqui
         if pagamento.status != 'PAGO':
             pagamento.status = 'PAGO'
             pagamento.data_pagamento = timezone.now()
             pagamento.save()
 
-            # Chama a função para enviar o e-mail após confirmar o pagamento
             self.enviar_email_recibo_avulso(pagamento)
 
         context = {'pagamento': pagamento}

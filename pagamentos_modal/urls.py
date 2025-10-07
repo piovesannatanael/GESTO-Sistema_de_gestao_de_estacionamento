@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import ProcessarPagamentoModalView, PagamentoPixView, PagamentoCartaoView, PagamentoConcluidoView
+from .views import (ProcessarPagamentoModalView, PagamentoPixModalView, PagamentoCartaoModalView, PagamentoConcluidoModalView)
 
 urlpatterns = [
-    path('<int:estada_pk>/', ProcessarPagamentoModalView.as_view(), name='pagamento_modal'),
-    path('<int:pagamento_pk>/pix/', PagamentoPixView.as_view(), name='pagamento_pix'),
-    path('<int:pagamento_pk>/cartao/', PagamentoCartaoView.as_view(), name='pagamento_cartao'),
-    path('<int:pagamento_pk>/concluido/', PagamentoConcluidoView.as_view(), name='pagamento_concluido'),
+    path('<int:estada_pk>/', ProcessarPagamentoModalView.as_view(), name='pagamento_modal_processar'),
+    path('<int:pagamento_pk>/pix/', PagamentoPixModalView.as_view(), name='pagamento_modal_pix'),
+    path('<int:pagamento_pk>/cartao/', PagamentoCartaoModalView.as_view(), name='pagamento_modal_cartao'),
+    path('<int:pagamento_pk>/concluido/', PagamentoConcluidoModalView.as_view(), name='pagamento_modal_concluido'),
 ]

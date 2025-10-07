@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -6,7 +5,6 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.contrib import messages
 from django.views.generic.base import logger
 
@@ -121,26 +119,16 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
         return context
 
     def form_valid(self, form):
-        # O self.object é populado aqui quando o formulário é salvo
         self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        """
-        Verifica o plano da estadia e redireciona para a tela de pagamento correta.
-        """
-        # Acessa a estadia que acabou de ser atualizada através de self.object
         estadia = self.object
 
-        # ATENÇÃO: Confirme se o valor 'avulso' é exatamente o que você usa no seu modelo.
-        # Em alguns arquivos, usamos 'horario_avulso'.
         if estadia.plano == 'avulso':
-            # Se o plano for avulso, vai para a URL de pagamento avulso
             return reverse('pagamento_avulso', kwargs={'estada_pk': estadia.pk})
         else:
-            # Para qualquer outro plano (diaria, semanal, mensal),
-            # redireciona para a URL de pagamento por modalidade.
-            return reverse('pagamento_modal', kwargs={'estada_pk': estadia.pk})
+            return reverse('pagamento_modal_processar', kwargs={'estada_pk': estadia.pk})
 
 
 
@@ -167,8 +155,6 @@ class DashboardView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # estadias em andamento
         context['object_list'] = Estadia.objects.filter(data_saida__isnull=True)
-        # últimas chegadas (ordenadas por entrada, limitando a 10)
         context['estadias_chegadas'] = Estadia.objects.filter(data_chegada__isnull=False).order_by('-data_chegada')[:10]
         return context
