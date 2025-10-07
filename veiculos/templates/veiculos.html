@@ -12,7 +12,7 @@
             <div class="input-group">
                 <input class="form-control" type="text" name="buscar" value="{{ buscar }}"
                        placeholder="Buscar por placa, nome do cliente ou empresa...">
-                <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                <button type="submit" class="btn btn-outline-secondary">🔍 Buscar</button>
             </div>
         </form>
     </div>
@@ -36,7 +36,7 @@
                 {% for veiculo in veiculos %}
                 <tr>
                     <td>
-                        <a href="#" data-bs-toggle="modal"
+                        <a href="#" id="link-modal" data-bs-toggle="modal"
                            data-bs-target="#modal-veiculo-{{ veiculo.id }}">
                             {{ veiculo.placa }}
                         </a>

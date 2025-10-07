@@ -21,7 +21,7 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% for estada in object_list %}
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
+                    <div class="card text-bg-dark h-100 shadow-sm ">
                         {% if estada.veiculo.foto %}
                             <img src="{{ estada.veiculo.foto }}" class="card-img-top" alt="Foto do veículo {{ estada.veiculo.placa }}" style="height: 200px; object-fit: cover;">
                         {% else %}
@@ -30,16 +30,21 @@
                             </div>
                         {% endif %}
 
-                        <div class="card-body">
-                            <h5 class="card-title">{{ estada.veiculo.placa }}</h5>
+                        <div class="card text-bg-dark h-100 shadow-sm">
+                            <div class="text-center" style="padding:10px !important;">
+                             <h5><a href="#" data-bs-toggle="modal" id="link-modal"
+                           data-bs-target="#modal-estada-{{ estada.id }}" >
+                            {{ estada.veiculo.placa }}
+                        </a></h5>
                             <h6 class="card-subtitle mb-2 text-muted">{{ estada.veiculo.marca }} {{ estada.veiculo.modelo }}</h6>
                         </div>
+                            </div>
 
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Cliente:</strong> {{ estada.cliente }}</li>
-                            <li class="list-group-item"><strong>Vaga:</strong> {{ estada.vaga }}</li>
-                            <li class="list-group-item"><strong>Plano do veículo:</strong> {{ estada.veiculo.plano }}</li>
-                            <li class="list-group-item"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</li>
+                            <li class="list-group-item text-bg-dark"><strong>Cliente:</strong> {{ estada.cliente }}</li>
+                            <li class="list-group-item text-bg-dark"><strong>Vaga:</strong> {{ estada.vaga }}</li>
+                            <li class="list-group-item text-bg-dark"><strong>Plano do veículo:</strong> {{ estada.veiculo.plano }}</li>
+                            <li class="list-group-item text-bg-dark"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</li>
                         </ul>
 
                         <div class="card-footer d-flex justify-content-between gap-2">

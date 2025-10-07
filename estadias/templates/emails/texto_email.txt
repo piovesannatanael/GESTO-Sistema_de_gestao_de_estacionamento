@@ -1,17 +1,9 @@
-Olá {{cliente}},
-Estamos enviando este email para comunicar que seu carro será muito bem cuidado em noso estacionamento!
+Olá {{ cliente }},
 
-Dados do veículo
-Placa: {{ veiculo.placa }}
-Modelo: {{ veiculo.modelo}}
+Seu veículo (placa: {{ placa }}, modelo: {{ modelo }}) chegou ao estacionamento.
 
-Dados da estadia
 Chegada: {{ horario }}
-Funcionario responsável pelo agendamento: {{ funcionario }}
+Funcionário: {{ funcionario }}
 
-
-Estaremos a disposição para seu retorno e retirada do veículo.
-
-Agradecemos pela preferencia
-
+Agradecemos pela preferência!
 GESTO - Parking System

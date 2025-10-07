@@ -33,7 +33,6 @@ class Estadia(models.Model):
                 vaga_original = Estadia.objects.get(pk=self.pk).vaga
             except Estadia.DoesNotExist:
                 pass
-
         super().save(*args, **kwargs)
 
         if self.vaga:
