@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -9,7 +10,9 @@ from .models import ClienteGeral
 from .forms import ClienteGeralModelForm
 
 
-class ClienteListView(ListView):
+class ClienteListView(PermissionRequiredMixin, ListView):
+    permission_required = 'clientes.view_cliente'
+    permission_denied_message = 'Visualizar cliente'
     model = ClienteGeral
     template_name = 'clientes.html'
     context_object_name = 'clientes'
@@ -29,7 +32,9 @@ class ClienteListView(ListView):
         return qs
 
 
-class ClienteCreateView(CreateView):
+class ClienteCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = 'clientes.add_cliente'
+    permission_denied_message = 'Cadastrar cliente'
     model = ClienteGeral
     form_class = ClienteGeralModelForm
     template_name = 'cliente_form.html'
@@ -41,7 +46,9 @@ class ClienteCreateView(CreateView):
         return context
 
 
-class ClienteUpdateView(UpdateView):
+class ClienteUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = 'clientes.update_cliente'
+    permission_denied_message = 'Editar cliente'
     model = ClienteGeral
     form_class = ClienteGeralModelForm
     template_name = 'cliente_form.html'
@@ -53,7 +60,9 @@ class ClienteUpdateView(UpdateView):
         return context
 
 
-class ClienteDeleteView(DeleteView):
+class ClienteDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = 'clientes.delete_cliente'
+    permission_denied_message = 'Excluir cliente'
     model = ClienteGeral
     template_name = 'cliente_apagar.html'
     success_url = reverse_lazy('clientes')

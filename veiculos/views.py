@@ -1,11 +1,13 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
-from django.forms import models
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Veiculo
 from .forms import VeiculoModelForm
 
-class VeiculosView(ListView):
+class VeiculosView(PermissionRequiredMixin, ListView):
+    permission_required = 'veiculos.view_veiculos'
+    permission_denied_message = 'Visualizar veiculos'
     model = Veiculo
     template_name = 'veiculos.html'
     context_object_name = 'veiculos'
@@ -23,21 +25,27 @@ class VeiculosView(ListView):
                 ).distinct()
             return qs
 
-class VeiculoAddView(CreateView):
+class VeiculoAddView(PermissionRequiredMixin, CreateView):
+    permission_required = 'veiculos.add_veiculos'
+    permission_denied_message = 'Cadastrar veiculos'
     model = Veiculo
     form_class = VeiculoModelForm
     template_name = 'veiculo_form.html'
     success_url = reverse_lazy('veiculos')
     success_message = 'Veículo cadastrado com sucesso!'
 
-class VeiculoUpdateView(UpdateView):
+class VeiculoUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = 'veiculos.update_veiculos'
+    permission_denied_message = 'Atualizar veiculos'
     model = Veiculo
     form_class = VeiculoModelForm
     template_name = 'veiculo_form.html'
     success_url = reverse_lazy('veiculos')
     success_message = 'Veículo atualizado com sucesso!'
 
-class VeiculoDeleteView(DeleteView):
+class VeiculoDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = 'veiculos.delete_veiculos'
+    permission_denied_message = 'Excluir veiculos'
     model = Veiculo
     template_name = 'veiculo_apagar.html'
     success_url = reverse_lazy('veiculos')

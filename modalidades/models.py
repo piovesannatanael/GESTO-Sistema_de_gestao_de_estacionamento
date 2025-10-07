@@ -36,7 +36,7 @@ class Modalidade(models.Model):
     def esta_atrasado(self):
         if not self.valido_ate:
             return True
-        return timezone.now() > self.valido_ate + timedelta(days=1)
+        return timezone.now() > self.valido_ate + timedelta(days=0.5)
 
     @property
     def valor_com_multa(self):

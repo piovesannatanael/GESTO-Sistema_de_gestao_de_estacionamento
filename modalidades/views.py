@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
@@ -7,8 +8,9 @@ from veiculos.models import Veiculo
 from .models import Modalidade
 
 
-class ModalidadeListView(ListView):
-
+class ModalidadeListView(PermissionRequiredMixin, ListView):
+    permission_required = 'modalidades.view_modalidade'
+    permission_denied_message = 'Visualizar modalidade'
     model = Veiculo
     template_name = 'modalidades/modalidade_list.html'
     context_object_name = 'veiculos'
@@ -52,7 +54,7 @@ class PagarModalidadeView(View):
             pagamento.modalidade = modalidade
             pagamento.save()
 
-            return redirect('modalidades:modalidade_list')
+            return redirect('modalidades:modalidades')
 
         context = {
             'form': form,

@@ -9,7 +9,6 @@ class PagarModalidadeView(View):
 
     def get(self, request, modalidade_pk):
         modalidade = get_object_or_404(Modalidade, pk=modalidade_pk)
-        # Preenche o formulário com o valor a ser pago (com multa, se houver)
         form = PagamentoModalidadeForm(initial={'valor_pago': modalidade.valor_com_multa})
 
         context = {
@@ -27,10 +26,8 @@ class PagarModalidadeView(View):
             pagamento.modalidade = modalidade
             pagamento.save()
 
-            # Redireciona de volta para a lista de modalidades após o sucesso
             return redirect('modalidades:modalidade_list')
 
-        # Se o formulário for inválido, renderiza a página novamente com os erros
         context = {
             'form': form,
             'modalidade': modalidade,

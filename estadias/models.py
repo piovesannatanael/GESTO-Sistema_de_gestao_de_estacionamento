@@ -1,4 +1,3 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from veiculos.models import Veiculo
@@ -8,22 +7,18 @@ from vagas.models import Vaga
 
 
 class Estadia(models.Model):
-    # Relacionamentos
     veiculo = models.ForeignKey(Veiculo, on_delete=models.PROTECT)
     cliente = models.ForeignKey(ClienteGeral, on_delete=models.SET_NULL, null=True, blank=True)
     funcionario = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, blank=True)
-
     vaga = models.ForeignKey(Vaga, on_delete=models.SET_NULL, null=True, blank=True)
-
     plano = models.CharField('Plano', max_length=20, choices=Veiculo.PLANOS_CHOICES, null=True, blank=True)
-
-    # Controle de Tempo e Status
     data_chegada = models.DateTimeField(default=timezone.now)
     data_saida = models.DateTimeField(null=True, blank=True)
     finalizada = models.BooleanField(default=False)
     valor_total = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 
     class Meta:
+        permissions = (('encerrar_estadia','Permite fazer o encerramento de uma estadia'),)
         verbose_name = 'Estadia'
         verbose_name_plural = 'Estadias'
         ordering = ['-data_chegada']
@@ -41,7 +36,6 @@ class Estadia(models.Model):
 
         super().save(*args, **kwargs)
 
-        # CORREÇÃO: A indentação deste bloco foi ajustada
         if self.vaga:
             if self.finalizada:
                 self.vaga.status = 'livre'

@@ -1,28 +1,43 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q, Prefetch
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
+from estadias.models import Estadia
 from vagas.forms import VagaModelForm
 from vagas.models import Vaga
 
 
-class VagasView(ListView):
+class VagasView(PermissionRequiredMixin, ListView):
+    permission_required = 'vagas.view_vaga'
+    permission_denied_message = 'Visualizar vaga'
     model = Vaga
     template_name = 'vagas.html'
     context_object_name = 'vagas'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
-        queryset = super().get_queryset()
         buscar = self.request.GET.get('buscar')
+        estada_ativa_qs = Estadia.objects.filter(finalizada=False)
+
+        queryset = Vaga.objects.prefetch_related(
+            Prefetch('estadia_set', queryset=estada_ativa_qs, to_attr='estada_ativa')
+        )
+
         if buscar:
-            queryset = queryset.filter(codigo__icontains=buscar)
-        return queryset
+            queryset = queryset.filter(
+                Q(codigo__icontains=buscar) |
+                Q(status__icontains=buscar)
+            )
+        return queryset.order_by('codigo')
 
 
-class VagaAddView(SuccessMessageMixin, CreateView):
+class VagaAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'vagas.add_vaga'
+    permission_denied_message = 'Cadastrar vaga'
     model = Vaga
     form_class = VagaModelForm
     template_name = 'vaga_form.html'
@@ -30,7 +45,7 @@ class VagaAddView(SuccessMessageMixin, CreateView):
     success_message = 'Vaga cadastrada com sucesso!'
 
 
-class VagaUpdateView(SuccessMessageMixin, UpdateView):
+class VagaUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Vaga
     form_class = VagaModelForm
     template_name = 'vaga_form.html'
@@ -38,7 +53,9 @@ class VagaUpdateView(SuccessMessageMixin, UpdateView):
     success_message = 'Vaga alterada com sucesso!'
 
 
-class VagaDeleteView(SuccessMessageMixin, DeleteView):
+class VagaDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    permission_required = 'vagas.delete_vaga'
+    permission_denied_message = 'Excluir vaga'
     model = Vaga
     template_name = 'vaga_apagar.html'
     success_url = reverse_lazy('vagas')

@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.timezone import localtime, now  # CORREÇÃO: Garante que 'localtime' e 'now' estão importados
+from django.utils.timezone import localtime, now
 from django.core.exceptions import ValidationError
 from .models import Estadia
 from vagas.models import Vaga

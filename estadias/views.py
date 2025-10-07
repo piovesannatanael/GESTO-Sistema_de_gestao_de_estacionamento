@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -6,11 +7,13 @@ from .models import Estadia
 from .forms import EstadiaChegadaForm, EstadiaSaidaForm
 
 
-class EstadiaListView(ListView):
+class EstadiaListView(PermissionRequiredMixin, LoginRequiredMixin, ListView):
+    permission_required = 'estadias.view_estadia'
+    permission_denied_message = 'Visualizar estadia'
     model = Estadia
     template_name = 'estadias.html'
     context_object_name = 'object_list'
-    paginate_by = 3
+    paginate_by = 9
 
     def get_queryset(self):
         queryset = super().get_queryset().filter(finalizada=False).select_related(
@@ -25,7 +28,6 @@ class EstadiaListView(ListView):
                 Q(cliente__empresa__icontains=buscar) |
                 Q(vaga__codigo__icontains=buscar)
             )
-
         return queryset.order_by('-data_chegada')
 
     def get_context_data(self, **kwargs):
@@ -34,17 +36,13 @@ class EstadiaListView(ListView):
         return context
 
 
-class EstadiaChegadaCreateView(CreateView):
+class EstadiaChegadaCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = 'estadias.add_estadia'
+    permission_denied_message = 'Cadastrar estadia'
     model = Estadia
     form_class = EstadiaChegadaForm
     template_name = 'estadia_form.html'
     success_url = reverse_lazy('estadias')
-
-    def form_valid(self, form):
-        veiculo = form.cleaned_data.get('veiculo')
-        if veiculo:
-            form.instance.plano = veiculo.plano
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -52,17 +50,13 @@ class EstadiaChegadaCreateView(CreateView):
         return context
 
 
-class EstadiaChegadaUpdateView(UpdateView):
+class EstadiaChegadaUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = 'estadias.update_estadia_chegada'
+    permission_denied_message = 'Editar chegada'
     model = Estadia
     form_class = EstadiaChegadaForm
     template_name = 'estadia_form.html'
     success_url = reverse_lazy('estadias')
-
-    def form_valid(self, form):
-        veiculo = form.cleaned_data.get('veiculo')
-        if veiculo:
-            form.instance.plano = veiculo.plano
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -70,7 +64,9 @@ class EstadiaChegadaUpdateView(UpdateView):
         return context
 
 
-class EstadiaSaidaUpdateView(UpdateView):
+class EstadiaSaidaUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = 'estadias.update_estadia_saida'
+    permission_denied_message = 'Editar saida'
     model = Estadia
     form_class = EstadiaSaidaForm
     template_name = 'estadia_saida.html'
@@ -88,7 +84,9 @@ class EstadiaSaidaUpdateView(UpdateView):
         return reverse('pagamento_processar', kwargs={'estada_pk': self.object.pk})
 
 
-class EstadiaDeleteView(DeleteView):
+class EstadiaDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = 'estadias.delete_estadia'
+    permission_denied_message = 'Apagar estadia'
     model = Estadia
     template_name = 'estadia_apagar.html'
     success_url = reverse_lazy('estadias')
