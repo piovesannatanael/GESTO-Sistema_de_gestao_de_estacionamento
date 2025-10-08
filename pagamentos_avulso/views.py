@@ -12,8 +12,8 @@ from .forms import PagamentoAvulsoForm
 class ProcessarPagamentoView(View):
     template_name = 'pagamento_avulso.html'
 
-    def _get_context(self, request, estada_pk, form=None):
-        estada = get_object_or_404(Estadia, pk=estada_pk)
+    def _get_context(self, request, estada_avulso_pk, form=None):
+        estada = get_object_or_404(Estadia, pk=estada_avulso_pk)
         pagamento, created = PagamentoAvulso.objects.get_or_create(estadia=estada, defaults={'metodo': 'PIX'})
 
         if created or pagamento.valor_final is None:
@@ -45,14 +45,14 @@ class ProcessarPagamentoView(View):
         }
         return context
 
-    def get(self, request, estada_pk):
-        context = self._get_context(request, estada_pk)
+    def get(self, request, estada_avulso_pk):
+        context = self._get_context(request, estada_avulso_pk)
         if context is None:
             return redirect('estadias')
         return render(request, self.template_name, context)
 
-    def post(self, request, estada_pk):
-        context = self._get_context(request, estada_pk)
+    def post(self, request, estada_avulso_pk):
+        context = self._get_context(request, estada_avulso_pk)
         if context is None:
             return redirect('estadias')
 
@@ -64,17 +64,17 @@ class ProcessarPagamentoView(View):
             metodo = (pagamento_atualizado.metodo or '').upper()
 
             if metodo == 'PIX':
-                return redirect('pagamento_pix', pagamento_pk=pagamento_atualizado.pk)
+                return redirect('pagamentos_avulso:pagamento_pix', pagamento_pk=pagamento_atualizado.pk)
             elif metodo == 'CARTAO':
-                return redirect('pagamento_cartao', pagamento_pk=pagamento_atualizado.pk)
+                return redirect('pagamentos_avulso:pagamento_cartao', pagamento_pk=pagamento_atualizado.pk)
             else:
-                return redirect('pagamento_concluido', pagamento_pk=pagamento_atualizado.pk)
+                return redirect('pagamentos_avulso:pagamento_concluido', pagamento_pk=pagamento_atualizado.pk)
 
         return render(request, self.template_name, context)
 
 
 class PagamentoPixView(View):
-    template_name = 'pagamento_pix.html'
+    template_name = 'pagamento_modal_pix.html'
 
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(PagamentoAvulso, pk=pagamento_pk)
@@ -83,15 +83,16 @@ class PagamentoPixView(View):
 
 
 class PagamentoCartaoView(View):
-    template_name = 'pagamento_cartao.html'
+    template_name = 'pagamento_modal_cartao.html'
 
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(PagamentoAvulso, pk=pagamento_pk)
         context = {'pagamento': pagamento}
         return render(request, self.template_name, context)
 
+
 class PagamentoConcluidoView(View):
-    template_name = 'pagamento_concluido.html'
+    template_name = 'pagamento_modal_concluido.html'
     logger = logging.getLogger(__name__)
 
     def get(self, request, pagamento_pk):
@@ -146,4 +147,3 @@ class PagamentoConcluidoView(View):
         except Exception as e:
             self.logger.exception(f"Falha ao enviar e-mail de recibo para o pagamento {pagamento.pk}: {e}")
             return False
-

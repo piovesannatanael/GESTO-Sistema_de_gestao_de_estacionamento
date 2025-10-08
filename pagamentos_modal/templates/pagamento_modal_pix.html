@@ -11,10 +11,10 @@
                 <img src="https://placehold.co/250x250/2d3748/e2e8f0?text=QR+Code+PIX" alt="QR Code para pagamento via PIX">
             </div>
 
-            <h4>Valor: R$ {{ pagamento.valor_calculado|floatformat:2 }}</h4>
+            <h4>Valor: R$ {{ pagamento.valor_final|floatformat:2 }}</h4>
             <p class="text-muted">Após o pagamento, clique no botão abaixo para finalizar.</p>
 
-            <a href="{% url 'pagamento_concluido' pagamento.pk %}" class="btn btn-success btn-lg mt-3">Já Paguei, Finalizar</a>
+            <a href="{% url 'pagamentos_modal:pagamento_modal_concluido' pagamento.pk %}" class="btn btn-success btn-lg mt-3">Já Paguei, Finalizar</a>
         </div>
     </div>
 </div>

@@ -38,7 +38,6 @@
                             <strong>Valor Final a Pagar com desconto:</strong>
                             <span class="h4">R$ {{ pagamento.valor_calculado|floatformat:2 }}</span>
                         </p>
-                        {# CORREÇÃO: Adicionado o botão Cancelar e ajustado o layout dos botões #}
                         <div class="d-flex justify-content-end gap-2 mt-4">
                             <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Avançar para Pagamento</button>

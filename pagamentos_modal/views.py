@@ -12,8 +12,8 @@ from .forms import PagamentoModalForm
 class ProcessarPagamentoModalView(View):
     template_name = 'pagamento_modal.html'
 
-    def _get_context(self, request, estada_pk, form=None):
-        estadia = get_object_or_404(Estadia, pk=estada_pk)
+    def _get_context(self, request, estada_modal_pk, form=None):
+        estadia = get_object_or_404(Estadia, pk=estada_modal_pk)
 
         pagamento, created = PagamentoModal.objects.get_or_create(
             estadia=estadia,
@@ -23,22 +23,35 @@ class ProcessarPagamentoModalView(View):
             }
         )
 
+        pagamento.save()
+
         if not form:
             form = PagamentoModalForm(instance=pagamento)
+
+        duracao_dias, duracao_horas, duracao_minutos = 0, 0, 0
+        if estadia.data_saida and estadia.data_chegada:
+            duracao = estadia.data_saida - estadia.data_chegada
+            total_seconds = int(duracao.total_seconds())
+            duracao_dias = total_seconds // 86400
+            duracao_horas = (total_seconds % 86400) // 3600
+            duracao_minutos = (total_seconds % 3600) // 60
 
         context = {
             'form': form,
             'pagamento': pagamento,
             'estadia': estadia,
+            'duracao_dias': duracao_dias,
+            'duracao_horas': duracao_horas,
+            'duracao_minutos': duracao_minutos,
         }
         return context
 
-    def get(self, request, estada_pk):
-        context = self._get_context(request, estada_pk)
+    def get(self, request, estada_modal_pk):
+        context = self._get_context(request, estada_modal_pk)
         return render(request, self.template_name, context)
 
-    def post(self, request, estada_pk):
-        context = self._get_context(request, estada_pk)
+    def post(self, request, estada_modal_pk):
+        context = self._get_context(request, estada_modal_pk)
         pagamento = context['pagamento']
         form = PagamentoModalForm(request.POST, instance=pagamento)
 
@@ -47,17 +60,17 @@ class ProcessarPagamentoModalView(View):
             metodo = (pagamento_atualizado.metodo or '').upper()
 
             if metodo == 'PIX':
-                return redirect('pagamento_modal_pix', pagamento_pk=pagamento_atualizado.pk)
+                return redirect('pagamentos_modal:pagamento_modal_pix', pagamento_pk=pagamento_atualizado.pk)
             elif metodo == 'CARTAO':
-                return redirect('pagamento_modal_cartao', pagamento_pk=pagamento_atualizado.pk)
+                return redirect('pagamentos_modal:pagamento_modal_cartao', pagamento_pk=pagamento_atualizado.pk)
             else:
-                return redirect('pagamento_modal_concluido', pagamento_pk=pagamento_atualizado.pk)
+                return redirect('pagamentos_modal:pagamento_modal_concluido', pagamento_pk=pagamento_atualizado.pk)
 
         return render(request, self.template_name, context)
 
 
 class PagamentoPixModalView(View):
-    template_name = 'pagamento_pix.html'
+    template_name = 'pagamento_modal_pix.html'
 
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(PagamentoModal, pk=pagamento_pk)
@@ -66,7 +79,7 @@ class PagamentoPixModalView(View):
 
 
 class PagamentoCartaoModalView(View):
-    template_name = 'pagamento_cartao.html'
+    template_name = 'pagamento_modal_cartao.html'
 
     def get(self, request, pagamento_pk):
         pagamento = get_object_or_404(PagamentoModal, pk=pagamento_pk)
@@ -75,7 +88,7 @@ class PagamentoCartaoModalView(View):
 
 
 class PagamentoConcluidoModalView(View):
-    template_name = 'pagamento_concluido.html'
+    template_name = 'pagamento_modal_concluido.html'
     logger = logging.getLogger(__name__)
 
     def get(self, request, pagamento_pk):
@@ -86,13 +99,14 @@ class PagamentoConcluidoModalView(View):
             pagamento.data_pagamento = timezone.now()
             pagamento.save()
 
-            self.enviar_email_recibo_modal(pagamento)
+            enviar_email_recibo_modal(pagamento)
 
         context = {'pagamento': pagamento}
         return render(request, self.template_name, context)
 
 
 logger = logging.getLogger(__name__)
+
 
 def enviar_email_recibo_modal(pagamento):
     try:
@@ -109,7 +123,7 @@ def enviar_email_recibo_modal(pagamento):
             'veiculo_modelo': estadia.veiculo.modelo,
             'data_chegada': estadia.data_chegada,
             'data_saida': estadia.data_saida,
-            'plano_contratado': pagamento.get_plano_contratado_display(),  # Específico do PagamentoModal
+            'plano_contratado': pagamento.get_plano_contratado_display(),
             'valor_bruto': pagamento.valor_bruto,
             'desconto_aplicado': pagamento.desconto_aplicado,
             'valor_final': pagamento.valor_final,

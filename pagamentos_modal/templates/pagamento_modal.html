@@ -8,22 +8,24 @@
             <h3>Processar Pagamento por Modalidade</h3>
         </div>
         <div class="card-body">
-            
+
             <div class="row">
                 <div class="col-md-6 border-end">
                     <h4>Resumo da Estada</h4>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Veículo:</strong> {{ estada.veiculo.placa }}</li>
-                        <li class="list-group-item"><strong>Cliente:</strong> {{ estada.cliente }}</li>
-                        <li class="list-group-item"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</li>
-                        <li class="list-group-item"><strong>Saída:</strong> {{ estada.data_saida|date:"d/m/Y H:i" }}</li>
+                        <li class="list-group-item"><strong>Veículo:</strong> {{ estadia.veiculo.placa }}</li>
+                        <li class="list-group-item"><strong>Cliente:</strong> {{ estadia.cliente }}</li>
+                        <li class="list-group-item"><strong>Chegada:</strong> {{ estadia.data_chegada|date:"d/m/Y H:i" }}
+                        </li>
+                        <li class="list-group-item"><strong>Saída:</strong> {{ estadia.data_saida|date:"d/m/Y H:i" }}
+                        </li>
                         <li class="list-group-item">
-                            <strong>Duração:</strong> 
+                            <strong>Duração:</strong>
                             {{ duracao_dias }} dia(s), {{ duracao_horas }} hora(s) e {{ duracao_minutos }} minuto(s)
                         </li>
                         <li class="list-group-item">
                             <strong>Plano:</strong>
-                            {{ estada.get_plano_display }}
+                            {{ estadia.veiculo.plano }}
                         </li>
                     </ul>
                 </div>
@@ -32,13 +34,21 @@
                     <h4>Detalhes do Pagamento</h4>
                     <form method="post">
                         {% csrf_token %}
+
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Por favor, corrija os seguintes erros:</strong>
+                            {{ form.errors }}
+                        </div>
+                        {% endif %}
+
+
                         {% bootstrap_form form %}
                         <hr>
                         <p class="text-end">
-                            <strong>Valor Final a Pagar:</strong>
-                            <span class="h4">R$ {{ pagamento.valor_calculado|floatformat:2 }}</span>
+                            <strong>Valor pré calculado:</strong>
+                            <span class="h4">R$ {{ pagamento.valor_final|floatformat:2 }}</span>
                         </p>
-                        {# CORREÇÃO: Adicionado o botão Cancelar e ajustado o layout dos botões #}
                         <div class="d-flex justify-content-end gap-2 mt-4">
                             <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Avançar para Pagamento</button>

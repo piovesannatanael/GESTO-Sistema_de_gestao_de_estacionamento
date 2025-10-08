@@ -5,7 +5,7 @@
         <div class="card-body">
             <i class="fas fa-check-circle fa-7x my-4 text-success"></i>
             <h3 class="card-title">Pagamento Concluído!</h3>
-            <p>O pagamento de <strong>R$ {{ pagamento.valor_calculado|floatformat:2 }}</strong> foi processado com sucesso.</p>
+            <p>O pagamento de <strong>R$ {{ pagamento.valor_final|floatformat:2 }}</strong> foi processado com sucesso.</p>
             <p>A estada do veículo <strong>{{ pagamento.estada.veiculo.placa }}</strong> foi finalizada.</p>
             
             <a href="{% url 'index' %}" class="btn btn-primary mt-3">Voltar para a Página Inicial</a>

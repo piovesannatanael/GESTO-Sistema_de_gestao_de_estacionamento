@@ -132,10 +132,10 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
 
         if self.object.veiculo.plano == 'Avulso':
             logger.info("Redirecionando para pagamento_avulso")
-            return HttpResponseRedirect(reverse('pagamento_avulso', kwargs={'estada_pk': self.object.pk}))
+            return HttpResponseRedirect(reverse('pagamentos_avulso:pagamento_avulso', kwargs={'estada_avulso_pk': self.object.pk}))
         else:
             logger.info("Redirecionando para pagamento_modal_processar")
-            return HttpResponseRedirect(reverse('pagamento_modal_processar', kwargs={'estada_pk': self.object.pk}))
+            return HttpResponseRedirect(reverse('pagamentos_modal:pagamento_modal_processar', kwargs={'estada_modal_pk': self.object.pk}))
 
 
 class EstadiaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
