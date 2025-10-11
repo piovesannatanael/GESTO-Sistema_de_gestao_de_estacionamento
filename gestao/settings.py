@@ -53,7 +53,7 @@ INSTALLED_APPS += ['home',
                    'modalidades',
                    'pagamentos_modal',
                    'valores',
-                   'pagamento_final',
+                   # 'pagamento_final',
                    ]
 
 

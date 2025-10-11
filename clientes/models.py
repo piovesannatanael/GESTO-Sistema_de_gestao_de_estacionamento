@@ -5,17 +5,17 @@ from stdimage import StdImageField
 
 
 class Pessoa(models.Model):
-    nome = models.CharField('Nome', max_length=50, help_text='Nome completo')
-    fone = models.CharField('Fone', max_length=12, help_text='Número de telefone (Apenas números)', unique=True)
-    email = models.EmailField('E-mail', max_length=100, help_text='E-mail', unique=True)
-    endereco = models.CharField('Endereço', max_length=300, help_text='Endereço completo')
+    nome = models.CharField('Nome', max_length=50, help_text='Nome completo', default='Ciclano da silva')
+    fone = models.CharField('Fone', max_length=12, help_text='Número de telefone (Apenas números)', unique=True, default='000000000000')
+    email = models.EmailField('E-mail', max_length=100, help_text='E-mail', unique=True, default='naoinformado@email.com')
+    endereco = models.CharField('Endereço', max_length=300, help_text='Endereço completo', default='naoinformado')
     foto = StdImageField('Foto', upload_to='pessoas', delete_orphans=True, null=True, blank=True)
 
     class Meta:
         abstract = True
         # verbose_name = 'Pessoa'
         # verbose_name_plural = 'Pessoas'
-        # ordering = [Upper('nome')]
+        # ordering = [Upper('nome')]'
 
     def __str__(self):
         return self.nome

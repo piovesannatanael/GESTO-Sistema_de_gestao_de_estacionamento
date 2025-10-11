@@ -1,5 +1,5 @@
 from django.urls import path
-from valores.views import ValoresView
+from valores.views import ValoresView, ValoresAddView, ValoresUpdateView, ValoresDeleteView
 
 urlpatterns = [
     path('valores', ValoresView.as_view(), name='valores'),
