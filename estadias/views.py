@@ -159,8 +159,4 @@ class DashboardView(ListView):
     model = Estadia
     template_name = 'dashboard.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['object_list'] = Estadia.objects.filter(data_saida__isnull=True)
-        context['estadias_chegadas'] = Estadia.objects.filter(data_chegada__isnull=False).order_by('-data_chegada')[:10]
-        return context
+

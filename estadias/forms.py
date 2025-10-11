@@ -41,13 +41,21 @@ class EstadiaChegadaForm(forms.ModelForm):
 class EstadiaSaidaForm(forms.ModelForm):
     class Meta:
         model = Estadia
-        fields = ['data_saida']
+        fields = ['cliente', 'data_saida','funcionario' ]
         widgets = {
             'data_saida': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+        labels = {
+            'data_saida': 'Data saída:',
+            'funcionario': 'Funcionário responsável:',
+            'cliente': 'Cliente:',
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields['cliente'].queryset = ClienteGeral.objects.order_by('nome', 'empresa')
+        self.fields['funcionario'].queryset = Funcionario.objects.order_by('nome')
         if not self.instance.data_saida:
             self.initial['data_saida'] = localtime(now()).strftime('%Y-%m-%dT%H:%M')
 
