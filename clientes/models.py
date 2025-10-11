@@ -12,9 +12,10 @@ class Pessoa(models.Model):
     foto = StdImageField('Foto', upload_to='pessoas', delete_orphans=True, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Pessoa'
-        verbose_name_plural = 'Pessoas'
-        ordering = [Upper('nome')]
+        abstract = True
+        # verbose_name = 'Pessoa'
+        # verbose_name_plural = 'Pessoas'
+        # ordering = [Upper('nome')]
 
     def __str__(self):
         return self.nome
