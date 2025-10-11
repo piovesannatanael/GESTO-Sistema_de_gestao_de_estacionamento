@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.functions import Upper
 
-from clientes.models import PessoaFisica
+# from clientes.models import PessoaFisica
 
 
 class Funcionario(PessoaFisica):

@@ -52,6 +52,8 @@ INSTALLED_APPS += ['home',
                    'pagamentos_avulso',
                    'modalidades',
                    'pagamentos_modal',
+                   'valores',
+                   'pagamento_final',
                    ]
 
 
