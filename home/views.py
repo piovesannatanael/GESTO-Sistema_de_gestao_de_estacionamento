@@ -4,6 +4,7 @@ from clientes.models import ClienteGeral
 from estadias.models import Estadia
 from funcionarios.models import Funcionario
 from vagas.models import Vaga
+from valores.models import Plano
 from veiculos.models import Veiculo
 
 
