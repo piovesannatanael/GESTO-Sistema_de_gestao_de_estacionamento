@@ -49,7 +49,8 @@
             <a href="{% url 'index' %}"
                class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">GESTO</a>
         </div>
-        <ul class="nav flex-column" role="menu" aria-label="Navegação principal">
+        <div data-bs-spy="scroll"  data-bs-offset="0" data-bs-smooth-scroll="true" class="scrollspy" tabindex="0">
+      <ul class="nav flex-column" role="menu" aria-label="Navegação principal">
             <li class="nav-item" role="none">
                 <a href="{% url 'index' %}"
                    class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">
@@ -78,9 +79,7 @@
                     <p>Veiculos</p>
                 </a>
             </li>
-
-            {% if user.is_staff %}
-            <li class="nav-item" role="none">
+           <li class="nav-item" role="none">
                 <a href="{% url 'funcionarios' %}"
                    class="nav-link {% if request.resolver_match.url_name == 'funcionarios' %}active{% endif %}">
                     <i class="fas fa-user-tie" aria-hidden="true"></i>
@@ -94,21 +93,28 @@
                     <p>Vagas</p>
                 </a>
             </li>
+          <li class="nav-item" role="none">
+                <a href="{% url 'valores' %}"
+                   class="nav-link {% if request.resolver_match.url_name == 'vagas' %}active{% endif %}">
+                    <i class="fa-solid fa-money-bill" aria-hidden="true"></i>
+                    <p>Preços</p>
+                </a>
+            </li>
             <li class="nav-item" role="none">
                 <a href="{% url 'admin:index' %}" class="nav-link">
                     <i class="fas fa-cogs" aria-hidden="true"></i>
                     <p>Admin</p>
                 </a>
             </li>
-            {% endif %}
+          <li class="nav-item" role="none">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cogs" aria-hidden="true"></i>
+                    <p></p>
+                </a>
+            </li>
         </ul>
+    </div>
     </nav>
-{% endif %}
-
-{% if messages %}
-<div class="container-fluid p-3">
-    {% bootstrap_messages %}
-</div>
 {% endif %}
 
 {% block content %}

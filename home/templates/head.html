@@ -21,6 +21,15 @@
       --border-subtle: rgba(56, 223, 248, 0.25);
       --table-row-alt: #374151;
     }
+    .scrollspy {
+    position: relative;
+    height: 100vh;
+    margin-top: .5rem;
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    }
+
 
     body {
       background-color: var(--bg-primary);
@@ -54,8 +63,11 @@
       border-right: 1px solid var(--border-subtle);
       z-index: 1030;
       transition: 0.7s ease-out;
-
+      margin-bottom: 10%;
     }
+
+
+
     #sidebar p{
     visibility: hidden
      }
@@ -87,6 +99,8 @@
       padding: 0;
       margin: 0;
       width: 100%;
+      margin-bottom: 10%;
+      padding-bottom: 30%;
     }
 
     #link-modal{
@@ -101,6 +115,7 @@
       width: 100%;
       margin-bottom: 1.5rem;
       text-align: center;
+
     }
 
     #sidebar ul.nav li a {
@@ -126,6 +141,7 @@
       display: flex;
       flex-direction: column;
       background-color: var(--bg-primary);
+padding-bottom: 10%;
     }
 
 
