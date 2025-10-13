@@ -5,7 +5,7 @@
     <div class="card shadow m-3 col-md-6 mx-auto">
         <div class="card-body">
             <div class="container">
-                <h3 class="mt-4 mb-4">{% if object.pk %}EDITAR PREÇO{% else %}ADICIONAR PREÇO{% endif %}</h3>
+                <h3 class="mt-4 mb-4">{% if object.pk %}EDITAR PLANO{% else %}ADICIONAR PLANO{% endif %}</h3>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     {% bootstrap_form form %}

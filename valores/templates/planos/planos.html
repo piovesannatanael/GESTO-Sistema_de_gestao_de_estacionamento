@@ -4,16 +4,20 @@
 {% block content %}
 
 <div id="dados" class="container">
+    <h3>Tabela de Planos</h3>
     <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
-        <h3>Tabela de planos</h3>
-        <a href="{% url 'plano_adicionar' %}" class="btn btn-primary">Criar um novo plano</a>
+        <a href="{% url 'valores' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+
+        <a href="{% url 'plano_adicionar' %}" class="btn btn-primary">Adicionar Plano</a>
     </div>
 
     <div class="card card-body mb-4" id="search">
         <form method="get" action="">
             <div class="input-group">
                 <input class="form-control" type="text" name="buscar" value="{{ request.GET.buscar }}"
-                       placeholder="Buscar por plano ou categoria do veiculo...">
+                       placeholder="Buscar por plano ou categoria do plano...">
                 <button type="submit" class="btn btn-outline-secondary">🔍 Buscar</button>
             </div>
         </form>

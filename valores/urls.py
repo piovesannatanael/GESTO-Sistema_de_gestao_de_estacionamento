@@ -1,7 +1,9 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
-from valores.views import PlanosView, PlanoCreateView, PlanoUpdateView, PlanoDeleteView
+from valores.views import PlanosView, PlanoCreateView, PlanoUpdateView, PlanoDeleteView, DescontosView, \
+    DescontoCreateView, DescontoUpdateView, DescontoDeleteView, ExtraView, ExtraCreateView, ExtraUpdateView, \
+    ExtraDeleteView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='valores.html'), name='valores'),
@@ -11,8 +13,17 @@ urlpatterns = [
     path('planos/editar/<int:pk>/', PlanoUpdateView.as_view(), name='plano_editar'),
     path('planos/apagar/<int:pk>/', PlanoDeleteView.as_view(), name='plano_apagar'),
 
-    # path('descontos/', RegraDeDescontoListView.as_view(), name='descontos'),
-    # path('descontos/adicionar/', RegraDeDescontoCreateView.as_view(), name='desconto_adicionar'),
-    # path('descontos/editar/<int:pk>/', RegraDeDescontoUpdateView.as_view(), name='desconto_editar'),
-    # path('descontos/apagar/<int:pk>/', RegraDeDescontoDeleteView.as_view(), name='desconto_apagar'),
+    path('descontos/', DescontosView.as_view(), name='descontos'),
+    path('descontos/adicionar/', DescontoCreateView.as_view(), name='desconto_adicionar'),
+    path('descontos/editar/<int:pk>/', DescontoUpdateView.as_view(), name='desconto_editar'),
+    path('descontos/apagar/<int:pk>/', DescontoDeleteView.as_view(), name='desconto_apagar'),
+
+    path('extras/', ExtraView.as_view(), name='extras'),
+    path('extras/adicionar/', ExtraCreateView.as_view(), name='extra_adicionar'),
+    path('extras/editar/<int:pk>/', ExtraUpdateView.as_view(), name='extra_editar'),
+    path('extras/apagar/<int:pk>/', ExtraDeleteView.as_view(), name='extra_apagar'),
+
 ]
+
+
+

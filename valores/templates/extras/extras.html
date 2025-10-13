@@ -1,10 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block content %}
 
-</body>
-</html>
+<div id="dados" class="container">
+    <h3>Valores Extras</h3>
+   <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <a href="{% url 'valores' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+        <a href="{% url 'extra_adicionar' %}" class="btn btn-primary">Adicionar valor extra</a>
+    </div>
+    <div class="card card-body mb-4" id="search">
+        <form method="get" action="">
+            <div class="input-group">
+                <input class="form-control" type="text" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar por nome do extra...">
+                <button type="submit" class="btn btn-outline-secondary">🔍 Buscar</button>
+            </div>
+        </form>
+    </div>
+
+    {% if object_list %}
+        <div class="card-body">
+            <h3 class="text-center">Extras Cadastrados</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-dark">
+                    <thead>
+                        <tr>
+                            <th>Nome do Extra</th>
+                            <th>Valor a Adicionar (R$)</th>
+                            <th>Status</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for extra in object_list %}
+                            <tr>
+                                <td>{{ extra.nome }}</td>
+                                <td>{{ extra.valor }}</td>
+                                <td>
+                                    {% if extra.status %}
+                                        <span class="badge bg-success">Ativo</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inativo</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{% url 'extra_editar' extra.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                                    <a href="{% url 'extra_apagar' extra.pk %}" class="btn btn-sm btn-danger">Apagar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center mt-4">
+                {% if is_paginated %}
+                    {% bootstrap_pagination page_obj url=request.get_full_path %}
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center mt-4">Nenhum valor extra encontrado.</div>
+    {% endif %}
+</div>
+{% endblock %}
