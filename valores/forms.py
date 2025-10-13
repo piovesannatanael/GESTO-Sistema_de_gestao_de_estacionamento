@@ -1,14 +1,14 @@
 from django import forms
-from .models import Plano, Desconto, Extra
+from .models import Plano, Desconto, Extra, Categoria
 
 
 class PlanoForm(forms.ModelForm):
     class Meta:
         model = Plano
-        fields = [ 'plano', 'valor', 'status', 'descricao']
+        fields = [ 'nome', 'valor', 'status', 'descricao']
 
         error_messages = {
-            'plano': {'required':'É obrigatório selecionar o plano',
+            'nome': {'required':'O nome do plano é obrigatório ',
                       'unique':'Já existe um plano com esse nome'},
             'valor': {'required': 'O valor base é obrigatório.',},
             'descricao': {'required': 'A descrição do valor extra é obrigatória.', },
@@ -37,4 +37,13 @@ class ExtraForm(forms.ModelForm):
             'tipo': {'required': 'É obrigatório selecionar o tipo de adicional.',},
             'valor': {'required': 'O valor do adicional é obrigatório.',},
             'descricao': {'required': 'A descrição do valor extra é obrigatória.',},
+        }
+
+class CategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['cnh', 'valor_hora', 'status']
+        error_messages = {
+            'cnh': {'required': 'A categoria é obrigatória.'},
+            'valor_hora': {'required': 'O valor por hora é obrigatório.'},
         }

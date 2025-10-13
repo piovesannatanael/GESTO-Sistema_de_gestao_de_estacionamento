@@ -88,8 +88,8 @@ class EstadiaChegadaCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
     def form_valid(self, form):
 
         estadia = form.save(commit=False)
-        if estadia.veiculo:
-            estadia.plano = estadia.veiculo.plano
+        # if estadia.veiculo:
+        #     estadia.plano = estadia.veiculo.plano
         estadia.save()
         self.object = estadia
         self.enviar_email(self.object)

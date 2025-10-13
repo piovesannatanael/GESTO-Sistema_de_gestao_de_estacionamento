@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 
 from valores.views import PlanosView, PlanoCreateView, PlanoUpdateView, PlanoDeleteView, DescontosView, \
     DescontoCreateView, DescontoUpdateView, DescontoDeleteView, ExtraView, ExtraCreateView, ExtraUpdateView, \
-    ExtraDeleteView
+    ExtraDeleteView, CategoriaView, CategoriaCreateView, CategoriaUpdateView, CategoriaDeleteView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='valores.html'), name='valores'),
@@ -22,6 +22,11 @@ urlpatterns = [
     path('extras/adicionar/', ExtraCreateView.as_view(), name='extra_adicionar'),
     path('extras/editar/<int:pk>/', ExtraUpdateView.as_view(), name='extra_editar'),
     path('extras/apagar/<int:pk>/', ExtraDeleteView.as_view(), name='extra_apagar'),
+
+    path('categorias/', CategoriaView.as_view(), name='categorias'),
+    path('categorias/adicionar/', CategoriaCreateView.as_view(), name='categoria_adicionar'),
+    path('categorias/editar/<int:pk>/', CategoriaUpdateView.as_view(), name='categoria_editar'),
+    path('categorias/apagar/<int:pk>/', CategoriaDeleteView.as_view(), name='categoria_apagar'),
 
 ]
 

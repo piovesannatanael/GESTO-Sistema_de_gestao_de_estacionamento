@@ -5,11 +5,11 @@ from django.urls.base import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
-from valores.forms import PlanoForm, DescontoForm, ExtraForm
-from valores.models import Plano, Desconto, Extra
+from valores.forms import PlanoForm, DescontoForm, ExtraForm, CategoriaForm
+from valores.models import Plano, Desconto, Extra, Categoria
 from veiculos.models import Veiculo
 
-
+    # ------ CRUD  Planos
 class PlanosView(PermissionRequiredMixin, ListView):
     permission_required = "valores.view_planos"
     permission_denied_required = "Visualizar planos"
@@ -63,6 +63,9 @@ class PlanoDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
         return context
 
 
+    # ----- CRUD Descontos
+
+
 class DescontosView(PermissionRequiredMixin, ListView):
     permission_required = "valores.view_descontos"
     permission_denied_required = "Visualizar descontos"
@@ -111,6 +114,8 @@ class DescontoDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteVie
     success_message = "Desconto apagado com sucesso."
 
 
+    # ----- CRUD Extras
+
 class ExtraView(PermissionRequiredMixin, ListView):
     permission_required = "valores.view_extra"
     permission_denied_message = "Listar valores extras"
@@ -140,7 +145,7 @@ class ExtraCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "Valor extra cadastrado com sucesso."
 
 class ExtraUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
-    permission_required = "valores.change_extra"
+    permission_required = "valores.update_extra"
     permission_denied_message = "Atualizar valor extra"
     model = Extra
     form_class = ExtraForm
@@ -155,3 +160,52 @@ class ExtraDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     template_name = "extras/extra_apagar.html"
     success_url = reverse_lazy('extras')
     success_message = "Valor extra apagado com sucesso."
+
+
+    # ----- CRUD Categoria
+
+
+class CategoriaView(PermissionRequiredMixin, ListView):
+    permission_required = "valores.view_categoria"
+    permission_denied_message = "Listar categorias"
+    model = Categoria
+    template_name = "categorias/categorias.html"
+    context_object_name = "categorias"
+    paginate_by = 5
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        buscar = self.request.GET.get('buscar')
+
+        if buscar:
+            qs = qs.filter(
+                Q(nome__icontains=buscar) |
+                Q(status__icontains=buscar)
+            )
+        return qs
+
+class CategoriaCreateView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = "valores.add_categoria"
+    permission_denied_message = "Cadastrar categorias"
+    model = Categoria
+    form_class = CategoriaForm
+    template_name = "categorias/categoria_form.html"
+    success_url = reverse_lazy('categorias')
+    success_message = "Categoria cadastrada com sucesso."
+
+class CategoriaUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = "valores.update_categoria"
+    permission_denied_message = "Atualizar categorias"
+    model = Categoria
+    form_class = CategoriaForm
+    template_name = "categorias/categoria_form.html"
+    success_url = reverse_lazy('categorias')
+    success_message = "Categoria atualizada com sucesso."
+
+class CategoriaDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    permission_required = "valores.delete_categoria"
+    permission_denied_message = "Apagar categorias"
+    model = Categoria
+    template_name = "categorias/categoria_apagar.html"
+    success_url = reverse_lazy('categorias')
+    success_message = "Categoria apagada com sucesso."

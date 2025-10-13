@@ -11,7 +11,6 @@ class Estadia(models.Model):
     cliente = models.ForeignKey(ClienteGeral, on_delete=models.SET_NULL, null=True, blank=True)
     funcionario = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, null=True, blank=True)
     vaga = models.ForeignKey(Vaga, on_delete=models.SET_NULL, null=True, blank=True)
-    plano = models.CharField('Plano', max_length=20, choices=Veiculo.PLANOS_CHOICES, null=True, blank=True)
     data_chegada = models.DateTimeField(default=timezone.now)
     data_saida = models.DateTimeField(null=True, blank=True)
     finalizada = models.BooleanField(default=False)
