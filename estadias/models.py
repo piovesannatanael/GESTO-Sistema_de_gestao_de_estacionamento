@@ -31,7 +31,7 @@ class Estadia(models.Model):
         duracao = self.data_saida - self.data_chegada
         horas = duracao.total_seconds() / 3600
         if horas > int(horas):
-            return int(horas) + 1
+            return int(horas)
         return int(horas)
 
     def save(self, *args, **kwargs):

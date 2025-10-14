@@ -1,39 +1,90 @@
-# def enviar_email_recibo_avulso(self, pagamento):
-#     try:
-#         estadia = pagamento.estadia
-#         cliente = estadia.cliente
-#
-#         if not cliente or not cliente.email:
-#             self.logger.warning(f"Pagamento (ID: {pagamento.pk}) sem cliente ou e-mail associado.")
-#             return False
-#
-#         dados = {
-#             'cliente_nome': cliente.nome,
-#             'veiculo_placa': estadia.veiculo.placa,
-#             'veiculo_modelo': estadia.veiculo.modelo,
-#             'data_chegada': estadia.data_chegada,
-#             'data_saida': estadia.data_saida,
-#             'valor_bruto': pagamento.valor_bruto,
-#             'desconto_aplicado': pagamento.desconto_aplicado,
-#             'valor_final': pagamento.valor_final,
-#             'metodo_pagamento': pagamento.get_metodo_display(),
-#             'data_pagamento': pagamento.data_pagamento,
-#         }
-#
-#         texto_email = render_to_string('emails/recibo_pgto_avulso.txt', dados)
-#         html_email = render_to_string('emails/recibo_pgto_avulso.html', dados)
-#         recipient = [cliente.email]
-#
-#         send_mail(
-#             subject='GESTO - Recibo de Pagamento',
-#             message=texto_email,
-#             from_email='piovesannatanael@gmail.com',
-#             recipient_list=recipient,
-#             html_message=html_email,
-#             fail_silently=False
-#         )
-#         self.logger.info(f"E-mail de recibo enviado para {recipient} (Pagamento ID: {pagamento.pk})")
-#         return True
-#     except Exception as e:
-#         self.logger.exception(f"Falha ao enviar e-mail de recibo para o pagamento {pagamento.pk}: {e}")
-#         return False
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
+from django.views import View
+from django.views.generic.base import logger
+
+from estadias.models import Estadia
+
+
+class PagamentoPixView(View):
+    def get(self, request, *args, **kwargs):
+        estadia_pk = self.kwargs.get('estadia_pk')
+        estadia = get_object_or_404(Estadia, pk=estadia_pk)
+
+        context = {
+            'estadia': estadia,
+            'valor_final': estadia.valor_total,
+        }
+        return render(request, 'pagamento_pix.html', context)
+
+
+class PagamentoCreditoView(View):
+    def get(self, request, *args, **kwargs):
+        estadia_pk = self.kwargs.get('estadia_pk')
+        estadia = get_object_or_404(Estadia, pk=estadia_pk)
+
+        context = {
+            'estadia': estadia,
+            'valor_final': estadia.valor_total,
+        }
+        return render(request, 'pagamento_final/pagamento_credito.html', context)
+
+
+class PagamentoDebitoView(View):
+    def get(self, request, *args, **kwargs):
+        estadia_pk = self.kwargs.get('estadia_pk')
+        estadia = get_object_or_404(Estadia, pk=estadia_pk)
+
+        context = {
+            'estadia': estadia,
+            'valor_final': estadia.valor_total,
+        }
+        return render(request, 'pagamento_final/pagamento_debito.html', context)  # Pode reutilizar o template
+
+
+class PagamentoConcluidoView(View):
+
+    def enviar_recibo(self, estadia):
+        try:
+            if not estadia.cliente or not estadia.cliente.email:
+                print(f"Não foi possível enviar e-mail: cliente ou e-mail não cadastrado para estadia {estadia.pk}.")
+                return False
+            recipient = [estadia.cliente.email]
+            context = {'estadia': estadia}
+
+            html_message = render_to_string('emails/recibo.html', context)
+            plain_message = render_to_string('emails/texto_recibo.txt', context)
+
+            send_mail(
+                subject='GESTO - Recibo do seu Pagamento',
+                message=plain_message,
+                from_email='piovesannatanael@gmail.com',
+                recipient_list=recipient,
+                html_message=html_message,
+                fail_silently=False
+            )
+            print(f"E-mail de texto_recibo enviado com sucesso para {recipient}.")
+            return True
+        except Exception as e:
+            print(f"Erro ao enviar e-mail para estadia {estadia.pk}: {e}")
+            return False
+
+    def post(self, request, *args, **kwargs):
+        estadia_pk = self.kwargs.get('estadia_pk')
+        estadia = get_object_or_404(Estadia, pk=estadia_pk)
+
+        estadia.finalizada = True
+        estadia.save()
+
+        if estadia.vaga:
+            estadia.vaga.status = 'livre'
+            estadia.vaga.save()
+
+        self.enviar_recibo(estadia)
+
+        messages.success(request, "Pagamento confirmado e estadia finalizada!")
+        context = {'estadia': estadia}
+
+        return render(request, 'pagamento_concluido.html', context)

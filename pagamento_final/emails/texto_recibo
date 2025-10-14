@@ -1,0 +1,24 @@
+Olá, {{ pagamento.estadia.cliente.nome }}!
+
+Obrigado por utilizar nossos serviços. Segue o resumo da sua estadia e pagamento.
+
+--------------------
+Detalhes da Estadia
+--------------------
+Veículo: {{ pagamento.estadia.veiculo.placa }} ({{ pagamento.estadia.veiculo.modelo }})
+Chegada: {{ pagamento.estadia.data_chegada|date:"d/m/Y H:i" }}
+Saída: {{ pagamento.estadia.data_saida|date:"d/m/Y H:i" }}
+
+--------------------
+Detalhes do Pagamento
+--------------------
+Custo Base: R$ {{ pagamento.valor_base|floatformat:2 }}
+{% if pagamento.valor_extras > 0 %}Extras: R$ {{ pagamento.valor_extras|floatformat:2 }}{% endif %}
+{% if pagamento.valor_descontos > 0 %}Descontos: - R$ {{ pagamento.valor_descontos|floatformat:2 }}{% endif %}
+Total Pago: R$ {{ pagamento.valor_final|floatformat:2 }}
+Forma de Pagamento: {{ pagamento.get_forma_pagamento_display }}
+
+--------------------
+
+Atenciosamente,
+Equipe GESTO Parking

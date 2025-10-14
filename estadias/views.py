@@ -130,17 +130,6 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
     def form_valid(self, form):
         estadia = form.save(commit=False)
 
-        # estadia.finalizada = True
-        # if not estadia.data_saida:
-        #     estadia.data_saida = timezone.now()
-        # estadia.save()
-        #
-        #
-        # vaga = self.object.vaga
-        # if vaga:
-        #     vaga.status = 'livre'
-        #     vaga.save()
-
         estadia.save()
 
         if estadia.veiculo.plano and estadia.veiculo.plano.nome == 'Avulso':

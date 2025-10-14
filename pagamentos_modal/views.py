@@ -143,8 +143,8 @@ def enviar_email_recibo_modal(pagamento):
             html_message=html_email,
             fail_silently=False
         )
-        logger.info(f"E-mail de recibo de modalidade enviado para {recipient} (Pagamento ID: {pagamento.pk})")
+        logger.info(f"E-mail de texto_recibo de modalidade enviado para {recipient} (Pagamento ID: {pagamento.pk})")
         return True
     except Exception as e:
-        logger.exception(f"Falha ao enviar e-mail de recibo para o pagamento modal {pagamento.pk}: {e}")
+        logger.exception(f"Falha ao enviar e-mail de texto_recibo para o pagamento modal {pagamento.pk}: {e}")
         return False
