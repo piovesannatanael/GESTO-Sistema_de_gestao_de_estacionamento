@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.functions import Upper
 from stdimage import StdImageField
 from clientes.models import ClienteGeral
-from valores.models import Plano, Extra, CNH_CHOICES
+from valores.models import Plano, Categoria
 
 
 class Veiculo(models.Model):
@@ -11,8 +11,8 @@ class Veiculo(models.Model):
     marca = models.CharField('Marca', max_length=50)
     modelo = models.CharField('Modelo', max_length=50)
     cor = models.CharField('Cor', max_length=30)
-    categoria_cnh = models.CharField('Categoria do Veículo', max_length=5, choices=CNH_CHOICES,
-        help_text='Selecione a categorias correspondente ao porte do veículo', default=CNH_CHOICES[0][0])
+    categoria_cnh = models.ForeignKey(Categoria,on_delete=models.SET_NULL,null=True,verbose_name='Categoria do Veículo',
+        limit_choices_to={'status': True})
     plano = models.ForeignKey(Plano,on_delete=models.SET_NULL, null=True,blank=True, verbose_name='Plano')
     clientes = models.ManyToManyField(ClienteGeral,verbose_name='Proprietário(s)',related_name='veiculos')
     foto = StdImageField('Foto', upload_to='carros', delete_orphans=True, null=True, blank=True)

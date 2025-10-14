@@ -3,8 +3,15 @@ from django.db import models
 
 
 class Plano(models.Model):
+    PLANOS_CHOICES = (
+        ('Avulso', 'Horário Avulso'),
+        ('Diaria', 'Diária'),
+        ('Semanal', 'Semanal'),
+        ('Mensal', 'Mensal'),
+        ('Outro', 'Outro plano'),
+    )
 
-    nome = models.CharField('Nome do Plano', max_length=50, unique=True)
+    nome = models.CharField('Nome do Plano',choices=PLANOS_CHOICES,  max_length=50, unique=True, default='Avulso')
     valor = models.DecimalField('Valor Base (R$)', max_digits=8, decimal_places=2)
     status = models.BooleanField('Ativo', default=True, help_text='Marque para ativar o plano')
     descricao = models.TextField('Descrição', max_length=300, blank=True, null=True)
@@ -77,19 +84,20 @@ class Extra(models.Model):
         return f"{self.nome} (+ R$ {self.valor})"
 
 
-CNH_CHOICES = (
+
+
+class Categoria(models.Model):
+
+    CNH_CHOICES = (
         ('A', 'A - Motocicleta'),
         ('B', 'B - Carro'),
         ('C', 'C - Caminhão'),
         ('D', 'D - Ônibus/Van'),
         ('E', 'E - Veículos com reboque'),
-        ('O', 'Outro tipo de categorias'),
+        ('O', 'Outro tipo de categoria'),
     )
-
-class Categoria(models.Model):
-
     cnh = models.CharField('Categoria de CNH', max_length=5, choices=CNH_CHOICES, unique=True, default="A")
-    valor_hora = models.DecimalField('Valor adicional pela categoria (%)', max_digits=8, decimal_places=2 )
+    valor_hora = models.DecimalField('Valor adicional pela categoria (%)', max_digits=8, decimal_places=2)
     status = models.BooleanField('Ativo', default=True, help_text='Marque para ativar a categoria')
 
     class Meta:
@@ -97,4 +105,4 @@ class Categoria(models.Model):
         verbose_name_plural = 'Categorias'
 
     def __str__(self):
-        return f'{self.cnh} - R$ {self.valor_hora}/hora'
+        return f'{self.cnh} (+{self.valor_hora} %)'

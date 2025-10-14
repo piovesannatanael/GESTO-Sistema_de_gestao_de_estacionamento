@@ -50,10 +50,10 @@ INSTALLED_APPS += ['home',
                    'estadias',
                    'vagas',
                    'pagamentos_avulso',
-                   'modalidades',
+                   # 'modalidades',
                    'pagamentos_modal',
                    'valores',
-                   # 'pagamento_final',
+                   'pagamento_final',
                    ]
 
 

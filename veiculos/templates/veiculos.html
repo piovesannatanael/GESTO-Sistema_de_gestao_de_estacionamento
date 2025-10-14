@@ -45,8 +45,8 @@
                     <td>
                         {% for cliente in veiculo.clientes.all %}{{ cliente }}{% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
-                    <td>{{ veiculo.get_qtd_rodas_display }}</td>
-                    <td>{{ veiculo.get_plano_display }}</td>
+                    <td>{{ veiculo.categoria_cnh }}</td>
+                    <td>{{ veiculo.plano }}</td>
                     <td class="text-center">
                         {# Os botões agora têm o mesmo estilo e espaçamento do template de clientes #}
                         <a href="{% url 'veiculo_editar' veiculo.pk %}" class="btn btn-sm btn-warning">Editar</a>
@@ -86,9 +86,10 @@
                      alt="Foto de {{ veiculo.modelo }}"/>
                 {% endif %}
 
+                <p><strong>Categoria CNH:</strong> {{ veiculo.categoria_cnh }}</p>
                 <p><strong>Marca/Modelo:</strong> {{ veiculo.marca }} / {{ veiculo.modelo }}</p>
                 <p><strong>Cor:</strong> {{ veiculo.cor }}</p>
-                <p><strong>Plano Contratado:</strong> {{ veiculo.get_plano_display }}</p>
+                <p><strong>Plano Contratado:</strong> {{ veiculo.plano }}</p>
                 <hr>
                 <h6><strong>Proprietário(s):</strong></h6>
                 <ul class="list-unstyled">

@@ -3,7 +3,7 @@
 <div class="container text-center mt-5">
     <div class="card shadow m-3 col-md-6 mx-auto">
         <div class="card-body">
-            <h3 class="card-title">Pagamento com Cartão</h3>
+            <h3 class="card-title">Pagamento com Cartão de Credito</h3>
             <p>Insira o cartão na maquininha e siga as instruções.</p>
 
             <i class="fas fa-credit-card fa-7x my-4 text-primary"></i>
@@ -11,7 +11,7 @@
             <h4>Valor: R$ {{ pagamento.valor_final|floatformat:2 }}</h4>
             <p class="text-muted">Após a confirmação do pagamento na maquininha, clique no botão abaixo.</p>
 
-            <a href="{% url 'pagamentos_avulso:pagamento_concluido' pagamento.pk %}" class="btn btn-success btn-lg mt-3">Pagamento Aprovado, Finalizar</a>
+            <a href="{% url 'estadias' %}" class="btn btn-success btn-lg mt-3">Pagamento Aprovado, Finalizar</a>
         </div>
     </div>
 </div>

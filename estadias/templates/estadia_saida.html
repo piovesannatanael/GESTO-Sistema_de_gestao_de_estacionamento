@@ -9,54 +9,34 @@
             <h3>{{ titulo }}</h3>
         </div>
         <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 border-end">
+                        <h4>Informações de Chegada</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Veículo:</strong> {{ object.veiculo.placa }} ({{ object.veiculo.marca }} {{ object.veiculo.modelo }})</li>
+                            <li class="list-group-item"><strong>Cliente:</strong> {{ object.cliente }}</li>
+                            <li class="list-group-item"><strong>Plano:</strong> {{ object.veiculo.plano }}</li>
+                            <li class="list-group-item"><strong>Vaga:</strong> {{ object.vaga }}</li>
+                            <li class="list-group-item"><strong>Chegada:</strong> {{ object.data_chegada|date:"d/m/Y H:i" }}</li>
+                            <li class="list-group-item"><strong>Funcionário (Chegada):</strong> {{ object.funcionario }}</li>
+                        </ul>
+                    </div>
 
-            <div class="row">
-                <div class="col-md-6 border-end">
-                    <h4>Informações de chegada</h4>
-                    <ul class="list-group list-group">
-                        <li class="list-group-item"><strong>Veículo:</strong> {{ object.veiculo.placa }} ({{ object.veiculo.marca }} {{ object.veiculo.modelo }})</li>
-                        <li class="list-group-item"><strong>Cliente:</strong> {{ object.cliente }}</li>
-                        <li class="list-group-item"><strong>Plano:</strong> {{ object.veiculo.plano }}</li>
-                        <li class="list-group-item"><strong>Vaga:</strong> {{ object.vaga }}</li>
-                        <li class="list-group-item"><strong>Chegada:</strong> {{ object.data_chegada|date:"d/m/Y H:i" }}</li>
-                        <li class="list-group-item"><strong>Funcionario responsável:</strong> {{ object.funcionario }}</li>
-
-
-
-                    </ul>
-
-                    <div class="d-flex justify-content-start gap-2 mt-4">
-                    <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
+                    <div class="col-md-6">
+                        <h4>Informações de Saída</h4>
+                        {% bootstrap_form form %}
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <h4>Informações de saída</h4>
-                    <form method="post">
-                        {% csrf_token %}
-                        {% bootstrap_form form %}
-                        <hr>
-                        <div class="d-flex justify-content-end gap-2 mt-4">
-<!--                            <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>-->
-                        </div>
-                    </form>
+                <hr>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Avançar para Pagamento</button>
                 </div>
-            </div>
-        </div>
-
-    </div>
-    <div class="col-md-8 mx-auto">
-        <div class="d-flex justify-content-end gap-2 mt-4">
-<!--                            <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>-->
-
-                            <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-primary text-end">Avançar para Pagamento</button>
-</div>   <div class="d-flex justify-content-start gap-2 mt-4">
-<!--                            <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>-->
-
-                            <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-primary text-end">Avançar para Pagamento</button>
-</div>
+            </form> </div>
     </div>
 </div>
 {% endblock %}

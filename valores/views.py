@@ -58,7 +58,7 @@ class PlanoDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         plano_obj = self.get_object()
-        contagem = Veiculo.objects.filter(plano=plano_obj.plano).count()
+        contagem = Veiculo.objects.filter(plano=plano_obj).count()
         context['veiculos_count'] = contagem
         return context
 

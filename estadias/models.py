@@ -25,6 +25,15 @@ class Estadia(models.Model):
     def __str__(self):
         return f'{self.veiculo.placa} - {self.data_chegada.strftime("%d/%m/%Y %H:%M")}'
 
+    def calcular_duracao_em_horas(self):
+        if not self.data_saida:
+            return 0
+        duracao = self.data_saida - self.data_chegada
+        horas = duracao.total_seconds() / 3600
+        if horas > int(horas):
+            return int(horas) + 1
+        return int(horas)
+
     def save(self, *args, **kwargs):
         vaga_original = None
         if self.pk:

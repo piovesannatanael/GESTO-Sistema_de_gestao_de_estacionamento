@@ -1,0 +1,45 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div id="dados" class="container">
+    <div class="card shadow m-3 col-md-8 mx-auto">
+        <div class="card-header text-center">
+            <h3>Processar Pagamento Avulso</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 border-end">
+                        <h4>Resumo da Estadia</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Veículo:</strong> {{ estadia.veiculo.placa }} ({{ estadia.veiculo.get_categoria_cnh_display }})</li>
+                            <li class="list-group-item"><strong>Plano:</strong> {{ estadia.veiculo.plano.nome|default:"Avulso" }}</li>
+                            <li class="list-group-item"><strong>Chegada:</strong> {{ estadia.data_chegada|date:"d/m/Y H:i" }}</li>
+                            <li class="list-group-item"><strong>Saída:</strong> {{ estadia.data_saida|date:"d/m/Y H:i" }}</li>
+                        </ul>
+                        <hr>
+                        <h4>Custo Base</h4>
+                        <ul class="list-group list-group-flush">
+                             <li class="list-group-item"><strong>Valor Inicial:</strong> R$ {{ custos.custo_base|floatformat:2 }}</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4>Opções de Pagamento</h4>
+                        {% bootstrap_form form %}
+                    </div>
+                </div>
+
+                <hr>
+                
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{% url 'estadia_saida' estadia.pk %}" class="btn btn-secondary">Voltar</a>
+                    <button type="submit" class="btn btn-primary">Calcular Total e Avançar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

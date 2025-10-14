@@ -1,6 +1,7 @@
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import send_mail
@@ -46,6 +47,7 @@ class EstadiaChegadaCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
     form_class = EstadiaChegadaForm
     template_name = 'estadia_form.html'
     success_url = reverse_lazy('estadias')
+    success_message = "Dados da chegada cadastrados com sucesso."
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -84,12 +86,11 @@ class EstadiaChegadaCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
 
             return False
 
-
     def form_valid(self, form):
 
         estadia = form.save(commit=False)
-        # if estadia.veiculo:
-        #     estadia.plano = estadia.veiculo.plano
+        if estadia.veiculo:
+            estadia.plano = estadia.veiculo.plano
         estadia.save()
         self.object = estadia
         self.enviar_email(self.object)
@@ -102,15 +103,21 @@ class EstadiaChegadaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Upda
     form_class = EstadiaChegadaForm
     template_name = 'estadia_form.html'
     success_url = reverse_lazy('estadias')
+    success_message = "Dados da chegada atualizados com sucesso."
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["titulo"] = "Editar Dados da Chegada"
         return context
 
+    def form_valid(self, form):
+        messages.success(self.request, self.success_message)
+        return super().form_valid(form)
+
+
 
 class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = 'estadias.change_estadia'
+    permission_required = 'estadias.encerrar_estadia'
     model = Estadia
     form_class = EstadiaSaidaForm
     template_name = 'estadia_saida.html'
@@ -121,21 +128,29 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
         return context
 
     def form_valid(self, form):
-        self.object = form.save()
+        estadia = form.save(commit=False)
 
-        vaga = self.object.vaga
-        if vaga:
-            vaga.status = 'livre'
-            vaga.save()
+        # estadia.finalizada = True
+        # if not estadia.data_saida:
+        #     estadia.data_saida = timezone.now()
+        # estadia.save()
+        #
+        #
+        # vaga = self.object.vaga
+        # if vaga:
+        #     vaga.status = 'livre'
+        #     vaga.save()
 
-        logger.info(f"Plano do veículo: {self.object.veiculo.plano}")
+        estadia.save()
 
-        if self.object.veiculo.plano == 'Avulso':
+        if estadia.veiculo.plano and estadia.veiculo.plano.nome == 'Avulso':
             logger.info("Redirecionando para pagamento_avulso")
-            return HttpResponseRedirect(reverse('pagamentos_avulso:pagamento_avulso', kwargs={'estada_avulso_pk': self.object.pk}))
+            return HttpResponseRedirect(
+                reverse('pagamentos_avulso:processar_pagamento_avulso', kwargs={'estada_avulso_pk': estadia.pk}))
         else:
             logger.info("Redirecionando para pagamento_modal_processar")
-            return HttpResponseRedirect(reverse('pagamentos_modal:pagamento_modal_processar', kwargs={'estada_modal_pk': self.object.pk}))
+            return HttpResponseRedirect(
+                reverse('pagamentos_modal:pagamento_modal_processar', kwargs={'estada_modal_pk': estadia.pk}))
 
 
 class EstadiaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -143,20 +158,38 @@ class EstadiaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     model = Estadia
     template_name = 'estadia_apagar.html'
     success_url = reverse_lazy('estadias')
+    success_message = "Registro da estadia foi apagado com sucesso."
 
     def post(self, request, *args, **kwargs):
         estada = self.get_object()
         vaga = estada.vaga
-        response = super().post(request, *args, **kwargs)
+
         if vaga:
             vaga.status = 'livre'
             vaga.save()
         messages.success(request, f"A estada do veículo {estada.veiculo.placa} foi apagada e a vaga foi liberada.")
 
-        return response
+        return super().post(request, *args, **kwargs)
+
+
+
+class EstadiaFinalizarView(LoginRequiredMixin, TemplateView):
+    template_name = 'pagamento_concluido.html'
+
+    def get(self, request, *args, **kwargs):
+        estadia_pk = self.kwargs.get('pk')
+        estadia = get_object_or_404(Estadia, pk=estadia_pk)
+
+        estadia.finalizada = True
+        estadia.save()
+
+        if estadia.vaga:
+            estadia.vaga.status = 'livre'
+            estadia.vaga.save()
+
+        messages.success(request, "Pagamento confirmado e estadia finalizada com sucesso!")
+
 
 class DashboardView(ListView):
     model = Estadia
     template_name = 'dashboard.html'
-
-

@@ -39,7 +39,7 @@
                 <tbody>
                 {% for plano in object_list %}
                 <tr>
-                    <td>{{ plano.get_plano_display }}</td>
+                    <td>{{ plano.nome }}</td>
                     <td>
                         {% if plano.status %}
                         <span class="badge bg-success">Ativo</span>
