@@ -3,10 +3,18 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.views import View
-from django.views.generic.base import logger
-
 from estadias.models import Estadia
 
+
+class PagamentoDinheiroView(View):
+    def get(self, request, *args, **kwargs):
+        estadia_pk = self.kwargs.get('estadia_pk')
+        estadia = get_object_or_404(Estadia, pk=estadia_pk)
+
+        context = {
+            'estadia': estadia,
+        }
+        return render(request, 'pagamento_dinheiro.html', context)
 
 class PagamentoPixView(View):
     def get(self, request, *args, **kwargs):
@@ -29,7 +37,7 @@ class PagamentoCreditoView(View):
             'estadia': estadia,
             'valor_final': estadia.valor_total,
         }
-        return render(request, 'pagamento_final/pagamento_credito.html', context)
+        return render(request, 'pagamento_credito.html', context)
 
 
 class PagamentoDebitoView(View):
@@ -41,7 +49,7 @@ class PagamentoDebitoView(View):
             'estadia': estadia,
             'valor_final': estadia.valor_total,
         }
-        return render(request, 'pagamento_final/pagamento_debito.html', context)  # Pode reutilizar o template
+        return render(request, 'pagamento_debito.html', context)
 
 
 class PagamentoConcluidoView(View):

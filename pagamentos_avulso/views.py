@@ -1,4 +1,3 @@
-# Em: pagamentos_avulso/views.py
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
@@ -15,7 +14,7 @@ class ProcessarPagamentoAvulsoView(View):
         estadia = get_object_or_404(Estadia, pk=estadia_pk)
 
         custo_base = 0
-        duracao_horas = estadia.calcular_duracao_em_horas() + 1
+        duracao_horas = estadia.calcular_duracao_em_horas()
 
 
         if estadia.veiculo and estadia.veiculo.categoria_cnh:
@@ -87,7 +86,7 @@ class ProcessarPagamentoAvulsoView(View):
             elif forma_pagamento == 'DEBITO':
                 return redirect('pagamento_final:pagamento_debito', estadia_pk=estadia.pk)
             elif forma_pagamento == 'DINHEIRO':
-                return redirect('estadia_finalizar', pk=estadia.pk)
+                return redirect('pagamento_final:pagamento_dinheiro', estadia_pk=estadia.pk)
 
         context = {
             'estadia': estadia,

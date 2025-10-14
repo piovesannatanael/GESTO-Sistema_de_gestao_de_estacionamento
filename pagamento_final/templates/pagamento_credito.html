@@ -1,17 +1,23 @@
 {% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
 {% block content %}
 <div class="container text-center mt-5">
     <div class="card shadow m-3 col-md-6 mx-auto">
-        <div class="card-body">
-            <h3 class="card-title">Pagamento com Cartão de Credito</h3>
+        <div class="card-body p-5">
+            <h3 class="card-title">Pagamento com Cartão de Crédito</h3>
+            <p class="text-muted">Estadia do veículo: {{ estadia.veiculo.placa }}</p>
+            <hr>
             <p>Insira o cartão na maquininha e siga as instruções.</p>
-
             <i class="fas fa-credit-card fa-7x my-4 text-primary"></i>
-
-            <h4>Valor: R$ {{ pagamento.valor_final|floatformat:2 }}</h4>
+            <h4 class="my-4">Valor: R$ {{ estadia.valor_total|floatformat:2 }}</h4>
             <p class="text-muted">Após a confirmação do pagamento na maquininha, clique no botão abaixo.</p>
 
-            <a href="{% url 'estadias' %}" class="btn btn-success btn-lg mt-3">Pagamento Aprovado, Finalizar</a>
+            <form action="{% url 'estadia_finalizar' estadia.pk %}" method="post" class="mt-4">
+                {% csrf_token %}
+                <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success">Pagamento Aprovado, Finalizar</button>
+            </form>
         </div>
     </div>
 </div>

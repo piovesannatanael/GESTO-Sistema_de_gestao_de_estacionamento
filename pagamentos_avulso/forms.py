@@ -1,3 +1,5 @@
+from email.policy import default
+
 from django import forms
 from valores.models import Desconto, Extra
 
@@ -13,4 +15,5 @@ class PagamentoAvulsoForm(forms.Form):
         empty_label="Nenhum desconto")
     extra = forms.ModelChoiceField(queryset=Extra.objects.filter(status=True), required=False,label='Adicionar Extra',
         empty_label="Nenhum extra")
-    forma_pagamento = forms.ChoiceField(choices=PAGAMENTO_CHOICES,required=True ,label='Forma de Pagamento',widget=forms.RadioSelect )
+    forma_pagamento = forms.ChoiceField(choices=PAGAMENTO_CHOICES,required=True ,label='Forma de Pagamento',
+                                        widget=forms.RadioSelect, initial="DINHEIRO" )
