@@ -15,7 +15,7 @@
             <p class="mt-3">Após escanear o código e realizar o pagamento, clique no botão abaixo para confirmar e
                 finalizar a estadia.</p>
 
-            <form action="{% url 'pagamento_concluido' estadia.pk %}" method="post">
+            <form action="{% url 'pagamento_final:pagamento_concluido' estadia.pk %}" method="post">
                 {% csrf_token %}
                 <a href="{% url 'estadias' %}" class="btn btn-secondary">Cancelar Pagamento</a>
                 <button type="submit" class="btn btn-success">Confirmar Pagamento</button>

@@ -77,21 +77,23 @@ class PagamentoConcluidoView(View):
             if not estadia.cliente or not estadia.cliente.email:
                 print(f"Não foi possível enviar e-mail: cliente ou e-mail não cadastrado para estadia {estadia.pk}.")
                 return False
+
             recipient = [estadia.cliente.email]
             context = {'estadia': estadia}
 
+
             html_message = render_to_string('emails/recibo.html', context)
-            plain_message = render_to_string('emails/texto_recibo.txt', context)
+            text_message = render_to_string('emails/texto_recibo.txt',context)
 
             send_mail(
                 subject='GESTO - Recibo do seu Pagamento',
-                message=plain_message,
+                message=text_message,
                 from_email='piovesannatanael@gmail.com',
                 recipient_list=recipient,
                 html_message=html_message,
                 fail_silently=False
             )
-            print(f"E-mail de texto_recibo enviado com sucesso para {recipient}.")
+            print(f"E-mail de recibo enviado com sucesso para {recipient}.")
             return True
         except Exception as e:
             print(f"Erro ao enviar e-mail para estadia {estadia.pk}: {e}")

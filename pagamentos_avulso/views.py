@@ -133,6 +133,7 @@ class ProcessarPagamentoAvulsoView(View):
             'estadia': estadia,
             'form': form,
             'custo_base': custo_base,
+            'forma_pagamento': forma_pagamento,
 
         }
         return render(request, self.form_template_name, context)
