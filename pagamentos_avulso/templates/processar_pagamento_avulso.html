@@ -14,7 +14,7 @@
                     <div class="col-md-6 border-end">
                         <h4>Resumo da Estadia</h4>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Veículo:</strong> {{ estadia.veiculo.placa }} ({{ estadia.veiculo.get_categoria_cnh_display }})</li>
+                            <li class="list-group-item"><strong>Veículo:</strong> {{ estadia.veiculo.placa }} ({{ estadia.veiculo.marca }} {{ estadia.veiculo.modelo }})</li>
                             <li class="list-group-item"><strong>Plano:</strong> {{ estadia.veiculo.plano.nome|default:"Avulso" }}</li>
                             <li class="list-group-item"><strong>Chegada:</strong> {{ estadia.data_chegada|date:"d/m/Y H:i" }}</li>
                             <li class="list-group-item"><strong>Saída:</strong> {{ estadia.data_saida|date:"d/m/Y H:i" }}</li>
@@ -23,6 +23,9 @@
                         <h4>Custo Base</h4>
                         <ul class="list-group list-group-flush">
                              <li class="list-group-item"><strong>Valor Inicial:</strong> R$ {{ custo_base|floatformat:2 }}</li>
+                        </ul>
+                        <ul class="list-group list-group-flush">
+                             <li class="list-group-item"><strong>Valor Mínimo:</strong> R$ {{ estadia.veiculo.plano.valor|floatformat:2 }}</li>
                         </ul>
                     </div>
 

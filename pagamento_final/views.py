@@ -54,6 +54,24 @@ class PagamentoDebitoView(View):
 
 class PagamentoConcluidoView(View):
 
+    def post(self, request, *args, **kwargs):
+        estadia_pk = self.kwargs.get('estadia_pk')
+        estadia = get_object_or_404(Estadia, pk=estadia_pk)
+
+        estadia.finalizada = True
+        estadia.save()
+
+        if estadia.vaga:
+            estadia.vaga.status = 'livre'
+            estadia.vaga.save()
+
+        self.enviar_recibo(estadia)
+
+        messages.success(request, "Pagamento confirmado e estadia finalizada!")
+        context = {'estadia': estadia}
+
+        return render(request, 'pagamento_concluido.html', {'estadia': estadia})
+
     def enviar_recibo(self, estadia):
         try:
             if not estadia.cliente or not estadia.cliente.email:
@@ -78,21 +96,3 @@ class PagamentoConcluidoView(View):
         except Exception as e:
             print(f"Erro ao enviar e-mail para estadia {estadia.pk}: {e}")
             return False
-
-    def post(self, request, *args, **kwargs):
-        estadia_pk = self.kwargs.get('estadia_pk')
-        estadia = get_object_or_404(Estadia, pk=estadia_pk)
-
-        estadia.finalizada = True
-        estadia.save()
-
-        if estadia.vaga:
-            estadia.vaga.status = 'livre'
-            estadia.vaga.save()
-
-        self.enviar_recibo(estadia)
-
-        messages.success(request, "Pagamento confirmado e estadia finalizada!")
-        context = {'estadia': estadia}
-
-        return render(request, 'pagamento_concluido.html', context)
