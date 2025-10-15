@@ -24,6 +24,11 @@ class EstadiaChegadaForm(forms.ModelForm):
         self.fields['cliente'].queryset = ClienteGeral.objects.order_by('nome', 'empresa')
         self.fields['funcionario'].queryset = Funcionario.objects.order_by('nome')
 
+        self.fields['veiculo'].empty_label = "Selecione uma Placa"
+        self.fields['cliente'].empty_label = "Selecione um Cliente"
+        self.fields['funcionario'].empty_label = "Selecione um Funcionário"
+        self.fields['vaga'].empty_label = "Selecione uma Vaga"
+
     def clean_veiculo(self):
         veiculo = self.cleaned_data.get('veiculo')
         if veiculo:
@@ -56,6 +61,10 @@ class EstadiaSaidaForm(forms.ModelForm):
 
         self.fields['cliente'].queryset = ClienteGeral.objects.order_by('nome', 'empresa')
         self.fields['funcionario'].queryset = Funcionario.objects.order_by('nome')
+
+        self.fields['cliente'].empty_label = "Selecione um Cliente"
+        self.fields['funcionario'].empty_label = "Selecione um Funcionário"
+
         if not self.instance.data_saida:
             self.initial['data_saida'] = localtime(now()).strftime('%Y-%m-%dT%H:%M')
 
