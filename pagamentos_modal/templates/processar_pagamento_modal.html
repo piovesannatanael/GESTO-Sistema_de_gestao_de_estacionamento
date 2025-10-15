@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
 
-</body>
-</html>
+{% block content %}
+<div id="dados" class="container">
+    <div class="card shadow m-3 col-md-8 mx-auto">
+        <div class="card-header text-center">
+            <h3>Processar Pagamento de Plano</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 border-end">
+                        <h4>Resumo do Plano</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Veículo:</strong> {{ veiculo.placa }} ({{ veiculo.modelo }})</li>
+                            <li class="list-group-item"><strong>Plano:</strong> {{ veiculo.plano.nome }}</li>
+                            <li class="list-group-item"><strong>Valor do Plano:</strong> R$ {{ custo_base|floatformat:2 }}</li>
+                            <li class="list-group-item text-success"><strong>Nova Validade:</strong> {{ data_validade|date:"d/m/Y" }}</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4>Opções de Pagamento</h4>
+                        {% bootstrap_form form %}
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{% url 'veiculos' %}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Calcular Total e Avançar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

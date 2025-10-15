@@ -142,6 +142,20 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
                 reverse('pagamentos_modal:pagamento_modal_processar', kwargs={'estada_modal_pk': estadia.pk}))
 
 
+            # if estadia.veiculo.plano and estadia.veiculo.plano.nome != 'Avulso':
+            #     estadia.finalizada = True
+            #     estadia.save()
+            #     if estadia.vaga:
+            #         estadia.vaga.status = 'livre'
+            #         estadia.vaga.save()
+            #     messages.success(request,
+            #                      f"Saída do veículo mensalista {estadia.veiculo.placa} registrada com sucesso.")
+            #     return redirect('estadias')
+            # else:
+            #     return HttpResponseRedirect(
+            #         reverse('pagamentos_avulso:processar_pagamento_avulso', kwargs={'estada_avulso_pk': estadia.pk}))
+            #
+
 class EstadiaDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'estadias.delete_estadia'
     model = Estadia
