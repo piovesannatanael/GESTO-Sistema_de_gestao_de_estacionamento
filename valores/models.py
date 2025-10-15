@@ -5,7 +5,7 @@ from django.db import models
 class Plano(models.Model):
     PLANOS_CHOICES = (
         ('Avulso', 'Horário Avulso'),
-        ('Diaria', 'Diária'),
+        ('Diaria', 'Diaria'),
         ('Semanal', 'Semanal'),
         ('Mensal', 'Mensal'),
         ('Outro', 'Outro plano'),

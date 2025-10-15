@@ -6,6 +6,5 @@ app_name = 'pagamentos_avulso'
 
 urlpatterns = [
     path('processar/<int:estada_avulso_pk>/', ProcessarPagamentoAvulsoView.as_view(),name='processar_pagamento_avulso'),
-
 ]
 
