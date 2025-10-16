@@ -14,7 +14,6 @@ class Estadia(models.Model):
     data_chegada = models.DateTimeField(default=timezone.now)
     data_saida = models.DateTimeField(null=True, blank=True)
     finalizada = models.BooleanField(default=False)
-    valor_total = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 
     class Meta:
         permissions = (('encerrar_estadia','Permite fazer o encerramento de uma estadia'),)
