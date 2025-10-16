@@ -74,7 +74,7 @@ class ProcessarPagamentoModalView(View):
                 # Desconto pix e dinheiro
             if forma_pagamento == 'PIX' or forma_pagamento == 'DINHEIRO':
                 desconto_pagamento = subtotal * 0.15
-                messages.info(request, "Desconto de 15% para pagamento!")
+                messages.info(request, "Desconto de 15% para pagamentos!")
             else:
                 desconto_pagamento = 0.0
 

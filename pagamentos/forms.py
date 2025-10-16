@@ -1,4 +1,4 @@
-# pagamento/forms.py
+# pagamentos/forms.py
 from django import forms
 from .models import Pagamento
 
@@ -21,7 +21,7 @@ class PagamentoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Se for um novo pagamento, definir data atual
+        # Se for um novo pagamentos, definir data atual
         if not self.instance.pk:
             from django.utils.timezone import localtime, now
             self.initial['data_pagamento'] = localtime(now()).strftime('%Y-%m-%dT%H:%M')

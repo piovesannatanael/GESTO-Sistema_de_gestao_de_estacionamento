@@ -1,4 +1,4 @@
-# pagamento/views.py
+# pagamentos/views.py
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.urls import reverse_lazy

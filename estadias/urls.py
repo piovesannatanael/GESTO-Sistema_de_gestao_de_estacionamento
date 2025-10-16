@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
 
     EstadiaListView, EstadiaChegadaCreateView, EstadiaChegadaUpdateView, EstadiaSaidaUpdateView, EstadiaDeleteView,
-    DashboardView, EstadiaFinalizarView,
+     EstadiaFinalizarView,
 )
 
 
@@ -14,6 +14,5 @@ urlpatterns = [
     path('estadia/<int:pk>/apagar/', EstadiaDeleteView.as_view(), name='estadia_apagar'),
     path('finalizar/<int:pk>/', EstadiaFinalizarView.as_view(), name='estadia_finalizar'),
 
-    path('estadias/grafico', DashboardView.as_view(), name='grafico'),
 ]
 

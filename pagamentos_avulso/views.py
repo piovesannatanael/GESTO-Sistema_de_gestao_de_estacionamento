@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from estadias.models import Estadia
-from valores.models import Categoria
+from valores.models import Categoria, Plano
 from .forms import PagamentoAvulsoForm
 
 
@@ -20,7 +20,7 @@ class ProcessarPagamentoAvulsoView(View):
 
         if estadia.veiculo and estadia.veiculo.categoria_cnh:
 
-            valor_por_hora = float(estadia.veiculo.categoria_cnh.valor_hora)
+            valor_por_hora = float(estadia.veiculo.plano.valor)
             custo_base = duracao_horas * valor_por_hora
         else:
             messages.error(request, "O veículo ou sua categoria não estão definidos corretamente para esta estadia.")
@@ -46,9 +46,10 @@ class ProcessarPagamentoAvulsoView(View):
         try:
             duracao_horas = estadia.calcular_duracao_em_horas()
             duracao_horas = max(1, duracao_horas)
-
-            preco_categoria = Categoria.objects.get(cnh=estadia.veiculo.categoria_cnh.cnh, status=True)
-            custo_base = duracao_horas * float(preco_categoria.valor_hora)
+            preco_plano = estadia.veiculo.plano.valor
+            preco_categoria = estadia.veiculo.categoria_cnh.valor_hora / 100
+            calculo_categoria = (duracao_horas * float(preco_plano)) * float(preco_categoria)
+            custo_base = (duracao_horas * float(preco_plano)) + float(calculo_categoria)
 
         except Categoria.DoesNotExist:
             messages.error(request,
@@ -58,7 +59,7 @@ class ProcessarPagamentoAvulsoView(View):
             return render(request, self.form_template_name, context)
 
         if form.is_valid():
-            cleaned_data = form.cleaned_data
+            # cleaned_data = form.cleaned_data
             desconto_obj = cleaned_data.get('desconto')
             extra_obj = cleaned_data.get('extra')
             forma_pagamento = cleaned_data.get('forma_pagamento')
@@ -93,7 +94,7 @@ class ProcessarPagamentoAvulsoView(View):
                 # Desconto pix e dinheiro
             if forma_pagamento == 'PIX' or forma_pagamento == 'DINHEIRO':
                 desconto_pagamento = subtotal * 0.15
-                messages.info(request, "Desconto de 15% para pagamento!")
+                messages.info(request, "Desconto de 15% para pagamentos!")
             else:
                 desconto_pagamento = 0.0
 

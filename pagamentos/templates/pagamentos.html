@@ -1,42 +1,108 @@
+<!-- pagamento/templates/pagamentos.html -->
 {% extends 'principal.html' %}
-{% load django_bootstrap5 %}
 
 {% block content %}
-<div id="dados" class="container">
-    <h3 class="mt-4 mb-4">Histórico de Pagamentos</h3>
-
-    {% if pagamentos %}
-    <div class="table-responsive">
-        <table class="table table-striped table-dark">
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Estadia (Veículo)</th>
-                    <th>Valor Total</th>
-                    <th>Forma de Pagamento</th>
-                    <th>Status</th>
-                    <th class="text-center">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pagamento in pagamentos %}
-                <tr>
-                    <td>{{ pagamento.data_pagamento|date:"d/m/Y H:i" }}</td>
-                    <td>{{ pagamento.estadia.veiculo.placa }}</td>
-                    <td>R$ {{ pagamento.valor_total|floatformat:2 }}</td>
-                    <td>{{ pagamento.get_forma_pagamento_display }}</td>
-                    <td><span class="badge bg-{% if pagamento.status == 'PAGO' %}success{% else %}warning{% endif %}">{{ pagamento.get_status_display }}</span></td>
-                    <td class="text-center">
-                        <a href="{% url 'pagamentos:pagamento_editar' pagamento.pk %}" class="btn btn-sm btn-warning">Editar</a>
-                        <a href="{% url 'pagamentos:pagamento_apagar' pagamento.pk %}" class="btn btn-sm btn-danger">Apagar</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4 class="card-title mb-0">Pagamentos</h4>
+        <a href="{% url 'pagamento_adicionar' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Novo Pagamento
+        </a>
     </div>
-    {% else %}
-    <div class="alert alert-info text-center">Nenhum pagamento registrado.</div>
-    {% endif %}
+    <div class="card-body">
+        <!-- Filtros e Busca -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <form method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="buscar" 
+                               placeholder="Buscar por ID da estadia, forma de pagamento ou valor..." 
+                               value="{{ buscar }}">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabela de Pagamentos -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Estadia</th>
+                        <th>Valor Total</th>
+                        <th>Forma de Pagamento</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pagamento in pagamentos %}
+                    <tr>
+                        <td>{{ pagamento.id }}</td>
+                        <td>#{{ pagamento.estadia.id }}</td>
+                        <td>R$ {{ pagamento.valor_total }}</td>
+                        <td>{{ pagamento.get_forma_display }}</td>
+                        <td>{{ pagamento.data_pagamento|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <span class="badge {% if pagamento.status == 'PAGO' %}bg-success{% else %}bg-warning{% endif %}">
+                                {{ pagamento.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                        <a href="{% url 'pagamento_editar' pagamento.pk %}"
+                                   class="btn btn-warning" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'pagamento_apagar' pagamento.pk %}"
+                                   class="btn btn-danger" title="Excluir">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">Nenhum pagamento encontrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginação -->
+        {% if is_paginated %}
+        <nav aria-label="Paginação">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if buscar %}&buscar={{ buscar }}{% endif %}">Primeira</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if buscar %}&buscar={{ buscar }}{% endif %}">Anterior</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if buscar %}&buscar={{ buscar }}{% endif %}">Próxima</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if buscar %}&buscar={{ buscar }}{% endif %}">Última</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

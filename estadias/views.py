@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
@@ -21,7 +21,7 @@ class EstadiaListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(finalizada=False).select_related(
+        queryset = super().get_queryset().select_related(
             'veiculo', 'cliente', 'vaga'
         )
         buscar = self.request.GET.get('buscar')
@@ -127,6 +127,16 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
         context["titulo"] = "Registrar Saída de Veículo"
         return context
 
+    def calcular_duracao_em_horas(self):
+        if not self.data_saida:
+            return 1
+        duracao = self.data_saida - self.data_chegada
+        horas = duracao.total_seconds() / 3600
+        if horas <= 0:
+            return 1
+        else:
+            return horas
+
     def form_valid(self, form):
         estadia = form.save(commit=False)
 
@@ -180,6 +190,18 @@ class EstadiaFinalizarView(LoginRequiredMixin, TemplateView):
         messages.success(request, "Pagamento confirmado e estadia finalizada com sucesso!")
 
 
-class DashboardView(ListView):
-    model = Estadia
-    template_name = 'dashboard.html'
+def relatorio_estadias(request):
+    """
+    Esta view busca as estadias e as envia diretamente para o template.
+    """
+    # 1. Busque os dados do banco de dados.
+    #    Estou assumindo que você quer as estadias finalizadas, ordenadas pela data.
+    #    Adapte a query conforme a sua regra de negócio.
+    object_list = Estadia.objects.filter(finalizada=True).order_by('data_saida')
+
+    # 2. Envie a lista de objetos diretamente para o contexto.
+    context = {
+        'object_list': object_list,
+    }
+
+    return render(request, 'registros.html', context)

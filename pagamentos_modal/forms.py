@@ -1,6 +1,5 @@
 from django import forms
 from valores.models import Desconto, Extra
-from estadias.models import Estadia
 
 class PagamentoModalForm(forms.Form):
     PAGAMENTO_CHOICES = (

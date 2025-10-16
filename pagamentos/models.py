@@ -1,4 +1,3 @@
-# pagamento/models.py
 from django.db import models
 from django.utils import timezone
 from estadias.models import Estadia
