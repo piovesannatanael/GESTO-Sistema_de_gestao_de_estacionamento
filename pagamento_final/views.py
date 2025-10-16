@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
 from django.views import View
 from estadias.models import Estadia
@@ -11,10 +11,20 @@ class PagamentoDinheiroView(View):
         estadia_pk = self.kwargs.get('estadia_pk')
         estadia = get_object_or_404(Estadia, pk=estadia_pk)
 
+        valor_final = getattr(estadia, 'valor_total', 0) or 0
+        estadia.finalizada = True
+        estadia.save()
+
         context = {
             'estadia': estadia,
+            'valor_final': valor_final,
+            'forma_pagamento': 'DINHEIRO',
         }
         return render(request, 'pagamento_dinheiro.html', context)
+
+    def post(self, request, *args, **kwargs):
+        estadia_pk = self.kwargs.get('estadia_pk')
+        return redirect('pagamento_concluido', estadia_pk=estadia_pk)
 
 class PagamentoPixView(View):
     def get(self, request, *args, **kwargs):
@@ -60,6 +70,8 @@ class PagamentoConcluidoView(View):
 
         estadia.finalizada = True
         estadia.save()
+
+
 
         if estadia.vaga:
             estadia.vaga.status = 'livre'

@@ -32,7 +32,6 @@ class Pagamento(models.Model):
         return f'Pagamento #{self.id} - Estadia #{self.estadia.id} - R$ {self.valor_total}'
 
     def save(self, *args, **kwargs):
-        # Se não tem valor_total, pega da estadia
         if not self.valor_total and self.estadia:
             self.valor_total = self.estadia.valor_total or 0
         super().save(*args, **kwargs)

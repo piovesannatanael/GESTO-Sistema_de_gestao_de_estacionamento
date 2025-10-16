@@ -26,13 +26,13 @@
             </div>
         </div>
 
-        <!-- Tabela de Pagamentos -->
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
                         <th>Estadia</th>
+                        <th>Veiculo</th>
                         <th>Valor Total</th>
                         <th>Forma de Pagamento</th>
                         <th>Data</th>
@@ -45,6 +45,7 @@
                     <tr>
                         <td>{{ pagamento.id }}</td>
                         <td>#{{ pagamento.estadia.id }}</td>
+                        <td>{{ pagamento.estadia.veiculo }}</td>
                         <td>R$ {{ pagamento.valor_total }}</td>
                         <td>{{ pagamento.get_forma_display }}</td>
                         <td>{{ pagamento.data_pagamento|date:"d/m/Y H:i" }}</td>

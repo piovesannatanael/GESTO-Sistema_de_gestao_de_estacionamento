@@ -59,7 +59,7 @@ class ProcessarPagamentoAvulsoView(View):
             return render(request, self.form_template_name, context)
 
         if form.is_valid():
-            # cleaned_data = form.cleaned_data
+            cleaned_data = form.cleaned_data
             desconto_obj = cleaned_data.get('desconto')
             extra_obj = cleaned_data.get('extra')
             forma_pagamento = cleaned_data.get('forma_pagamento')
@@ -124,11 +124,6 @@ class ProcessarPagamentoAvulsoView(View):
                 return redirect('pagamento_final:pagamento_debito', estadia_pk=estadia.pk)
             elif forma_pagamento == 'DINHEIRO':
                 return redirect('pagamento_final:pagamento_dinheiro', estadia_pk=estadia.pk)
-
-
-
-
-
 
         context = {
             'estadia': estadia,

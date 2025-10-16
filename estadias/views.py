@@ -187,19 +187,13 @@ class EstadiaFinalizarView(LoginRequiredMixin, TemplateView):
             estadia.vaga.status = 'livre'
             estadia.vaga.save()
 
+
         messages.success(request, "Pagamento confirmado e estadia finalizada com sucesso!")
 
 
 def relatorio_estadias(request):
-    """
-    Esta view busca as estadias e as envia diretamente para o template.
-    """
-    # 1. Busque os dados do banco de dados.
-    #    Estou assumindo que você quer as estadias finalizadas, ordenadas pela data.
-    #    Adapte a query conforme a sua regra de negócio.
-    object_list = Estadia.objects.filter(finalizada=True).order_by('data_saida')
 
-    # 2. Envie a lista de objetos diretamente para o contexto.
+    object_list = Estadia.objects.filter(finalizada=True).order_by('data_saida')
     context = {
         'object_list': object_list,
     }

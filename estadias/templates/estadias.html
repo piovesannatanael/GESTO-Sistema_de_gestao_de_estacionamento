@@ -11,65 +11,74 @@
     <div class="card card-body mb-4" id="search">
         <form method="get" action="">
             <div class="input-group">
-                <input class="form-control" type="text" name="buscar" value="{{ request.GET.buscar }}" placeholder="Buscar por placa, cliente, modelo ou vaga...">
+                <input class="form-control" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                       placeholder="Buscar por placa, cliente, modelo ou vaga...">
                 <button type="submit" class="btn btn-outline-secondary">🔍 Buscar</button>
             </div>
         </form>
     </div>
 
     {% if object_list %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {% for estada in object_list %}
-                <div class="col">
-                    <div class="card text-bg-dark h-100 shadow-sm ">
-                        {% if estada.veiculo.foto %}
-                            <img src="{{ estada.veiculo.foto }}" class="card-img-top" alt="Foto do veículo {{ estada.veiculo.placa }}" style="height: 200px; object-fit: cover;">
-                        {% else %}
-                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
-                                <i class="fas fa-car fa-4x text-light"></i>
-                            </div>
-                        {% endif %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for estada in object_list %}
+        <div class="col">
+            <div class="card text-bg-dark h-100 shadow-sm ">
+                {% if estada.veiculo.foto %}
+                <img src="{{ estada.veiculo.foto }}" class="card-img-top"
+                     alt="Foto do veículo {{ estada.veiculo.placa }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                     style="height: 200px;">
+                    <i class="fas fa-car fa-4x text-light"></i>
+                </div>
+                {% endif %}
 
-                        <div class="card text-bg-dark h-100 shadow-sm">
-                            <div class="text-center" style="padding:10px !important;">
-                             <h5><a href="#" data-bs-toggle="modal" id="link-modal"
-                           data-bs-target="#modal-estada-{{ estada.id }}" >
+                <div class="card text-bg-dark h-100 shadow-sm">
+                    <div class="text-center" style="padding:10px !important;">
+                        <h5><a href="#" data-bs-toggle="modal" id="link-modal"
+                               data-bs-target="#modal-estada-{{ estada.id }}">
                             {{ estada.veiculo.placa }}
                         </a></h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ estada.veiculo.marca }} {{ estada.veiculo.modelo }}</h6>
-                        </div>
-                            </div>
-
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item text-bg-dark"><strong>Cliente:</strong> {{ estada.cliente }}</li>
-                            <li class="list-group-item text-bg-dark"><strong>Vaga:</strong> {{ estada.vaga }}</li>
-                            <li class="list-group-item text-bg-dark"><strong>Plano do veículo:</strong> {{ estada.veiculo.plano }}</li>
-                            <li class="list-group-item text-bg-dark"><strong>VAlor:</strong>                                 <p>{{estadia.valor_total}}</p>
-</li>
-
-                            <li class="list-group-item text-bg-dark"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</li>
-                        </ul>
-
-                        <div class="card-footer d-flex justify-content-between gap-2">
-                            <a href="{% url 'estadia_apagar' estada.pk %}" class="btn btn-sm btn-danger">Excluir</a>
-                            <a href="{% url 'estadia_editar' estada.pk %}" class="btn btn-info">Editar</a>
-                            <a href="{% url 'estadia_saida' estada.pk %}" class="btn btn-success">Registrar Saída</a>
-                        </div>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ estada.veiculo.marca }} {{ estada.veiculo.modelo}}</h6>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
 
-        <div class="d-flex justify-content-center mt-4">
-            {% if is_paginated %}
-                {% bootstrap_pagination page_obj url=request.get_full_path %}
-            {% endif %}
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-bg-dark"><strong>Cliente:</strong> {{ estada.cliente }}</li>
+                    <li class="list-group-item text-bg-dark"><strong>Vaga:</strong> {{ estada.vaga }}</li>
+                    <li class="list-group-item text-bg-dark"><strong>Plano do veículo:</strong> {{ estada.veiculo.plano}}
+                    </li>
+                    <li class="list-group-item text-bg-dark">
+                        {% if estadia.finalizada %}
+    <span class="badge bg-success">Finalizada</span>
+{% else %}
+    <span class="badge bg-warning">Ativa</span>
+{% endif %}
+                    </li>
+                    <li class="list-group-item text-bg-dark"><strong>Chegada:</strong> {{estada.data_chegada|date:"d/m/Y H:i" }}
+                    </li>
+                </ul>
+
+                <div class="card-footer d-flex justify-content-between gap-2">
+                    <a href="{% url 'estadia_apagar' estada.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                    <a href="{% url 'estadia_editar' estada.pk %}" class="btn btn-info">Editar</a>
+                    <a href="{% url 'estadia_saida' estada.pk %}" class="btn btn-success">Registrar Saída</a>
+                </div>
+            </div>
         </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        {% if is_paginated %}
+        {% bootstrap_pagination page_obj url=request.get_full_path %}
+        {% endif %}
+    </div>
 
     {% else %}
-        <div class="alert alert-info text-center mt-4">
-            Nenhuma estada ativa encontrada.
-        </div>
+    <div class="alert alert-info text-center mt-4">
+        Nenhuma estada ativa encontrada.
+    </div>
     {% endif %}
 </div>
 
@@ -84,11 +93,13 @@
             <div class="modal-body">
                 <div class="text-center mb-3">
                     {% if estada.cliente.foto %}
-                        <img src="{{ estada.cliente.foto.url }}" class="img-thumbnail" width="150" alt="Foto de {{ estada.cliente }}"/>
+                    <img src="{{ estada.cliente.foto.url }}" class="img-thumbnail" width="150"
+                         alt="Foto de {{ estada.cliente }}"/>
                     {% endif %}
                 </div>
                 <p><strong>Cliente: </strong>{{ estada.cliente }}</p>
-                <p><strong>Veículo: </strong>{{ estada.veiculo.marca }} {{ estada.veiculo.modelo }} - Cor: {{ estada.veiculo.cor }}</p>
+                <p><strong>Veículo: </strong>{{ estada.veiculo.marca }} {{ estada.veiculo.modelo }} - Cor: {{
+                    estada.veiculo.cor }}</p>
                 <p><strong>Funcionário (Entrada): </strong>{{ estada.funcionario }}</p>
                 <p><strong>Vaga Ocupada: </strong>{{ estada.vaga }}</p>
                 <p><strong>Plano do veiculo: </strong>{{ estada.veiculo.plano }}</p>
