@@ -1,0 +1,42 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div id="dados" class="container">
+    <h3 class="mt-4 mb-4">Histórico de Pagamentos</h3>
+
+    {% if pagamentos %}
+    <div class="table-responsive">
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Estadia (Veículo)</th>
+                    <th>Valor Total</th>
+                    <th>Forma de Pagamento</th>
+                    <th>Status</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pagamento in pagamentos %}
+                <tr>
+                    <td>{{ pagamento.data_pagamento|date:"d/m/Y H:i" }}</td>
+                    <td>{{ pagamento.estadia.veiculo.placa }}</td>
+                    <td>R$ {{ pagamento.valor_total|floatformat:2 }}</td>
+                    <td>{{ pagamento.get_forma_pagamento_display }}</td>
+                    <td><span class="badge bg-{% if pagamento.status == 'PAGO' %}success{% else %}warning{% endif %}">{{ pagamento.get_status_display }}</span></td>
+                    <td class="text-center">
+                        <a href="{% url 'pagamentos:pagamento_editar' pagamento.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{% url 'pagamentos:pagamento_apagar' pagamento.pk %}" class="btn btn-sm btn-danger">Apagar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">Nenhum pagamento registrado.</div>
+    {% endif %}
+</div>
+{% endblock %}

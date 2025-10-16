@@ -17,10 +17,5 @@ class PagamentoForm(forms.ModelForm):
         label='Adicionar Extra',
         empty_label="Nenhum extra"
     )
-    forma_pagamento = forms.ChoiceField(
-        choices=Pagamento.PAGAMENTO_CHOICES,
-        required=True,
-        label='Forma de Pagamento',
-        widget=forms.RadioSelect,
-        initial="DINHEIRO"
+    forma_pagamento = forms.ChoiceField(choices=Pagamento.PAGAMENTO_CHOICES,required=True,label='Forma de Pagamento',widget=forms.RadioSelect,initial="DINHEIRO"
     )

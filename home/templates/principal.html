@@ -100,6 +100,14 @@
                     <p>Preços</p>
                 </a>
             </li>
+
+            <li class="nav-item" role="none">
+                <a href="{% url 'pagamento' %}"
+                   class="nav-link {% if request.resolver_match.url_name == 'pagamento' %}active{% endif %}">
+                    <i class="fa-solid fa-money-bill" aria-hidden="true"></i>
+                    <p>Pagamento</p>
+                </a>
+            </li>
             <li class="nav-item" role="none">
                 <a href="{% url 'admin:index' %}" class="nav-link">
                     <i class="fas fa-cogs" aria-hidden="true"></i>
