@@ -1,0 +1,183 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block content %}
+<div id="dados" class="container">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h3>Estadias</h3>
+        <a href="{% url 'estadia_chegada' %}" class="btn btn-primary">Registrar Chegada</a>
+    </div>
+
+    <div class="card-dark card-body mb-4">
+        <form method="get" action="" class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label for="filtro_status" class="form-label">Filtrar por status:</label>
+                <select class="form-select" id="filtro_status" name="status">
+                    <option value="">Todas as estadias</option>
+                    <option value="ativas" {% if request.GET.status == 'ativas' %}selected{% endif %}>Estadias Ativas</option>
+                    <option value="finalizadas" {% if request.GET.status == 'finalizadas' %}selected{% endif %}>Estadias Finalizadas</option>
+                </select>
+            </div>
+            <div class="col-md-8">
+                <label for="input_buscar" class="form-label">Buscar:</label>
+                <input class="form-control" type="text" name="buscar" id="input_buscar" value="{{ request.GET.buscar }}"
+                       placeholder="Placa, cliente, modelo ou vaga...">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </form>
+    </div>
+
+    {% if object_list %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for estada in object_list %}
+        <div class="col">
+            <div class="card text-bg-dark h-100 shadow-sm">
+                {% if estada.veiculo.foto %}
+                <img src="{{ estada.veiculo.foto.url }}" class="card-img-top"
+                     alt="Foto do veículo {{ estada.veiculo.placa }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                     style="height: 200px;">
+                    <i class="fas fa-car fa-4x text-light"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <div class="text-center">
+                        <h5><a href="#" data-bs-toggle="modal" id="link-modal"
+                               data-bs-target="#modal-estada-{{ estada.id }}">
+                            {{ estada.veiculo.placa }}
+                        </a></h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ estada.veiculo.marca }} {{ estada.veiculo.modelo}}</h6>
+                    </div>
+                </div>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-bg-dark"><strong>Cliente:</strong> {{ estada.cliente }}</li>
+                    <li class="list-group-item text-bg-dark"><strong>Vaga:</strong> {{ estada.vaga }}</li>
+                    <li class="list-group-item text-bg-dark"><strong>Plano:</strong> {{ estada.veiculo.plano.nome }}
+                    </li>
+
+                    <li class="list-group-item text-bg-dark">
+                        <strong>Status do Plano:</strong>
+                        {% if estada.veiculo.plano_esta_valido %}
+                        <span class="badge bg-success">Válido</span>
+                        {% else %}
+                        <span class="badge bg-danger">Vencido</span>
+                        {% endif %}
+                    </li>
+
+                    <li class="list-group-item text-bg-dark">
+                        <strong>Validade do plano:</strong>
+                        {% if estada.veiculo.data_vencimento_plano %}
+                                {{ estada.veiculo.data_vencimento_plano|date:"d/m/Y" }}
+                            {% elif estada.veiculo.plano.nome|lower != "avulso" %}
+                                <span class="badge bg-warning">Aguardando pagamento</span>
+                            {% else %}
+                                Avulso (sem vencimento)
+                            {% endif %}
+                    </li>
+
+                    <li class="list-group-item text-bg-dark">
+                        <strong>Estadia:</strong>
+                        {% if estada.finalizada %}
+                        <span class="badge bg-secondary">Finalizada</span>
+                        {% else %}
+                        <span class="badge bg-success">Ativa</span>
+                        {% endif %}
+                    </li>
+                    <li class="list-group-item text-bg-dark"><strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}
+                    </li>
+                    {% if estada.finalizada %}
+                    <li class="list-group-item text-bg-dark"><strong>Saída:</strong> {{ estada.data_saida|date:"d/m/Y H:i" }}</li>
+                    {% endif %}
+                </ul>
+
+                <div class="card-footer d-flex justify-content-between gap-2">
+                    {% if not estada.finalizada %}
+                    <a href="{% url 'estadia_apagar' estada.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                    <a href="{% url 'estadia_editar' estada.pk %}" class="btn btn-info">Editar</a>
+                    <a href="{% url 'estadia_saida' estada.pk %}" class="btn btn-success">Registrar Saída</a>
+                    {% else %}
+                    <a href="{% url 'estadia_apagar' estada.pk %}" class="btn btn-sm btn-danger">Excluir</a>
+                    <span class="text-muted">Estadia finalizada</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        {% if is_paginated %}
+        {% bootstrap_pagination page_obj url=request.get_full_path %}
+        {% endif %}
+    </div>
+
+    {% else %}
+    <div class="alert alert-warning text-center mt-4">
+        Nenhuma estada encontrada.
+    </div>
+    {% endif %}
+</div>
+
+{% for estada in object_list %}
+<div class="modal fade" tabindex="-1" id="modal-estada-{{ estada.id }}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes da Estada: {{ estada.veiculo.placa }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    {% if estada.cliente.foto %}
+                    <img src="{{ estada.cliente.foto.url }}" class="img-thumbnail" width="150"
+                         alt="Foto de {{ estada.cliente }}"/>
+                    {% endif %}
+                </div>
+                <p><strong>Cliente: </strong>{{ estada.cliente }}</p>
+                <p><strong>Veículo: </strong>{{ estada.veiculo.marca }} {{ estada.veiculo.modelo }} - Cor: {{ estada.veiculo.cor }}</p>
+                <p><strong>Funcionário (Entrada): </strong>{{ estada.funcionario }}</p>
+                <p><strong>Vaga Ocupada: </strong>{{ estada.vaga }}</p>
+                <p><strong>Plano: </strong>{{ estada.veiculo.plano.nome }}</p>
+
+                <p><strong>Status do Plano: </strong>
+                    {% if estada.veiculo.plano_esta_valido %}
+                    <span class="badge bg-success">Válido</span>
+                    {% else %}
+                    <span class="badge bg-danger">Vencido</span>
+                    {% endif %}
+                </p>
+                <p><strong>Vencimento: </strong>
+                    {% if estada.veiculo.data_vencimento_plano %}
+                    {{ estada.veiculo.data_vencimento_plano|date:"d/m/Y" }}
+                    {% else %}
+                    Avulso (sem vencimento)
+                    {% endif %}
+                </p>
+
+                <p><strong>Data de Chegada: </strong>{{ estada.data_chegada|date:"d/m/Y H:i" }}</p>
+                {% if estada.finalizada %}
+                <p><strong>Data de Saída: </strong>{{ estada.data_saida|date:"d/m/Y H:i" }}</p>
+                <p><strong>Funcionário (Saída): </strong>{{ estada.funcionario_saida }}</p>
+                {% endif %}
+                <p><strong>Status: </strong>
+                    {% if estada.finalizada %}
+                    <span class="badge bg-success">Finalizada</span>
+                    {% else %}
+                    <span class="badge bg-warning">Ativa</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

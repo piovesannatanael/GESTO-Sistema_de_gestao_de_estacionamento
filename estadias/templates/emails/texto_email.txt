@@ -1,0 +1,9 @@
+Olá {{ cliente }},
+
+Seu veículo (placa: {{ placa }}, modelo: {{ modelo }}) chegou ao estacionamento.
+
+Chegada: {{ horario }}
+Funcionário: {{ funcionario }}
+
+Agradecemos pela preferência!
+GESTO - Parking System
