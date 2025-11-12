@@ -1,0 +1,42 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+<div id="dados">
+    <div class="card shadow m-3 col-md-6 mx-auto">
+        <div class="card-body">
+            <div class="row">
+                <h1 class="text-center">EXCLUIR AUTOMÓVEL?</h1>
+                <h3 class="text-center">Dados do veículo</h3>
+
+                <p class="p-2 mt-2"><strong>Placa: </strong>{{ object.placa }} </p>
+                <p class="p-2 mt-2"><strong>Marca/Modelo: </strong>{{ object.marca }} / {{ object.modelo }}</p>
+                <p class="p-2 mt-2"><strong>Cor: </strong>{{ object.cor }}</p>
+                <p><strong>Cliente(s): </strong>
+                    {% for cliente in object.clientes.all %}
+                    {{ cliente }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                    Nenhum proprietário associado.
+                    {% endfor %}
+                </p>
+                {% if object.foto.url is not empty %}
+                    <img src="{{ veiculo.foto.url }}" class="img-thumbnail" width="150" alt="Foto de {{ veiculo }}/">
+                {% endif %}
+
+                <p class="p-2 mt-2">Confirma a exclusão do veículo de placa <strong>{{ object.placa }}</strong>?</p>
+
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="text-end">
+                        {% bootstrap_button button_type="submit" content="Sim" %}
+                        <a href="{% url 'veiculos' %}" class="btn btn-secondary text-white" type="button">
+                            <span class="text">Cancelar</span>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

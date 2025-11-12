@@ -1,0 +1,118 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div id="dados" class="container">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h3>Lista de Veículos</h3>
+        <a href="{% url 'veiculo_adicionar' %}" class="btn btn-primary">Adicionar Veículo</a>
+    </div>
+    <div class="card card-body mb-4" id="search">
+        <form method="get" action="">
+            <div class="input-group">
+                <input class="form-control" type="text" name="buscar" value="{{ buscar }}"
+                       placeholder="Buscar por placa, nome do cliente ou empresa...">
+                <button type="submit" class="btn btn-outline-secondary">🔍 Buscar</button>
+            </div>
+        </form>
+    </div>
+
+    {% if veiculos %}
+    <div class="card-body">
+        <h3 class="text-center">Veículos Cadastrados</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-dark">
+                <thead>
+                <tr>
+                    <th>Placa</th>
+                    <th>Modelo</th>
+                    <th>Proprietário(s)</th>
+                    <th>Categoria</th>
+                    <th>Plano</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for veiculo in veiculos %}
+                <tr>
+                    <td>
+                        <a href="#" id="link-modal" data-bs-toggle="modal"
+                           data-bs-target="#modal-veiculo-{{ veiculo.id }}">
+                            {{ veiculo.placa }}
+                        </a>
+                    </td>
+                    <td>{{ veiculo.modelo }}</td>
+                    <td>
+                        {% for cliente in veiculo.clientes.all %}{{ cliente }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </td>
+                    <td>{{ veiculo.categoria_cnh }}</td>
+                    <td>{{ veiculo.plano }}</td>
+                    <td class="text-center">
+                        {# Os botões agora têm o mesmo estilo e espaçamento do template de clientes #}
+                        <a href="{% url 'veiculo_editar' veiculo.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{% url 'veiculo_apagar' veiculo.pk %}" class="btn btn-sm btn-danger">Apagar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center mt-4">
+                {% if is_paginated %}
+                {% bootstrap_pagination page_obj url=request.get_full_path %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+        Nenhum veículo encontrado.
+    </div>
+    {% endif %}
+</div>
+
+
+{% for veiculo in veiculos %}
+<div class="modal fade" id="modal-veiculo-{{ veiculo.id }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Veículo: {{ veiculo.placa }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+
+                {% if veiculo.foto %}
+                <img src="{{ veiculo.foto.url }}" class="img-fluid img-thumbnail mb-3" width="150"
+                     alt="Foto de {{ veiculo.modelo }}"/>
+                {% endif %}
+
+                <p><strong>Categoria CNH:</strong> {{ veiculo.categoria_cnh }}</p>
+                <p><strong>Marca/Modelo:</strong> {{ veiculo.marca }} / {{ veiculo.modelo }}</p>
+                <p><strong>Cor:</strong> {{ veiculo.cor }}</p>
+                <p><strong>Plano Contratado:</strong> {{ veiculo.plano }}</p>
+                <hr>
+                <h6><strong>Proprietário(s):</strong></h6>
+                <ul class="list-unstyled">
+                    {% for cliente in veiculo.clientes.all %}
+                    <li>
+                        <strong>{{ cliente }}</strong>
+                        <small class="d-block text-muted">
+                            ({{ cliente.get_tipo_cliente_display }}) - Contato: {{ cliente.fone }}
+                        </small>
+                    </li>
+                    {% empty %}
+                    <li>Nenhum proprietário associado.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
