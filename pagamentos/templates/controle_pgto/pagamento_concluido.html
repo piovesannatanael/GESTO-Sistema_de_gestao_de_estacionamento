@@ -1,0 +1,42 @@
+<!-- pagamentos/templates/pagamentos/pagamento_concluido.html -->
+{% extends 'principal.html' %}
+
+{% block content %}
+<div class="card shadow m-3">
+    <div class="card-body text-center">
+        <h3 class="text-success">✅ Pagamento Concluído!</h3>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Estadia</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Veículo:</strong> {{ estadia.veiculo.placa }}</p>
+                        <p><strong>Cliente:</strong> {{ estadia.cliente.nome }}</p>
+                        <p><strong>Duração:</strong> {{ estadia.calcular_duracao_em_horas }} horas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Pagamento</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Valor:</strong> R$ {{ pagamento.valor_total }}</p>
+                        <p><strong>Forma:</strong> {{ pagamento.get_forma_display }}</p>
+                        <p><strong>Data:</strong> {{ pagamento.data_pagamento|date:"d/m/Y H:i" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <a href="{% url 'pagamentos:pagamentos' %}" class="btn btn-primary">Ver Todos os Pagamentos</a>
+            <a href="{% url 'estadias' %}" class="btn btn-secondary">Voltar para Estadias</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div id="dados">
+    <div class="card shadow m-3 col-md-6 mx-auto">
+        <div class="card-body">
+            <div class="row p-3">
+                <h1 class="text-center">EXCLUIR PAGAMENTO?</h1>
+                <p class="text-center mt-3">Você tem certeza que deseja excluir permanentemente o registo de pagamento para a estadia do veículo <strong>{{ object.estadia.veiculo.placa }}</strong> no valor de <strong>R$ {{ object.valor_total|floatformat:2 }}</strong>?</p>
+                <p class="text-center text-danger">Esta ação não pode ser desfeita.</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                        <a href="{% url 'pagamentos:pagamentos' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

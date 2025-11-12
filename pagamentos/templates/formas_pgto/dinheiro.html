@@ -1,0 +1,36 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Pagamento em Dinheiro</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Resumo do Pagamento</h5>
+                        <p><strong>Veículo:</strong> {{ estadia.veiculo.placa }}</p>
+                        <p><strong>Cliente:</strong> {{ estadia.cliente.nome }}</p>
+                        <p><strong>Valor Total:</strong> R$ {{ pagamento.valor_total }}</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="alert alert-info">
+                            <strong>Instruções:</strong> Receba o valor em dinheiro e confirme o pagamento.
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'pagamentos:processar_pagamento' estadia.id %}" class="btn btn-secondary me-md-2">Voltar</a>
+                            <button type="submit" class="btn btn-success">Confirmar Pagamento</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

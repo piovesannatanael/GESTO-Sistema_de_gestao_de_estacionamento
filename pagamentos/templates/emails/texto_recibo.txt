@@ -1,0 +1,16 @@
+Olá {{ estadia.cliente.nome }},
+
+O pagamento da sua estadia foi confirmado. Obrigado!
+
+--------------------
+Resumo do Pagamento
+--------------------
+Veículo (Placa): {{ estadia.veiculo.placa }}
+Chegada: {{ estadia.data_chegada|date:"d/m/Y H:i" }}
+Saída: {{ estadia.data_saida|date:"d/m/Y H:i" }}
+
+Valor Total Pago: R$ {{ estadia.valor_total|floatformat:2 }}
+--------------------
+
+Atenciosamente,
+Equipe GESTO - Parking System

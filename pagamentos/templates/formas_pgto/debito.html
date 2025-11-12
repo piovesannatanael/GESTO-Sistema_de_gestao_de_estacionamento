@@ -1,0 +1,40 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">💳 Pagamento com Débito</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Resumo do Pagamento -->
+                    <div class="alert alert-light border">
+                        <h5 class="text-center">Resumo do Pagamento</h5>
+                        <p><strong>Valor:</strong> R$ {{ pagamento.valor_total|floatformat:2 }}</p>
+                        <p><strong>Veículo:</strong> {{ pagamento.estadia.veiculo.placa }}</p>
+                        <p><strong>Cliente:</strong> {{ pagamento.estadia.cliente.nome }}</p>
+                    </div>
+
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-credit-card fa-3x mb-3 text-primary"></i>
+                        <p class="mb-0"><strong>Instruções:</strong> Insira o cartão na maquininha e siga as instruções.</p>
+                        <p class="mb-0">Após a confirmação do pagamento, clique em "Confirmar Pagamento".</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <!-- CORREÇÃO: Usar link seguro -->
+                            <a href="{% url 'pagamentos:pagamentos' %}" class="btn btn-secondary me-md-2">Cancelar</a>
+                            <button type="submit" class="btn btn-success">Confirmar Pagamento</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
