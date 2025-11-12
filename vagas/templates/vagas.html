@@ -1,0 +1,118 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block content %}
+
+
+<div id="dados" class="container">
+
+
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h3>Gerenciamento de Vagas</h3>
+        <a href="{% url 'vaga_adicionar' %}" class="btn btn-primary">Adicionar Vaga</a>
+    </div>
+
+    <div class="card card-body mb-4" id="search">
+        <form method="get" action="">
+            <div class="input-group">
+                <input class="form-control" type="text" name="buscar" value="{{ request.GET.buscar }}"
+                       placeholder="Buscar por código da vaga ou status...">
+                <button type="submit" class="btn btn-outline-secondary">🔍 Buscar</button>
+            </div>
+        </form>
+    </div>
+
+    {% if vagas %}
+    <div class="card-body">
+        <h3 class="text-center">Vagas Cadastradas</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-dark">
+                <thead>
+                <tr>
+                    <th>Código da Vaga</th>
+                    <th>Status</th>
+                    <th class="text-center">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for vaga in vagas %}
+                <tr>
+                    <td>
+                        <a href="#" id="link-modal" data-bs-toggle="modal" data-bs-target="#modal-vaga-{{ vaga.pk }}">
+                            {{ vaga.codigo }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if vaga.status == 'livre' %}
+                        <span class="badge bg-success">Livre</span>
+                        {% elif vaga.status == 'ocupada' %}
+                        <span class="badge bg-danger">Ocupada</span>
+                        {% else %}
+                        <span class="badge bg-warning text-dark">{{ vaga.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'vaga_editar' vaga.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{% url 'vaga_apagar' vaga.pk %}" class="btn btn-sm btn-danger">Apagar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            {% if is_paginated %}
+            {% bootstrap_pagination page_obj url=request.get_full_path %}
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center mt-4">Nenhuma vaga cadastrada.</div>
+    {% endif %}
+</div>
+
+{% for vaga in vagas %}
+<div class="modal fade" tabindex="-1" id="modal-vaga-{{ vaga.pk }}">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes da Vaga: {{ vaga.codigo }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% if vaga.status == 'ocupada' %}
+                {% with estada=vaga.estada_ativa.0 %}
+                {% if estada %}
+                <p>Esta vaga está atualmente ocupada por:</p>
+
+                <ul class="list-group list-group-flush">
+
+                    <li class="list-group-item bg-transparent"><small class="text-muted">
+                        <strong>Veículo:</strong> {{ estada.veiculo.placa }} ({{ estada.veiculo.modelo }})</small></li>
+                    <li class="list-group-item bg-transparent"><small class="text-muted">
+                        <strong>Cliente:</strong> {{ estada.cliente }}</small></li>
+                    <li class="list-group-item bg-transparent"><small class="text-muted">
+                        <strong>Chegada:</strong> {{ estada.data_chegada|date:"d/m/Y H:i" }}</small></li>
+                </ul>
+
+                {% else %}
+                <p>Status: Ocupada (mas não foi possível encontrar a estadia associada).</p>
+                {% endif %}
+                {% endwith %}
+                {% elif vaga.status == 'livre' %}
+                <p>Esta vaga está <strong>livre</strong> e pronta para ser utilizada.</p>
+                {% else %}
+                <p>Status da vaga: <strong>{{ vaga.get_status_display }}</strong>.</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+

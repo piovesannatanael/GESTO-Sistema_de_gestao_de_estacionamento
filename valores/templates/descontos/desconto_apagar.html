@@ -1,0 +1,29 @@
+{% extends 'principal.html' %}
+{% load django_bootstrap5 %}
+{% block content %}
+<div id="dados">
+    <div class="card shadow m-3 col-md-6 mx-auto">
+        <div class="card-body">
+            <div class="row p-3">
+                <h1 class="text-center">EXCLUIR DESCONTO?</h1>
+                <h3 class="text-center mt-3">Dados da Regra</h3>
+                <p class="p-2 mt-2"><strong>Nome: </strong>{{ object.nome }}</p>
+                <p class="p-2 mt-2"><strong>Valor: </strong>{% if desconto.tipo == 'PERCENTUAL' %}
+                        {{ desconto.valor }}%
+                        {% else %}
+                        R$ {{ desconto.valor }}
+                        {% endif %}</p>
+                <p class="p-2 mt-2"><strong>Descrição: </strong>{{ object.descricao }}</p>
+                <p class="p-2 mt-4">Confirma a exclusão desta regra de desconto?</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-danger">Sim, Excluir</button>
+                        <a href="{% url 'descontos' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
