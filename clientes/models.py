@@ -9,7 +9,7 @@ class Pessoa(models.Model):
     fone = models.CharField('Fone', max_length=12, help_text='Número de telefone (Apenas números)', unique=True)
     email = models.EmailField('E-mail', max_length=100, help_text='E-mail', unique=True)
     endereco = models.CharField('Endereço', max_length=300, help_text='Endereço completo')
-    foto = StdImageField('Foto', upload_to='pessoas', delete_orphans=True, null=True, blank=True)
+    foto = StdImageField('Foto', upload_to='static/pessoas', delete_orphans=True, null=True, blank=True)
 
     class Meta:
         abstract = True

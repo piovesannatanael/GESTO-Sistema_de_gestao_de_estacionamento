@@ -167,7 +167,7 @@ class EstadiaSaidaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Update
         estadia.save()
 
         if estadia.veiculo.plano_esta_valido and not estadia.veiculo.plano.is_avulso():
-            return redirect('pagamentos:plano_valido', estadia_pk=estadia.pk)
+            return redirect('pagamentos:plano_valido', estadia_id=estadia.pk)
         else:
             return redirect('pagamentos:processar_pagamento', estadia_pk=estadia.pk)
 

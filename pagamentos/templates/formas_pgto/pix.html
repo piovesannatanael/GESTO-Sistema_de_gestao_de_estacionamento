@@ -28,7 +28,7 @@
                     <form method="post">
                         {% csrf_token %}
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="{% url 'pagamentos:processar_pagamento' estadia.id %}" class="btn btn-secondary me-md-2">Voltar</a>
+                            <a href="{% url 'pagamentos:processar_pagamento' estadia.pk %}" class="btn btn-secondary me-md-2">Voltar</a>
                             <button type="submit" class="btn btn-success">Pagamento Confirmado</button>
                         </div>
                     </form>

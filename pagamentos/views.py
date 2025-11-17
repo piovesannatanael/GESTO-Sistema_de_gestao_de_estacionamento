@@ -59,7 +59,7 @@ class ProcessarPagamentoView(CreateView):
         initial = super().get_initial()
         estadia = self.get_estadia()
         initial['estadia'] = estadia
-        initial['valor_total'] = self.calcular_valor_final(estadia)
+        # initial['valor_total'] = self.calcular_valor_final(estadia)
         return initial
 
     def form_valid(self, form):
@@ -68,9 +68,9 @@ class ProcessarPagamentoView(CreateView):
         forma_pagamento = form.cleaned_data['forma']
 
         resultado_calculo = self.aplicar_regras_negocio(estadia, forma_pagamento,
-            self.calcular_valor_avulso(
-                estadia) if estadia.veiculo.plano.is_avulso()
-            else self.calcular_valor_plano_fixo(estadia))
+                                                        self.calcular_valor_avulso(
+                                                            estadia) if estadia.veiculo.plano.is_avulso()
+                                                        else self.calcular_valor_plano_fixo(estadia))
 
         valor_final = resultado_calculo['valor_final']
 

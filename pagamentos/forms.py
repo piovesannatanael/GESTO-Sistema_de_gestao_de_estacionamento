@@ -11,7 +11,7 @@ class PagamentoForm(forms.ModelForm):
 
     class Meta:
         model = Pagamento
-        fields = ['estadia', 'valor_total', 'forma', 'status', 'observacao']
+        fields = ['estadia', 'forma', 'status', 'observacao']
         widgets = {
             'estadia': forms.HiddenInput(),
             'valor_total': forms.NumberInput(attrs={

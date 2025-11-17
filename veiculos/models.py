@@ -9,7 +9,7 @@ class Veiculo(models.Model):
     marca = models.CharField('Marca', max_length=50, null=True, blank=True)
     modelo = models.CharField('Modelo', max_length=50, null=True, blank=True)
     cor = models.CharField('Cor', max_length=30, null=True, blank=True)
-    foto = models.ImageField('Foto', upload_to='veiculos/', null=True, blank=True)
+    foto = models.ImageField('Foto', upload_to='static/veiculos', null=True, blank=True)
     clientes = models.ManyToManyField(ClienteGeral,related_name='veiculos',verbose_name='Clientes',blank=False)
     plano = models.ForeignKey(Plano, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Plano')
     categoria_cnh = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, verbose_name='Categoria do Veículo',limit_choices_to={'status': True})

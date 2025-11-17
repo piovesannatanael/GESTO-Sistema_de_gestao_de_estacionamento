@@ -60,8 +60,8 @@
                         {% csrf_token %}
 
                         <!-- REMOVER estes campos hidden - eles estão causando problemas -->
-                        {# {{ form.estadia }} #}
-                        {# {{ form.status }} #}
+                        {{ form.estadia }}
+                        {{ form.status }}
 
                         <!-- MOSTRAR APENAS a forma de pagamento -->
                         <div class="mb-4">
