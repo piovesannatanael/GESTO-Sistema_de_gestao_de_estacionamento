@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
 from django.db.models import Q
@@ -46,7 +47,7 @@ def enviar_recibo_email(estadia, pagamento):
         return False
 
 
-class ProcessarPagamentoView(CreateView):
+class ProcessarPagamentoView(LoginRequiredMixin, CreateView):
     model = Pagamento
     form_class = PagamentoForm
     template_name = 'controle_pgto/processar_pagamento.html'
@@ -453,7 +454,7 @@ class SaidaPlanoValidoView(View):
         return redirect('estadias')
 
 
-class PagamentosView(ListView):
+class PagamentosView(LoginRequiredMixin, ListView):
     model = Pagamento
     template_name = 'pagamentos.html'
     context_object_name = 'pagamentos'
@@ -478,7 +479,7 @@ class PagamentosView(ListView):
         return context
 
 
-class PagamentoCreateView(SuccessMessageMixin, CreateView):
+class PagamentoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Pagamento
     form_class = PagamentoForm
     template_name = 'controle_pgto/pagamento_form.html'
@@ -498,7 +499,7 @@ class PagamentoCreateView(SuccessMessageMixin, CreateView):
         else:
             return redirect('pagamentos:pagamentos')
 
-class PagamentoUpdateView(SuccessMessageMixin, UpdateView):
+class PagamentoUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Pagamento
     form_class = PagamentoForm
     template_name = 'controle_pgto/pagamento_form.html'
@@ -520,7 +521,7 @@ class PagamentoUpdateView(SuccessMessageMixin, UpdateView):
             return redirect('pagamentos:pagamentos')
 
 
-class PagamentoDeleteView(SuccessMessageMixin, DeleteView):
+class PagamentoDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Pagamento
     template_name = 'controle_pgto/pagamento_apagar.html'
     success_url = reverse_lazy('pagamentos:pagamentos')
