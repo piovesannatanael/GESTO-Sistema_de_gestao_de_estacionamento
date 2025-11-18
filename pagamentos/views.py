@@ -48,6 +48,8 @@ def enviar_recibo_email(estadia, pagamento):
 
 
 class ProcessarPagamentoView(LoginRequiredMixin, CreateView):
+    required
+
     model = Pagamento
     form_class = PagamentoForm
     template_name = 'controle_pgto/processar_pagamento.html'
