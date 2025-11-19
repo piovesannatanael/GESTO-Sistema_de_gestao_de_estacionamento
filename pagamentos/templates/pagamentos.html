@@ -1,16 +1,17 @@
-<!-- pagamento/templates/pagamentos.html -->
 {% extends 'principal.html' %}
 
 {% block content %}
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4 class="card-title mb-0">Pagamentos</h4>
+        <a href="{% url 'pagamentos:relatorio_pagamentos' %}" class="btn btn-warning">
+            Relatório Pagamentos
+        </a>
         <a href="{% url 'pagamentos:pagamento_adicionar' %}" class="btn btn-success">
             <i class="fas fa-plus"></i> Novo Pagamento
         </a>
     </div>
     <div class="card-body">
-        <!-- Filtros e Busca -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <form method="get">
@@ -76,7 +77,6 @@
             </table>
         </div>
 
-        <!-- Paginação -->
         {% if is_paginated %}
         <nav aria-label="Paginação">
             <ul class="pagination justify-content-center">

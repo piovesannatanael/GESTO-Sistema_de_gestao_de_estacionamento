@@ -23,4 +23,5 @@ urlpatterns = [
 
    path('plano_valido/<int:estadia_id>/', views.SaidaPlanoValidoView.as_view(), name='plano_valido'),
 
+path('relatorio/', views.RelatorioPagamentosView.as_view(), name='relatorio_pagamentos'),
 ]

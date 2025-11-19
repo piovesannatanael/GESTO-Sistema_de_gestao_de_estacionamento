@@ -210,11 +210,11 @@ class EstadiaFinalizarView(LoginRequiredMixin, TemplateView):
         messages.success(request, "Pagamento confirmado e estadia finalizada com sucesso!")
 
 
-def relatorio_estadias(request):
-
-    object_list = Estadia.objects.filter(finalizada=True).order_by('data_saida')
-    context = {
-        'object_list': object_list,
-    }
-
-    return render(request, 'registros.html', context)
+# def relatorio_estadias(request):
+#
+#     object_list = Estadia.objects.filter(finalizada=True).order_by('data_saida')
+#     context = {
+#         'object_list': object_list,
+#     }
+#
+#     return render(request, 'registros.html', context)

@@ -48,7 +48,8 @@ def enviar_recibo_email(estadia, pagamento):
 
 
 class ProcessarPagamentoView(LoginRequiredMixin, CreateView):
-    required
+    permission_required = 'pagamentos.view_Processar_pagamento'
+    permission_denied_message = 'Processar pagamento'
 
     model = Pagamento
     form_class = PagamentoForm
@@ -457,6 +458,8 @@ class SaidaPlanoValidoView(View):
 
 
 class PagamentosView(LoginRequiredMixin, ListView):
+    permission_required = 'pagamentos.view_pagamento'
+    permission_denied_message = 'Visualizar pagamento'
     model = Pagamento
     template_name = 'pagamentos.html'
     context_object_name = 'pagamentos'
@@ -482,6 +485,8 @@ class PagamentosView(LoginRequiredMixin, ListView):
 
 
 class PagamentoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+    permission_required = 'pagamentos.add_pagamento'
+    permission_denied_message = 'Cadastrar pagamento'
     model = Pagamento
     form_class = PagamentoForm
     template_name = 'controle_pgto/pagamento_form.html'
@@ -502,6 +507,8 @@ class PagamentoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
             return redirect('pagamentos:pagamentos')
 
 class PagamentoUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    permission_required = 'pagamentos.update_pagamento'
+    permission_denied_message = 'Editar pagamento'
     model = Pagamento
     form_class = PagamentoForm
     template_name = 'controle_pgto/pagamento_form.html'
@@ -524,6 +531,8 @@ class PagamentoUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
 
 
 class PagamentoDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+    permission_required = 'pagamentos.delete_pagamento'
+    permission_denied_message = 'Apagar pagamento'
     model = Pagamento
     template_name = 'controle_pgto/pagamento_apagar.html'
     success_url = reverse_lazy('pagamentos:pagamentos')
@@ -532,3 +541,20 @@ class PagamentoDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
         return super().delete(request, *args, **kwargs)
+
+
+class RelatorioPagamentosView(ListView):
+    model = Pagamento
+    template_name = 'relatorio_pagamentos.html'
+    context_object_name = 'object_list'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Pagamento.objects.filter(status='PAGO').order_by('-data_pagamento')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pagamentos = self.get_queryset()
+        context['total_receita'] = sum(p.valor_total for p in pagamentos)
+        context['total_pagamentos'] = pagamentos.count()
+        return context
